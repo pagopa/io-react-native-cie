@@ -62,6 +62,7 @@ android/app/libs
 android/keystores/debug.keystore
 
 # Yarn
+.pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
