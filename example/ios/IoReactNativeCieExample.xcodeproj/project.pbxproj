@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0062AC3C72603C72AC3B0FDA /* libPods-IoReactNativeCieExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BF9915E9D7048C3B9A5A183 /* libPods-IoReactNativeCieExample.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		1A517D48EC349E94C36F811E /* libPods-IoReactNativeCieExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6480C13D578F2FE0F5CCCD3E /* libPods-IoReactNativeCieExample.a */; };
 		633C470644E6CA7AFE46FF8B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -19,11 +19,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = IoReactNativeCieExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = IoReactNativeCieExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = IoReactNativeCieExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1DAD4F55D588A6FFE8722F05 /* Pods-IoReactNativeCieExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoReactNativeCieExample.release.xcconfig"; path = "Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample.release.xcconfig"; sourceTree = "<group>"; };
+		267B50C17B72170545C13531 /* Pods-IoReactNativeCieExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoReactNativeCieExample.debug.xcconfig"; path = "Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample.debug.xcconfig"; sourceTree = "<group>"; };
+		6480C13D578F2FE0F5CCCD3E /* libPods-IoReactNativeCieExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IoReactNativeCieExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = IoReactNativeCieExample/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IoReactNativeCieExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		9BF9915E9D7048C3B9A5A183 /* libPods-IoReactNativeCieExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IoReactNativeCieExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B2B69931795ECC87F1A19CFB /* Pods-IoReactNativeCieExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoReactNativeCieExample.debug.xcconfig"; path = "Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample.debug.xcconfig"; sourceTree = "<group>"; };
+		AFCC9792D772D996FFA3A1F8 /* Pods-IoReactNativeCieExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoReactNativeCieExample.release.xcconfig"; path = "Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0062AC3C72603C72AC3B0FDA /* libPods-IoReactNativeCieExample.a in Frameworks */,
+				1A517D48EC349E94C36F811E /* libPods-IoReactNativeCieExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				9BF9915E9D7048C3B9A5A183 /* libPods-IoReactNativeCieExample.a */,
+				6480C13D578F2FE0F5CCCD3E /* libPods-IoReactNativeCieExample.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -92,8 +92,8 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B2B69931795ECC87F1A19CFB /* Pods-IoReactNativeCieExample.debug.xcconfig */,
-				1DAD4F55D588A6FFE8722F05 /* Pods-IoReactNativeCieExample.release.xcconfig */,
+				267B50C17B72170545C13531 /* Pods-IoReactNativeCieExample.debug.xcconfig */,
+				AFCC9792D772D996FFA3A1F8 /* Pods-IoReactNativeCieExample.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -105,13 +105,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "IoReactNativeCieExample" */;
 			buildPhases = (
-				14EDCCFAD9023BF2CBCC295D /* [CP] Check Pods Manifest.lock */,
+				B473E13D360B26CAAC1DD7C8 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				30EFC11E7F7A6CD051DECFDD /* [CP] Embed Pods Frameworks */,
-				224D6EA4C83BA8820197C44B /* [CP] Copy Pods Resources */,
+				6B36A9944F689C45D2B55F10 /* [CP] Embed Pods Frameworks */,
+				03B87F24275CDA362DAE29E9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,7 +183,41 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		14EDCCFAD9023BF2CBCC295D /* [CP] Check Pods Manifest.lock */ = {
+		03B87F24275CDA362DAE29E9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6B36A9944F689C45D2B55F10 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B473E13D360B26CAAC1DD7C8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -205,40 +239,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		224D6EA4C83BA8820197C44B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		30EFC11E7F7A6CD051DECFDD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -255,7 +255,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B2B69931795ECC87F1A19CFB /* Pods-IoReactNativeCieExample.debug.xcconfig */;
+			baseConfigurationReference = 267B50C17B72170545C13531 /* Pods-IoReactNativeCieExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -284,7 +284,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1DAD4F55D588A6FFE8722F05 /* Pods-IoReactNativeCieExample.release.xcconfig */;
+			baseConfigurationReference = AFCC9792D772D996FFA3A1F8 /* Pods-IoReactNativeCieExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

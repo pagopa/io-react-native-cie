@@ -1,6 +1,7 @@
 import * as CieUtils from './utils';
-import * as CieManager from './manager';
+import CieManager from './manager';
 
 export { CieUtils, CieManager };
 
-export type { NfcEvent, NfcError } from './manager/types';
+export type { NfcEvent } from './manager/types';
+export type { CieAttributes } from './manager/schema';

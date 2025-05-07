@@ -1,4 +1,4 @@
-import { IoReactNativeCie } from './native';
+import { IoReactNativeCie } from '../native';
 
 /**
  * Checks if the device has NFC hardware capabilities.
