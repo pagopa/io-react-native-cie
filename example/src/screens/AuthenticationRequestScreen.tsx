@@ -1,45 +1,27 @@
 import {
   ButtonSolid,
   ContentWrapper,
-  IOColors,
-  IOPictograms,
-  IOText,
   IOToast,
   ListItemHeader,
   OTPInput,
-  Pictogram,
 } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEventName } from '@pagopa/io-react-native-cie';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { Alert, Platform, StyleSheet, View } from 'react-native';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import Animated, { LinearTransition } from 'react-native-reanimated';
+import { Alert, StyleSheet, View } from 'react-native';
 import { CiewWebView } from '../components/CiewWebView';
 import { LoadingSpinnerOverlay } from '../components/LoadingSpinnerOverlay';
-
-type Status = 'idle' | 'reading' | 'error' | 'success';
-
-const pictogramMap: Record<Status, IOPictograms> = {
-  idle: 'smile',
-  reading: Platform.select({ ios: 'nfcScaniOS', default: 'nfcScanAndroid' }),
-  success: 'success',
-  error: 'fatalError',
-};
-
-const statusColorMap: Record<Status, IOColors> = {
-  idle: 'blueIO-500',
-  reading: 'blueIO-500',
-  success: 'success-500',
-  error: 'error-500',
-};
+import {
+  ReadStatusComponent,
+  type ReadStatus,
+} from '../components/ReadStatusComponent';
 
 export function AuthenticationRequestScreen() {
   const navigation = useNavigation();
 
   const [authUrl, setAuthUrl] = useState<string>();
   const [code, setCode] = useState<string>('');
-  const [status, setStatus] = useState<Status>('idle');
+  const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEventName>();
   const [progress, setProgress] = useState<number>(0);
 
@@ -111,29 +93,7 @@ export function AuthenticationRequestScreen() {
   return (
     <ContentWrapper style={styles.container}>
       <View style={styles.progressContainer}>
-        <Animated.View layout={LinearTransition}>
-          <AnimatedCircularProgress
-            size={300}
-            width={10}
-            fill={progress}
-            tintColor={IOColors[statusColorMap[status]]}
-            backgroundColor={IOColors['grey-50']}
-            padding={8}
-          >
-            {() => (
-              <>
-                <Animated.View layout={LinearTransition}>
-                  <Pictogram size={180} name={pictogramMap[status]} />
-                </Animated.View>
-                {event && (
-                  <IOText font="DMMono" color="black" weight="Bold" size={12}>
-                    {event}
-                  </IOText>
-                )}
-              </>
-            )}
-          </AnimatedCircularProgress>
-        </Animated.View>
+        <ReadStatusComponent progress={progress} status={status} step={event} />
       </View>
       <View>
         <ListItemHeader label="Insert card PIN" />
