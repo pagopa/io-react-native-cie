@@ -4,6 +4,8 @@ import {
   IOColors,
   IOPictograms,
   IOToast,
+  ListItemHeader,
+  OTPInput,
   Pictogram,
 } from '@pagopa/io-app-design-system';
 import { CieManager } from '@pagopa/io-react-native-cie';
@@ -30,6 +32,7 @@ const statusColorMap: Record<Status, IOColors> = {
 };
 
 export function AuthenticationScreen() {
+  const [code, setCode] = useState<string>('');
   const [status, setStatus] = useState<Status>('idle');
   const [progress, setProgress] = useState<number>(0);
   const [result, setResult] = useState<any>(null);
@@ -48,10 +51,8 @@ export function AuthenticationScreen() {
       IOToast.error('Error reading attributes');
     });
 
-    CieManager.addAttributesSuccessListener((attributes) => {
-      setResult(attributes);
-      setStatus('success');
-      IOToast.success('Attributes read successfully');
+    CieManager.addSuccessListener((uri) => {
+      console.log('NFC Success', uri);
     });
 
     return () => {
@@ -68,8 +69,9 @@ export function AuthenticationScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startReadingAttributes();
+      await CieManager.startReading(code, '');
     } catch (e) {
+      console.error('Error starting reading', JSON.stringify(e, null, 2));
       IOToast.error('Unable to start reading attributes');
     }
   };
@@ -107,8 +109,13 @@ export function AuthenticationScreen() {
       >
         {result && <DebugPrettyPrint data={result} />}
       </Animated.View>
+      <View>
+        <ListItemHeader label="Insert card PIN" />
+        <OTPInput secret value={code} length={8} onValueChange={setCode} />
+      </View>
       <IOButton
         label={status === 'reading' ? 'Stop reading' : 'Start reading'}
+        disabled={code.length !== 8}
         onPress={() =>
           status === 'reading' ? handleStopReading() : handleStartReading()
         }

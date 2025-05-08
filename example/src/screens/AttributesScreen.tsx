@@ -3,12 +3,13 @@ import {
   IOButton,
   IOColors,
   IOPictograms,
+  IOText,
   IOToast,
   Pictogram,
 } from '@pagopa/io-app-design-system';
-import { CieManager } from '@pagopa/io-react-native-cie';
+import { CieManager, type NfcEventName } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
@@ -16,8 +17,8 @@ import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
 type Status = 'idle' | 'reading' | 'error' | 'success';
 
 const pictogramMap: Record<Status, IOPictograms> = {
-  idle: 'nfcScaniOS',
-  reading: 'nfcScaniOS',
+  idle: 'smile',
+  reading: Platform.select({ ios: 'nfcScaniOS', default: 'nfcScanAndroid' }),
   success: 'success',
   error: 'fatalError',
 };
@@ -31,26 +32,30 @@ const statusColorMap: Record<Status, IOColors> = {
 
 export function AttributesScreen() {
   const [status, setStatus] = useState<Status>('idle');
+  const [event, setEvent] = useState<NfcEventName>();
   const [progress, setProgress] = useState<number>(0);
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
     // Start listening for NFC events
-    CieManager.addEventListener((event) => {
-      console.info('NFC Event', event);
-      setProgress(event.progress * 100);
+    CieManager.addEventListener((e) => {
+      console.info('NFC Event', e);
+      setEvent(e.name);
+      setProgress(e.progress * 100);
     });
 
     CieManager.addErrorListener((error) => {
       console.error('NFC Error', error);
       setResult(error);
       setStatus('error');
+      setEvent(undefined);
       IOToast.error('Error reading attributes');
     });
 
     CieManager.addAttributesSuccessListener((attributes) => {
       setResult(attributes);
       setStatus('success');
+      setEvent(undefined);
       IOToast.success('Attributes read successfully');
     });
 
@@ -66,7 +71,7 @@ export function AttributesScreen() {
     setProgress(0);
     setResult(null);
     setStatus('reading');
-
+    setEvent(undefined);
     try {
       await CieManager.startReadingAttributes();
     } catch (e) {
@@ -90,7 +95,7 @@ export function AttributesScreen() {
             width={10}
             fill={progress}
             tintColor={IOColors[statusColorMap[status]]}
-            backgroundColor={IOColors['grey-50']}
+            backgroundColor={IOColors['grey-100']}
             padding={8}
           >
             {() => (
@@ -101,6 +106,13 @@ export function AttributesScreen() {
           </AnimatedCircularProgress>
         </Animated.View>
       </View>
+      <Animated.View style={styles.eventContainer} layout={LinearTransition}>
+        {event && (
+          <IOText color="black" weight="Bold" size={12}>
+            {event}
+          </IOText>
+        )}
+      </Animated.View>
       <Animated.View
         style={styles.attributesContainer}
         layout={LinearTransition}
@@ -128,6 +140,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  eventContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   attributesContainer: {
     justifyContent: 'flex-end',

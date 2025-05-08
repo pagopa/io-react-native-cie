@@ -173,7 +173,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           }
         }
       )
-      promise.resolve(Unit)
+      promise.resolve(null)
     } catch (e: Exception) {
       ModuleException.UNKNOWN_EXCEPTION.reject(
         promise,
@@ -185,7 +185,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun startReading(
     pin: String,
-    url: String,
+    authenticationUrl: String,
     timeout: Int = 10000,
     promise: Promise,
   ) {
@@ -199,7 +199,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       return;
     }
 
-    cieSdk.withUrl(url)
+    cieSdk.withUrl(authenticationUrl)
 
     try {
       cieSdk.startReading(
@@ -253,9 +253,9 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           }
         }
       )
-      promise.resolve(Unit)
+      promise.resolve(null)
     } catch (e: Exception) {
-      ModuleException.CIE_READ_FAILED.reject(
+      ModuleException.UNKNOWN_EXCEPTION.reject(
         promise,
         Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
       )
@@ -275,29 +275,19 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       val ex: Exception
     ) {
       PIN_REGEX_NOT_VALID(Exception("PIN_REGEX_NOT_VALID")),
-      CIE_READ_FAILED(Exception("CIE_READ_FAILED")),
       UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
 
       fun reject(
-        promise: Promise, vararg args: Pair<String, *>
+        promise: Promise, vararg args: Pair<String, String>
       ) {
         exMap(*args).let {
           promise.reject(it.first, ex.message, it.second)
         }
       }
 
-      private fun exMap(vararg args: Pair<String, *>): Pair<String, WritableMap> {
+      private fun exMap(vararg args: Pair<String, String>): Pair<String, WritableMap> {
         val writableMap = WritableNativeMap()
-        args.forEach {
-          when (val value = it.second) {
-            is String -> writableMap.putString(it.first, value)
-            is Int -> writableMap.putInt(it.first, value)
-            is Double -> writableMap.putDouble(it.first, value)
-            is Boolean -> writableMap.putBoolean(it.first, value)
-            is WritableMap -> writableMap.putMap(it.first, value)
-            null -> writableMap.putNull(it.first)
-          }
-        }
+        args.forEach { writableMap.putString(it.first, it.second) }
         return Pair(this.ex.message ?: "UNKNOWN", writableMap)
       }
     }

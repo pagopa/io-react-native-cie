@@ -1,4 +1,7 @@
-import { ToastProvider } from '@pagopa/io-app-design-system';
+import {
+  IOThemeContextProvider,
+  ToastProvider,
+} from '@pagopa/io-app-design-system';
 import {
   createStaticNavigation,
   type StaticParamList,
@@ -40,9 +43,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView>
-        <ToastProvider>
-          <Navigation />
-        </ToastProvider>
+        <IOThemeContextProvider theme={'light'}>
+          <ToastProvider>
+            <Navigation />
+          </ToastProvider>
+        </IOThemeContextProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
