@@ -1,40 +1,50 @@
 # @pagopa/io-react-native-cie
 
-Module to handle CIE operations natively on react-native apps.
+Module to handle CIE (Electronic Identity Card) operations natively in React Native apps.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Check NFC Status](#check-nfc-status)
+  - [Read CIE Attributes](#read-cie-attributes)
+  - [Start CIE Authentication](#start-cie-authentication)
+- [Types](#types)
+- [Error Codes](#error-codes)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
 ```sh
 npm install @pagopa/io-react-native-cie
-
 # or
-
 yarn add @pagopa/io-react-native-cie
 ```
 
 ## Usage
 
-The package is splitted in two modules:
+The package is split into two modules:
 
-- [CieUtils](/src/utils): provides functions to check NFC status of the device
-- [CieManager](/src/manager): provides CIE read capabilities
+- [CieUtils](/src/utils): Provides functions to check the NFC status of the device.
+- [CieManager](/src/manager): Provides CIE read and authentication capabilities.
 
-### Check NFC status
+### Check NFC Status
 
-**NOTE**: these methods are applicable only for Android devices, since iOS devices has always NFC available
+**Note:** These methods are applicable only for Android devices, as iOS devices always have NFC available.
 
 ```typescript
 import { CieUtils } from '@pagopa/io-react-native-cie';
 
-// Check if device has NFC
+// Check if the device has NFC
 await CieUtils.hasNfcFeature();
 // Check if NFC is enabled
 await CieUtils.isNfcEnabled();
-// Conveniend method to check if CIE authentication is available
+// Convenient method to check if CIE authentication is supported
 await CieUtils.isCieAuthenticationSupported();
 ```
 
-### Read CIE attributes
+### Read CIE Attributes
 
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
@@ -43,27 +53,27 @@ import { CieManager } from '@pagopa/io-react-native-cie';
 CieManager.addEventListener((event) => {
   console.info('NFC Event', event);
 });
-// Start listenting for NFC errro events
+// Start listening for NFC error events
 CieManager.addErrorListener((error) => {
   console.info('NFC Error', error);
 });
-// Start listeing for attributes read success
+// Start listening for attribute read success
 CieManager.addAttributesSuccessListener((attributes) => {
   console.log('CIE type:', attributes.type);
 });
 
 // Start reading CIE attributes
 CieManager.startReadingAttributes().then(() => {
-  console.log('Attributes read started');
+  console.log('Attribute reading started');
 });
 
 // Stop reading when finished
 CieManager.stopReading().then(() => {
-  console.log('Attributes read stopped');
+  console.log('Attribute reading stopped');
 });
 ```
 
-### Start CIE authentication
+### Start CIE Authentication
 
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
@@ -72,13 +82,13 @@ import { CieManager } from '@pagopa/io-react-native-cie';
 CieManager.addEventListener((event) => {
   console.info('NFC Event', event);
 });
-// Start listenting for NFC errro events
+// Start listening for NFC error events
 CieManager.addErrorListener((error) => {
   console.info('NFC Error', error);
 });
-// Start listeing for authentication read success
+// Start listening for authentication success
 CieManager.addSuccessListener((url) => {
-  console.log('Authentication url:', url);
+  console.log('Authentication URL:', url);
 });
 
 // Start reading CIE for authentication
@@ -96,16 +106,18 @@ CieManager.stopReading().then(() => {
 
 ### `CieAttributes`
 
-Object containing the base64 encoded CIE attributes and the NFC chip type (manifacturer)
+Object containing the base64-encoded CIE attributes and the NFC chip type (manufacturer):
 
 ```typescript
 type CieAttributes = {
-  type: CieType,
-  base64: string,
-});
+  type: CieType;
+  base64: string;
+};
 ```
 
 ### `CieType`
+
+Possible values for the NFC chip manufacturer:
 
 | Name      |
 | --------- |
@@ -118,7 +130,7 @@ type CieAttributes = {
 
 ### `NfcEvent`
 
-Event emitted during the CIE reading process. Containes the event name and the reading progress value associated
+Event emitted during the CIE reading process. Contains the event name and the associated reading progress value.
 
 ```typescript
 type NfcEvent = {
@@ -129,7 +141,7 @@ type NfcEvent = {
 
 ### `NfcEventName`
 
-List of all the events emitted
+List of all events emitted during the CIE reading process:
 
 | Name                          |
 | ----------------------------- |
@@ -165,7 +177,7 @@ List of all the events emitted
 
 ### `NfcError`
 
-Error that could be emitted during the CIE reading process. Containes the error name, an optional message and the number of failed reading attemps (if applicable)
+Error that may be emitted during the CIE reading process. Contains the error name, an optional message, and the number of failed reading attempts (if applicable).
 
 ```typescript
 type NfcError = {
@@ -177,7 +189,7 @@ type NfcError = {
 
 ### `NfcErrorName`
 
-List of all the error that can be emitted
+List of all possible errors that can be emitted:
 
 | Error Name                   |
 | ---------------------------- |
