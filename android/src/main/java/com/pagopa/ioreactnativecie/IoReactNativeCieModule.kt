@@ -85,15 +85,8 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun isCieAuthenticationSupported(promise: Promise) {
-    try {
-      cieSdk.isCieAuthenticationSupported().let {
-        promise.resolve(it)
-      }
-    } catch (e: Exception) {
-      ModuleException.UNKNOWN_EXCEPTION.reject(
-        promise,
-        Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+    cieSdk.isCieAuthenticationSupported().apply {
+      promise.resolve(this)
     }
   }
 

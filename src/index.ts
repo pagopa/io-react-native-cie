@@ -6,7 +6,11 @@ export { CieUtils, CieManager };
 export type {
   NfcEvent,
   NfcEventName,
+  NfcEventHandler,
   NfcError,
   NfcErrorName,
+  NfcErrorHandler,
   CieAttributes,
+  AttributesSuccessHandler,
+  SuccessHandler,
 } from './manager/types';
