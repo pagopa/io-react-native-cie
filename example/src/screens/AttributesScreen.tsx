@@ -1,6 +1,6 @@
 import {
+  ButtonSolid,
   ContentWrapper,
-  IOButton,
   IOColors,
   IOPictograms,
   IOText,
@@ -99,26 +99,26 @@ export function AttributesScreen() {
           >
             {() => (
               <>
-                <Pictogram size={180} name={pictogramMap[status]} />
+                <Animated.View layout={LinearTransition}>
+                  <Pictogram size={180} name={pictogramMap[status]} />
+                </Animated.View>
+                {event && (
+                  <IOText font="DMMono" color="black" weight="Bold" size={12}>
+                    {event}
+                  </IOText>
+                )}
               </>
             )}
           </AnimatedCircularProgress>
         </Animated.View>
       </View>
-      <Animated.View style={styles.eventContainer} layout={LinearTransition}>
-        {event && (
-          <IOText color="black" weight="Bold" size={12}>
-            {event}
-          </IOText>
-        )}
-      </Animated.View>
       <Animated.View
         style={styles.attributesContainer}
         layout={LinearTransition}
       >
         {result && <DebugPrettyPrint data={result} />}
       </Animated.View>
-      <IOButton
+      <ButtonSolid
         label={status === 'reading' ? 'Stop reading' : 'Start reading'}
         onPress={() =>
           status === 'reading' ? handleStopReading() : handleStartReading()

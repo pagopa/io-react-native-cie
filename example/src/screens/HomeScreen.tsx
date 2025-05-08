@@ -1,7 +1,9 @@
 import {
+  ButtonLink,
+  ButtonSolid,
   ContentWrapper,
   Divider,
-  IOButton,
+  IOColors,
   ListItemInfo,
   Pictogram,
   VStack,
@@ -34,7 +36,7 @@ export function HomeScreen() {
       <View style={styles.pictogramContainer}>
         <Pictogram name="cie" size={180} />
       </View>
-      <View>
+      <View style={styles.infoContainer}>
         <ListItemInfo
           value="Has NFC"
           endElement={{
@@ -69,27 +71,25 @@ export function HomeScreen() {
         />
       </View>
       <VStack space={8}>
-        <IOButton
-          variant="solid"
+        <ButtonSolid
           label="Read CIE attributes"
           icon="creditCard"
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('Attributes')}
         />
-        <IOButton
-          variant="solid"
+        <ButtonSolid
           label="Start CIE authentication"
           icon="cieLetter"
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('AuthenticationRequest')}
         />
-        <Divider />
-        <IOButton
-          variant="solid"
-          label="Open NFC Settings"
-          icon="coggle"
-          onPress={() => CieUtils.openNfcSettings()}
-        />
+        <View style={styles.buttonContainer}>
+          <ButtonLink
+            label="Open NFC Settings"
+            icon="coggle"
+            onPress={() => CieUtils.openNfcSettings()}
+          />
+        </View>
       </VStack>
     </ContentWrapper>
   );
@@ -106,5 +106,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  infoContainer: {
+    backgroundColor: IOColors['grey-50'],
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    paddingVertical: 16,
   },
 });

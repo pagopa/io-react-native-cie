@@ -104,7 +104,7 @@ export type NfcError = z.infer<typeof NfcError>;
  * Represent the CIE attributes containing the CIE type
  */
 export const CieAttributes = z.object({
-  atr: CieType,
+  type: CieType,
   base64: z.string(),
 });
 

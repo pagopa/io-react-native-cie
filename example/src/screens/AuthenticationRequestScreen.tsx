@@ -1,6 +1,6 @@
 import {
+  ButtonSolid,
   ContentWrapper,
-  IOButton,
   IOColors,
   IOPictograms,
   IOText,
@@ -12,7 +12,7 @@ import {
 import { CieManager, type NfcEventName } from '@pagopa/io-react-native-cie';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { Alert, Platform, StyleSheet, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { CiewWebView } from '../components/CiewWebView';
@@ -21,8 +21,8 @@ import { LoadingSpinnerOverlay } from '../components/LoadingSpinnerOverlay';
 type Status = 'idle' | 'reading' | 'error' | 'success';
 
 const pictogramMap: Record<Status, IOPictograms> = {
-  idle: 'nfcScaniOS',
-  reading: 'nfcScaniOS',
+  idle: 'smile',
+  reading: Platform.select({ ios: 'nfcScaniOS', default: 'nfcScanAndroid' }),
   success: 'success',
   error: 'fatalError',
 };
@@ -122,24 +122,24 @@ export function AuthenticationRequestScreen() {
           >
             {() => (
               <>
-                <Pictogram size={180} name={pictogramMap[status]} />
+                <Animated.View layout={LinearTransition}>
+                  <Pictogram size={180} name={pictogramMap[status]} />
+                </Animated.View>
+                {event && (
+                  <IOText font="DMMono" color="black" weight="Bold" size={12}>
+                    {event}
+                  </IOText>
+                )}
               </>
             )}
           </AnimatedCircularProgress>
         </Animated.View>
       </View>
-      <Animated.View style={styles.eventContainer} layout={LinearTransition}>
-        {event && (
-          <IOText color="black" weight="Bold" size={12}>
-            {event}
-          </IOText>
-        )}
-      </Animated.View>
       <View>
         <ListItemHeader label="Insert card PIN" />
         <OTPInput secret value={code} length={8} onValueChange={setCode} />
       </View>
-      <IOButton
+      <ButtonSolid
         label={status === 'reading' ? 'Stop reading' : 'Start reading'}
         disabled={code.length !== 8}
         onPress={() =>

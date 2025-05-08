@@ -156,7 +156,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
               .emit("onAttributesSuccess", WritableNativeMap().apply {
                 putString("base64", Base64.encodeToString(atr, Base64.DEFAULT))
-                putString("atr", Atr(atr).getCieType().name)
+                putString("type", Atr(atr).getCieType().name)
               })
           }
 
