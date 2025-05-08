@@ -14,3 +14,5 @@ export type {
   AttributesSuccessHandler,
   SuccessHandler,
 } from './manager/types';
+
+export type { CieError, CieErrorCodes } from './errors';
