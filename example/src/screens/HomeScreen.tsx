@@ -81,7 +81,7 @@ export function HomeScreen() {
           label="Start CIE authentication"
           icon="cieLetter"
           disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('Authentication')}
+          onPress={() => navigation.navigate('AuthenticationRequest')}
         />
         <Divider />
         <IOButton

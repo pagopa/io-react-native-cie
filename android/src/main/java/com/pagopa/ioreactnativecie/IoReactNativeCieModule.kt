@@ -1,6 +1,7 @@
 package com.pagopa.ioreactnativecie
 
 import android.util.Base64
+import android.util.Log
 import com.facebook.react.bridge.Callback
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -11,6 +12,7 @@ import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.pagopa.ioreactnativecie.cie.Atr
 import com.pagopa.ioreactnativecie.cie.CieType
+import it.pagopa.io.app.cie.CieLogger
 import it.pagopa.io.app.cie.CieSDK
 import it.pagopa.io.app.cie.cie.CieAtrCallback
 import it.pagopa.io.app.cie.cie.NfcError
@@ -212,7 +214,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
                 putString("name", event.name)
                 putDouble(
                   "progress",
-                  (event.numeratorForKindOf.toDouble() / NfcEvent.totalKindOfNumeratorEvent.toDouble())
+                  (event.numerator.toDouble() / NfcEvent.totalNumeratorEvent.toDouble())
                 )
               })
           }
@@ -236,9 +238,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun onSuccess(url: String) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onReadSuccess", WritableNativeMap().apply {
-                putString("url", url)
-              })
+              .emit("onReadSuccess", url)
           }
 
           override fun onError(e: NetworkError) {

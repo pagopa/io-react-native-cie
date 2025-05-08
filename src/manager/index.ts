@@ -4,6 +4,7 @@ import {
   type AttributesSuccessHandler,
   type NfcErrorHandler,
   type NfcEventHandler,
+  type SuccessHandler,
 } from './types';
 
 const EVENT_LISTENER_NAME = 'onEvent';
@@ -16,7 +17,7 @@ const DEFAULT_TIMEOUT = 10000;
 const eventHandlers: NfcEventHandler[] = [];
 const errorHandlers: NfcErrorHandler[] = [];
 const attributesSuccessHandlers: AttributesSuccessHandler[] = [];
-const successHandlers: NfcEventHandler[] = [];
+const successHandlers: SuccessHandler[] = [];
 
 const eventEmitter =
   Platform.OS === 'android'
@@ -54,7 +55,7 @@ const addAttributesSuccessListener = (listener: AttributesSuccessHandler) => {
   }
 };
 
-const addSuccessListener = (listener: NfcEventHandler) => {
+const addSuccessListener = (listener: SuccessHandler) => {
   if (!successHandlers.includes(listener)) {
     successHandlers.push(listener);
   }

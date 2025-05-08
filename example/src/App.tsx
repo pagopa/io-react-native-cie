@@ -11,6 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AttributesScreen } from './screens/AttributesScreen';
+import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
 
@@ -26,6 +27,12 @@ const RootStack = createNativeStackNavigator({
       screen: AttributesScreen,
       options: {
         title: 'Read CIE attributes',
+      },
+    },
+    AuthenticationRequest: {
+      screen: AuthenticationRequestScreen,
+      options: {
+        title: 'CIE authentication',
       },
     },
     Authentication: {
