@@ -116,7 +116,7 @@ Use this method with caution, as it will remove all registered listeners for all
 
 ### Update alert messages (iOS only)
 
-On iOS, when performing NFC operations, the system presents a modal dialog to the user to guide them through the NFC reading process. This dialog can display custom alert messages to provide clear instructions, feedback, or error information during the CIE (Electronic Identity Card) reading and authentication process. Customizing these messages helps improve the user experience by making the process more intuitive and informative, as recommended by Apple's [Core NFC best practices](https://developer.apple.com/documentation/corenfc/nfcndefreadersession/3043855-alertmessage).
+On iOS, when performing NFC operations, the system presents a modal dialog to the user to guide them through the NFC reading process. This dialog can display custom alert messages to provide clear instructions, feedback, or error information during the CIE (Electronic Identity Card) reading and authentication process.
 
 You can update these alert messages at runtime using the `CieManager.setAlertMessage(key, value)` method. This allows you to tailor the dialog content to your application's context or localization needs. **Note:** This feature is only available on iOS; on Android, alert messages are not supported and calling this method has no effect.
 
@@ -150,8 +150,6 @@ The following keys can be used to customize specific messages shown in the iOS N
 | `genericError`         | Generic error message for unexpected failures.                                |
 
 These keys map to different stages and error conditions in the NFC reading process. Setting them appropriately ensures users receive clear, actionable feedback throughout the CIE operation.
-
-**Best Practice:** Always provide concise, user-friendly, and localized messages. For more details on customizing NFC alert messages, see the [Apple documentation](https://developer.apple.com/documentation/corenfc/nfcndefreadersession/3043855-alertmessage).
 
 ### Read CIE Attributes
 
