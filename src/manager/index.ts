@@ -1,23 +1,23 @@
-import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import { IoReactNativeCie } from '../native';
 import {
+  AlertMessageKey,
   type AttributesSuccessHandler,
   type NfcErrorHandler,
   type NfcEventHandler,
   type SuccessHandler,
 } from './types';
 
-const EVENT_LISTENER_NAME = 'onEvent';
-const ERROR_LISTENER_NAME = 'onError';
-const ATTRIBUTES_SUCCESS_LISTENER_NAME = 'onAttributesSuccess';
-const SUCCESS_LISTENER_NAME = 'onReadSuccess';
+enum CieManagerEvent {
+  OnEvent = 'onEvent',
+  OnError = 'onError',
+  OnAttributesSuccess = 'onAttributesSuccess',
+  OnSuccess = 'onReadSuccess',
+}
 
 const DEFAULT_TIMEOUT = 10000;
 
-const eventEmitter =
-  Platform.OS === 'android'
-    ? new NativeEventEmitter() // On Android, NativeEventEmitter constructor does not take arguments
-    : new NativeEventEmitter(NativeModules.IoReactNativeCie); // On iOS, it requires the native module
+const eventEmitter = new NativeEventEmitter(NativeModules.IoReactNativeCie);
 
 /**
  * Adds an event listener for NFC events during CIE operations.
@@ -34,7 +34,10 @@ const eventEmitter =
  * ```
  */
 const addEventListener = (listener: NfcEventHandler) => {
-  const subscription = eventEmitter.addListener(EVENT_LISTENER_NAME, listener);
+  const subscription = eventEmitter.addListener(
+    CieManagerEvent.OnEvent,
+    listener
+  );
   return subscription.remove;
 };
 
@@ -53,7 +56,10 @@ const addEventListener = (listener: NfcEventHandler) => {
  * ```
  */
 const addErrorListener = (listener: NfcErrorHandler) => {
-  const subscription = eventEmitter.addListener(ERROR_LISTENER_NAME, listener);
+  const subscription = eventEmitter.addListener(
+    CieManagerEvent.OnError,
+    listener
+  );
   return subscription.remove;
 };
 
@@ -73,7 +79,7 @@ const addErrorListener = (listener: NfcErrorHandler) => {
  */
 const addAttributesSuccessListener = (listener: AttributesSuccessHandler) => {
   const subscription = eventEmitter.addListener(
-    ATTRIBUTES_SUCCESS_LISTENER_NAME,
+    CieManagerEvent.OnAttributesSuccess,
     listener
   );
   return subscription.remove;
@@ -95,7 +101,7 @@ const addAttributesSuccessListener = (listener: AttributesSuccessHandler) => {
  */
 const addSuccessListener = (listener: SuccessHandler) => {
   const subscription = eventEmitter.addListener(
-    SUCCESS_LISTENER_NAME,
+    CieManagerEvent.OnSuccess,
     listener
   );
   return subscription.remove;
@@ -110,14 +116,15 @@ const addSuccessListener = (listener: SuccessHandler) => {
  * ```
  */
 const removeAllListeners = () => {
-  eventEmitter.removeAllListeners(EVENT_LISTENER_NAME);
-  eventEmitter.removeAllListeners(ERROR_LISTENER_NAME);
-  eventEmitter.removeAllListeners(ATTRIBUTES_SUCCESS_LISTENER_NAME);
-  eventEmitter.removeAllListeners(SUCCESS_LISTENER_NAME);
+  Object.values(CieManagerEvent).forEach((event) => {
+    eventEmitter.removeAllListeners(event);
+  });
 };
 
 /**
  * Sets a custom Identity Provider (IDP) URL for authentication.
+ * If not set, will be used the default IDP URL:
+ * https://idserver.servizicie.interno.gov.it/idp/
  *
  * @param url - The custom IDP URL to use
  * @example
@@ -130,9 +137,25 @@ const setCustomIdpUrl = (url: string) => {
 };
 
 /**
+ * Sets an alert message for the CIE reading process.
+ *
+ * **Note**: Alert messages are only available on iOS
+ *
+ * @param key - The key of the alert message to set
+ * @param value - The value of the alert message to set
+ * @example
+ * ```typescript
+ * CieManager.setAlertMessage('readingInstructions', 'Please scan your CIE card');
+ * ```
+ */
+export const setAlertMessage = (key: AlertMessageKey, value: string) => {
+  return IoReactNativeCie.setAlertMessage(key, value);
+};
+
+/**
  * Starts the process of reading attributes from the CIE card.
  *
- * @param timeout - Optional timeout in milliseconds (default: 10000)
+ * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
  * @returns Promise<void>
  * @throws {CieError} If reading attributes fails
  * @example
@@ -153,7 +176,7 @@ const startReadingAttributes = async (
  *
  * @param pin - The CIE card PIN code
  * @param authenticationUrl - The authentication service URL
- * @param timeout - Optional timeout in milliseconds (default: 10000)
+ * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
  * @returns Promise<void>
  * @throws {CieError} If could not start reading for authentication
  * @example
@@ -173,6 +196,9 @@ const startReading = async (
 
 /**
  * Stops any ongoing CIE reading process.
+ *
+ * **Note:** Android only. On iOS the reading process is stopped by closing
+ * the system NFC overlay
  *
  * @returns Promise<void>
  * @example

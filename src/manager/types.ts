@@ -78,6 +78,26 @@ export const NfcErrorName = z.enum([
 export type NfcErrorName = z.infer<typeof NfcErrorName>;
 
 /**
+ * Represent the key of the alert message that can be set during the CIE reading process
+ *
+ * **Note**: Alert messages are only available on iOS
+ */
+export const AlertMessageKey = z.enum([
+  'readingInstructions',
+  'moreTags',
+  'readingInProgress',
+  'readingSuccess',
+  'invalidCard',
+  'tagLost',
+  'cardLocked',
+  'wrongPin1AttemptLeft',
+  'wrongPin2AttemptLeft',
+  'genericError',
+]);
+
+export type AlertMessageKey = z.infer<typeof AlertMessageKey>;
+
+/**
  * Event emitted during the CIE reading process.
  * It contains the name of the event and the progress of the reading up to that point
  */

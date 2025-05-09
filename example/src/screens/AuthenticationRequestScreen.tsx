@@ -8,7 +8,13 @@ import {
 import { CieManager, type NfcEventName } from '@pagopa/io-react-native-cie';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { CiewWebView } from '../components/CiewWebView';
 import { LoadingSpinnerOverlay } from '../components/LoadingSpinnerOverlay';
 import {
@@ -93,22 +99,31 @@ export function AuthenticationRequestScreen() {
   }
 
   return (
-    <ContentWrapper style={styles.container}>
-      <View style={styles.progressContainer}>
-        <ReadStatusComponent progress={progress} status={status} step={event} />
-      </View>
-      <View>
-        <ListItemHeader label="Insert card PIN" />
-        <OTPInput secret value={code} length={8} onValueChange={setCode} />
-      </View>
-      <ButtonSolid
-        label={status === 'reading' ? 'Stop reading' : 'Start reading'}
-        disabled={code.length !== 8}
-        onPress={() =>
-          status === 'reading' ? handleStopReading() : handleStartReading()
-        }
-      />
-    </ContentWrapper>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <ContentWrapper style={styles.container}>
+        <View style={styles.progressContainer}>
+          <ReadStatusComponent
+            progress={progress}
+            status={status}
+            step={event}
+          />
+        </View>
+        <View>
+          <ListItemHeader label="Insert card PIN" />
+          <OTPInput secret value={code} length={8} onValueChange={setCode} />
+        </View>
+        <ButtonSolid
+          label={status === 'reading' ? 'Stop reading' : 'Start reading'}
+          disabled={code.length !== 8}
+          onPress={() =>
+            status === 'reading' ? handleStopReading() : handleStartReading()
+          }
+        />
+      </ContentWrapper>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -118,6 +133,7 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 24,
     backgroundColor: 'white',
+    paddingBottom: 24,
   },
   progressContainer: {
     flex: 1,

@@ -36,24 +36,11 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     CieSDK.withContext(currentActivity)
   };
 
-  private var listenerCount = 0
+  @ReactMethod
+  fun addListener(eventName: String) { }
 
   @ReactMethod
-  fun addListener(eventName: String) {
-    if (listenerCount == 0) {
-      // Set up any upstream listeners or background tasks as necessary
-    }
-
-    listenerCount += 1
-  }
-
-  @ReactMethod
-  fun removeListeners(count: Int) {
-    listenerCount -= count
-    if (listenerCount == 0) {
-      // Remove upstream listeners, stop unnecessary background tasks
-    }
-  }
+  fun removeListeners(count: Int) { }
 
   @ReactMethod
   fun hasNfcFeature(promise: Promise) {
@@ -104,6 +91,12 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+  fun setAlertMessage(key: String, value: String, promise: Promise) {
+    // Android does not support alert messages for NFC reading
+    promise.resolve(null)
+  }
+
+  @ReactMethod
   fun setCustomIdpUrl(url: String) {
     cieSdk.withCustomIdpUrl(url)
   }
@@ -120,7 +113,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun event(event: NfcEvent) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onEvent", WritableNativeMap().apply {
+              .emit(EVENT_ON_EVENT, WritableNativeMap().apply {
                 putString("name", event.name)
                 putDouble(
                   "progress",
@@ -132,7 +125,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun error(error: NfcError) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onError", WritableNativeMap().apply {
+              .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
                 putString("name", error.name)
                 error.numberOfAttempts?.let {
                   putInt("numberOfAttempts", it)
@@ -147,7 +140,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun onSuccess(atr: ByteArray) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onAttributesSuccess", WritableNativeMap().apply {
+              .emit(EVENT_ON_ATTRIBUTES_SUCCESS, WritableNativeMap().apply {
                 putString("base64", Base64.encodeToString(atr, Base64.DEFAULT))
                 putString("type", Atr(atr).getCieType().name)
               })
@@ -156,7 +149,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun onError(error: NfcError) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onError", WritableNativeMap().apply {
+              .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
                 putString("name", error.name)
                 error.numberOfAttempts?.let {
                   putInt("numberOfAttempts", it)
@@ -203,7 +196,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun event(event: NfcEvent) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onEvent", WritableNativeMap().apply {
+              .emit(EVENT_ON_EVENT, WritableNativeMap().apply {
                 putString("name", event.name)
                 putDouble(
                   "progress",
@@ -215,7 +208,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun error(error: NfcError) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onError", WritableNativeMap().apply {
+              .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
                 putString("name", error.name)
                 error.numberOfAttempts?.let {
                   putInt("numberOfAttempts", it)
@@ -231,13 +224,13 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           override fun onSuccess(url: String) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onReadSuccess", url)
+              .emit(EVENT_ON_READ_SUCCESS, url)
           }
 
           override fun onError(e: NetworkError) {
             this@IoReactNativeCieModule.reactApplicationContext
               .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-              .emit("onError", WritableNativeMap().apply {
+              .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
                 putString("name", e.name)
                 e.msg?.let {
                   putString("message", it)
@@ -263,6 +256,11 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   companion object {
     const val NAME = "IoReactNativeCie"
     const val ERROR_USER_INFO_KEY = "error"
+
+    const val EVENT_ON_EVENT = "onEvent"
+    const val EVENT_ON_ERROR = "onError"
+    const val EVENT_ON_ATTRIBUTES_SUCCESS = "onAttributesSuccess"
+    const val EVENT_ON_READ_SUCCESS = "onReadSuccess"
 
     private enum class ModuleException(
       val ex: Exception

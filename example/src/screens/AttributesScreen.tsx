@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 24,
     backgroundColor: 'white',
+    paddingBottom: 24,
   },
   progressContainer: {
     flex: 1,
