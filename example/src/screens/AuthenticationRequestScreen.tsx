@@ -27,19 +27,19 @@ export function AuthenticationRequestScreen() {
 
   useEffect(() => {
     // Start listening for NFC events
-    CieManager.addEventListener((e) => {
+    const unsubscribeEvent = CieManager.addEventListener((e) => {
       console.info('NFC Event', e);
       setProgress(e.progress * 100);
       setEvent(e.name);
     });
 
-    CieManager.addErrorListener((error) => {
+    const unsubscribeError = CieManager.addErrorListener((error) => {
       setStatus('error');
       setEvent(undefined);
       Alert.alert('Error', JSON.stringify(error, undefined, 2));
     });
 
-    CieManager.addSuccessListener((uri) => {
+    const unsubscribeSuccess = CieManager.addSuccessListener((uri) => {
       setStatus('success');
       setEvent(undefined);
       navigation.dispatch(
@@ -49,7 +49,9 @@ export function AuthenticationRequestScreen() {
 
     return () => {
       // Remove the event listener on unmount
-      CieManager.removeAllListeners();
+      unsubscribeEvent();
+      unsubscribeError();
+      unsubscribeSuccess();
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };

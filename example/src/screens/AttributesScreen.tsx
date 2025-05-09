@@ -21,29 +21,32 @@ export function AttributesScreen() {
 
   useEffect(() => {
     // Start listening for NFC events
-    CieManager.addEventListener((e) => {
+    const unsubscribeEvent = CieManager.addEventListener((e) => {
       console.info('NFC Event', e);
       setEvent(e.name);
       setProgress(e.progress * 100);
     });
 
-    CieManager.addErrorListener((error) => {
+    const unsubscribeError = CieManager.addErrorListener((error) => {
       setResult(error);
       setStatus('error');
       setEvent(undefined);
       IOToast.error('Error while reading attributes');
     });
 
-    CieManager.addAttributesSuccessListener((attributes) => {
-      setResult(attributes);
-      setStatus('success');
-      setEvent(undefined);
-      IOToast.success('Attributes read successfully');
-    });
+    const unsubscribeAttributesSuccess =
+      CieManager.addAttributesSuccessListener((attributes) => {
+        setResult(attributes);
+        setStatus('success');
+        setEvent(undefined);
+        IOToast.success('Attributes read successfully');
+      });
 
     return () => {
       // Remove the event listener on unmount
-      CieManager.removeAllListeners();
+      unsubscribeEvent();
+      unsubscribeError();
+      unsubscribeAttributesSuccess();
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
