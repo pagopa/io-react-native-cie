@@ -1,3 +1,5 @@
+[![npm version](https://img.shields.io/npm/v/@pagopa/io-react-native-cie.svg)](https://www.npmjs.com/package/@pagopa/io-react-native-cie) [![MIT License](https://img.shields.io/github/license/pagopa/io-react-native-cie)](LICENSE)
+
 # @pagopa/io-react-native-cie
 
 Module to handle CIE (Electronic Identity Card) operations natively in React Native apps.
@@ -5,8 +7,11 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 ## Table of Contents
 
 - [Installation](#installation)
+- [Example App](#example-app)
 - [Usage](#usage)
   - [Check NFC Status](#check-nfc-status)
+  - [Listening for events](#listening-for-events)
+  - [Update alert messages (iOS Only)](#update-alert-messages-ios-only)
   - [Read CIE Attributes](#read-cie-attributes)
   - [Start CIE Authentication](#start-cie-authentication)
 - [Types](#types)
@@ -21,6 +26,12 @@ npm install @pagopa/io-react-native-cie
 # or
 yarn add @pagopa/io-react-native-cie
 ```
+
+## Example App
+
+A fully working example app demonstrating how to use this package is available in the [example](./example) directory.
+
+To run the example app, follow the instructions in [example/README.md](./example/README.md).
 
 ## Usage
 
@@ -44,62 +55,125 @@ await CieUtils.isNfcEnabled();
 await CieUtils.isCieAuthenticationSupported();
 ```
 
-### Read CIE Attributes
+### Listening for events
+
+This library uses an event-driven approach to deliver information about the CIE reading and authentication process. Events are emitted to notify your application about the progress, success, or failure of NFC operations. You can subscribe to these events using the provided listener methods, and it is important to unsubscribe when the operation is complete or when your component unmounts to avoid memory leaks.
+
+#### How it works
+
+- **Event emission:** As the CIE reading or authentication progresses, the library emits events such as reading progress updates, successful reads, or errors.
+- **Event listeners:** You can register callback functions to handle these events using methods like `addEventListener`, `addErrorListener`, `addSuccessListener`, and `addAttributesSuccessListener`.
+- **Unsubscribing:** Each listener method returns a function that you should call to remove the listener when it is no longer needed (e.g., in a React component's cleanup function).
+
+#### Example: Listening and unsubscribing
+
+```typescript
+import { CieManager } from '@pagopa/io-react-native-cie';
+import { useEffect } from 'react';
+
+const useCieEvents = () => {
+  useEffect(() => {
+    // Listen for NFC events
+    const removeEventListener = CieManager.addEventListener((event) => {
+      console.info('NFC Event', event);
+    });
+
+    // Listen for NFC errors
+    const removeErrorListener = CieManager.addErrorListener((error) => {
+      console.error('NFC Error', error);
+    });
+
+    // Listen for successful attribute reads
+    const removeAttributesSuccessListener =
+      CieManager.addAttributesSuccessListener((attributes) => {
+        console.log('CIE Attributes:', attributes);
+      });
+
+    // Cleanup: unsubscribe from all events when the component unmounts
+    return () => {
+      removeEventListener();
+      removeErrorListener();
+      removeAttributesSuccessListener();
+    };
+  }, []);
+};
+```
+
+You can use similar patterns for authentication events with `addSuccessListener`. Always ensure you unsubscribe from listeners to prevent memory leaks and unintended side effects.
+
+#### Removing all listeners
+
+If you need to remove all event listeners at once (for example, during a global cleanup or when resetting the NFC state), you can use the `CieManager.removeAllListeners()` method. This is useful when you want to ensure that no event handlers remain active, especially in scenarios where multiple listeners may have been registered.
 
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
 
-// Start listening for NFC events
-CieManager.addEventListener((event) => {
-  console.info('NFC Event', event);
-});
-// Start listening for NFC error events
-CieManager.addErrorListener((error) => {
-  console.info('NFC Error', error);
-});
-// Start listening for attribute read success
-CieManager.addAttributesSuccessListener((attributes) => {
-  console.log('CIE type:', attributes.type);
-});
+// Remove all event listeners
+CieManager.removeAllListeners();
+```
 
-// Start reading CIE attributes
-CieManager.startReadingAttributes().then(() => {
-  console.log('Attribute reading started');
-});
+Use this method with caution, as it will remove all registered listeners for all event types. In most cases, prefer removing only the listeners you have registered, but `removeAllListeners` can be helpful for global teardown or debugging situations.
 
-// Stop reading when finished
-CieManager.stopReading().then(() => {
-  console.log('Attribute reading stopped');
-});
+### Update alert messages (iOS only)
+
+TBD
+
+### Read CIE Attributes
+
+CIE attributes are key data stored on the Electronic Identity Card (CIE), such as the card type and a base64-encoded string of attributes.
+
+Use `startReadingAttributes(timeout?)` to begin reading. The optional `timeout` parameter (in milliseconds, default: 10000) controls how long the operation will wait. If the process fails to start (e.g., NFC unavailable), it throws an error.
+
+#### Example
+
+```typescript
+import { CieManager } from '@pagopa/io-react-native-cie';
+
+const removeAttributesSuccessListener = CieManager.addAttributesSuccessListener(
+  (attributes) => {
+    console.log('CIE type:', attributes.type);
+    console.log('CIE base64:', attributes.base64);
+  }
+);
+
+// Start with default timeout
+CieManager.startReadingAttributes()
+  .then(() => {
+    console.log('Attribute reading started');
+  })
+  .catch((error) => {
+    console.error('Error starting attribute reading:', error);
+  });
+
+// When done, remove the listener
+// removeAttributesSuccessListener();
 ```
 
 ### Start CIE Authentication
 
+To start the CIE reading and authentication process, use `startReading(pin, authenticationUrl, timeout?)`. This function requires the CIE card PIN, the authentication service URL, and an optional timeout in milliseconds (default: 10000). It returns a Promise and throws if the process fails to start (e.g., invalid PIN format/length, NFC unavailable).
+
+#### Example
+
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
 
-// Start listening for NFC events
-CieManager.addEventListener((event) => {
-  console.info('NFC Event', event);
-});
-// Start listening for NFC error events
-CieManager.addErrorListener((error) => {
-  console.info('NFC Error', error);
-});
-// Start listening for authentication success
-CieManager.addSuccessListener((url) => {
+// Listen for authentication success
+const removeSuccessListener = CieManager.addSuccessListener((url) => {
   console.log('Authentication URL:', url);
 });
 
-// Start reading CIE for authentication
-CieManager.startReading().then(() => {
-  console.log('Authentication started');
-});
+// Start authentication with default timeout
+CieManager.startReading('12345678', 'https://idserver.example.com/auth')
+  .then(() => {
+    console.log('Authentication started');
+  })
+  .catch((error) => {
+    console.error('Error starting authentication:', error);
+  });
 
-// Stop reading when finished
-CieManager.stopReading().then(() => {
-  console.log('Authentication stopped');
-});
+// When done, remove the listener
+// removeSuccessListener();
 ```
 
 ## Types
