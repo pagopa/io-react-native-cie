@@ -98,9 +98,9 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 24,
-    gap: 24,
     backgroundColor: 'white',
+    paddingBottom: 24,
+    gap: 24,
   },
   pictogramContainer: {
     flex: 1,

@@ -1,4 +1,5 @@
 import {
+  HeaderSecondLevel,
   IOThemeContextProvider,
   ToastProvider,
 } from '@pagopa/io-app-design-system';
@@ -20,7 +21,9 @@ const RootStack = createNativeStackNavigator({
     Home: {
       screen: HomeScreen,
       options: {
-        headerShown: false,
+        header: () => (
+          <HeaderSecondLevel title="@pagopa/io-react-native-cie" type="base" />
+        ),
       },
     },
     Attributes: {
