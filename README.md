@@ -157,6 +157,8 @@ These keys map to different stages and error conditions in the NFC reading proce
 
 CIE attributes are key data stored on the Electronic Identity Card (CIE), such as the card type and a base64-encoded string of attributes.
 
+> **Note:** The `timeout` parameter is available only on **Android**. On iOS, this parameter is ignored.
+
 Use `startReadingAttributes(timeout?)` to begin reading. The optional `timeout` parameter (in milliseconds, default: 10000) controls how long the operation will wait. If the process fails to start (e.g., NFC unavailable), it throws an error.
 
 #### Example
@@ -186,7 +188,11 @@ CieManager.startReadingAttributes()
 
 ### Start CIE Authentication
 
-To start the CIE reading and authentication process, use `startReading(pin, authenticationUrl, timeout?)`. This function requires the CIE card PIN, the authentication service URL, and an optional timeout in milliseconds (default: 10000). It returns a Promise and throws if the process fails to start (e.g., invalid PIN format/length, NFC unavailable).
+To start the CIE reading and authentication process, use `startReading(pin, authenticationUrl, timeout?)`. This function requires the CIE card PIN, the authentication service URL, and an optional timeout in milliseconds (default: 10000).
+
+> **Note:** The `timeout` parameter is available only on **Android**. On iOS, this parameter is ignored.
+
+It returns a Promise and throws if the process fails to start (e.g., invalid PIN format/length, NFC unavailable).
 
 #### Example
 
