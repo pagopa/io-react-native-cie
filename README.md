@@ -116,9 +116,11 @@ Use this method with caution, as it will remove all registered listeners for all
 
 ### Update alert messages (iOS only)
 
-On iOS, when performing NFC operations, the system presents a modal dialog to the user to guide them through the NFC reading process. This dialog can display custom alert messages to provide clear instructions, feedback, or error information during the CIE (Electronic Identity Card) reading and authentication process.
+**Note:** This feature is only available on iOS; on Android, alert messages are not supported and calling this method has no effect.
 
-You can update these alert messages at runtime using the `CieManager.setAlertMessage(key, value)` method. This allows you to tailor the dialog content to your application's context or localization needs. **Note:** This feature is only available on iOS; on Android, alert messages are not supported and calling this method has no effect.
+On iOS, when performing NFC operations, the system presents a modal dialog to the user to guide them through the NFC reading process. This dialog can display custom alert messages to provide clear instructions, feedback, or error information during the CIE reading and authentication process.
+
+You can update these alert messages at runtime using the `CieManager.setAlertMessage(key, value)` method. This allows you to tailor the dialog content to your application's context or localization needs.
 
 #### Usage Example
 
