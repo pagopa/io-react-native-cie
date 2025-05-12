@@ -33,7 +33,6 @@ export function AuthenticationRequestScreen() {
   useEffect(() => {
     // Start listening for NFC events
     const unsubscribeEvent = CieManager.addEventListener((e) => {
-      console.info('NFC Event', e);
       setEvent(e);
     });
 
