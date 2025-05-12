@@ -60,12 +60,12 @@ The library uses an event-driven approach for NFC operations. Events are emitted
 
 #### Available Event Listeners
 
-| Listener Type                  | Description                | Cleanup Method           |
-| ------------------------------ | -------------------------- | ------------------------ |
-| `addEventListener`             | General NFC events         | Returns cleanup function |
-| `addErrorListener`             | NFC error events           | Returns cleanup function |
-| `addSuccessListener`           | Authentication success     | Returns cleanup function |
-| `addAttributesSuccessListener` | Successful attribute reads | Returns cleanup function |
+| Listener Type                  | Description                |
+| ------------------------------ | -------------------------- |
+| `addEventListener`             | General NFC events         |
+| `addErrorListener`             | NFC error events           |
+| `addSuccessListener`           | Authentication success     |
+| `addAttributesSuccessListener` | Successful attribute reads |
 
 #### Example Usage
 
@@ -73,25 +73,25 @@ The library uses an event-driven approach for NFC operations. Events are emitted
 import { CieManager } from '@pagopa/io-react-native-cie';
 import { useEffect } from 'react';
 
-const useCieEvents = () => {
-  useEffect(() => {
-    // Register all event listeners
-    const cleanup = [
-      CieManager.addEventListener((event) => {
-        console.info('NFC Event', event);
-      }),
-      CieManager.addErrorListener((error) => {
-        console.error('NFC Error', error);
-      }),
-      CieManager.addAttributesSuccessListener((attributes) => {
-        console.log('CIE Attributes:', attributes);
-      }),
-    ];
+// ...
 
-    // Cleanup all listeners on unmount
-    return () => cleanup.forEach((remove) => remove());
-  }, []);
-};
+useEffect(() => {
+  // Register all event listeners
+  const cleanup = [
+    CieManager.addEventListener((event) => {
+      console.info('NFC Event', event);
+    }),
+    CieManager.addErrorListener((error) => {
+      console.error('NFC Error', error);
+    }),
+    CieManager.addSuccessListener((url) => {
+      console.log('Auth url:', url);
+    }),
+  ];
+
+  // Cleanup all listeners on unmount
+  return () => cleanup.forEach((remove) => remove());
+}, []);
 ```
 
 To remove all listeners at once:
@@ -100,7 +100,7 @@ To remove all listeners at once:
 CieManager.removeAllListeners();
 ```
 
-### iOS Alert Messages
+### Alert Messages
 
 **Note:** This feature is iOS-only; Android does not support alert messages.
 
@@ -115,18 +115,18 @@ CieManager.setAlertMessage(
 
 #### Available Alert Messages
 
-| Key                    | Description              | Default Message                                     |
-| ---------------------- | ------------------------ | --------------------------------------------------- |
-| `readingInstructions`  | Pre-scan instructions    | "Hold your iPhone near your CIE card"               |
-| `moreTags`             | Multiple tags detected   | "Multiple tags detected. Please remove all but one" |
-| `readingInProgress`    | Reading status           | "Reading in progress..."                            |
-| `readingSuccess`       | Success message          | "Reading completed successfully"                    |
-| `invalidCard`          | Invalid card error       | "Invalid or unsupported card"                       |
-| `tagLost`              | Card removed error       | "Card removed during reading"                       |
-| `cardLocked`           | Card locked error        | "Card is locked"                                    |
-| `wrongPin1AttemptLeft` | PIN warning (1 attempt)  | "Wrong PIN. 1 attempt remaining"                    |
-| `wrongPin2AttemptLeft` | PIN warning (2 attempts) | "Wrong PIN. 2 attempts remaining"                   |
-| `genericError`         | Generic error            | "An error occurred"                                 |
+| Key                    | Description              | Default Message                                                                                   |
+| ---------------------- | ------------------------ | ------------------------------------------------------------------------------------------------- |
+| `readingInstructions`  | Pre-scan instructions    | "Tieni la tua carta d’identità elettronica sul retro dell’iPhone, nella parte in alto."           |
+| `moreTags`             | Multiple tags detected   | "Sono stati individuate più carte NFC. Per favore avvicina una carta alla volta."                 |
+| `readingInProgress`    | Reading status           | "Lettura in corso, tieni ferma la carta ancora per qualche secondo..."                            |
+| `readingSuccess`       | Success message          | "Lettura avvenuta con successo. Puoi rimuovere la carta mentre completiamo la verifica dei dati." |
+| `invalidCard`          | Invalid card error       | "La carta utilizzata non sembra essere una Carta di Identità Elettronica (CIE)."                  |
+| `tagLost`              | Card removed error       | "Hai rimosso la carta troppo presto."                                                             |
+| `cardLocked`           | Card locked error        | "Carta CIE bloccata"                                                                              |
+| `wrongPin1AttemptLeft` | PIN warning (1 attempt)  | "PIN errato, hai ancora 1 tentativo"                                                              |
+| `wrongPin2AttemptLeft` | PIN warning (2 attempts) | "PIN errato, hai ancora 2 tentativi"                                                              |
+| `genericError`         | Generic error            | "Qualcosa è andato storto"                                                                        |
 
 ### Reading CIE Data
 
@@ -159,31 +159,35 @@ CieManager.startReading(
 
 ## Types
 
-### Core Types
-
 ```typescript
 type CieAttributes = {
-  type: CieType;
+  type: string;
   base64: string;
-};
-
-type CieType = 'NXP' | 'GEMALTO' | 'GEMALTO_2' | 'ACTALIS' | 'ST' | 'UNKNOWN';
-
-type NfcEvent = {
-  name: NfcEventName;
-  progress: number;
-};
-
-type NfcError = {
-  name: string;
-  message?: string;
-  attempts?: number;
 };
 ```
 
-## Error Handling
+Contains the CIE type (NFC manufacturer) and the attributres in base64 encoded string format.
+CIE type can be one of the following: `NXP`, `GEMALTO`, `GEMALTO_2`, `ACTALIS`, `ST`, `UNKNOWN`
 
-### Common Error Codes
+```typescript
+type NfcEvent = {
+  name: string;
+  progress: number;
+};
+```
+
+Event sent during the CIE reading process. Contains the name of the event and the progress associated. Event names and order may vary based on the platform.
+
+```typescript
+type NfcError = {
+  name: string;
+  message?: string;
+};
+```
+
+Error event that may be sent during the CIE reading process. Contains the name of the error and an optional message. Error names and order may vary based on the platform.
+
+## Errors
 
 | Error Code            | Platform    | Description        | Resolution                                |
 | --------------------- | ----------- | ------------------ | ----------------------------------------- |

@@ -38,7 +38,6 @@ export type NfcEvent = z.infer<typeof NfcEvent>;
 export const NfcError = z.object({
   name: z.string(),
   message: z.string().optional(),
-  attempts: z.coerce.number().optional(),
 });
 
 export type NfcError = z.infer<typeof NfcError>;
