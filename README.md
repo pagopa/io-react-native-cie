@@ -10,11 +10,11 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 - [Example App](#example-app)
 - [Usage](#usage)
   - [Check NFC Status](#check-nfc-status)
-  - [Event System](#event-system)
-  - [iOS Alert Messages](#ios-alert-messages)
   - [Reading CIE Data](#reading-cie-data)
+  - [Event System](#event-system)
+  - [Alert Messages](#alert-messages)
 - [Types](#types)
-- [Error Handling](#error-handling)
+- [Errors](#errors)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -52,6 +52,34 @@ await CieUtils.hasNfcFeature();
 await CieUtils.isNfcEnabled();
 // Convenient method to check if CIE authentication is supported
 await CieUtils.isCieAuthenticationSupported();
+```
+### Reading CIE Data
+
+#### Reading Attributes
+
+Read CIE attributes (card type and base64-encoded data):
+
+```typescript
+import { CieManager } from '@pagopa/io-react-native-cie';
+
+// Start reading with optional timeout (Android only)
+CieManager.startReadingAttributes(timeout?: number)
+  .then(() => console.log('Reading started'))
+  .catch(error => console.error('Error:', error));
+```
+
+#### Authentication
+
+Start the CIE authentication process:
+
+```typescript
+CieManager.startReading(
+  pin: string,           // CIE card PIN
+  authenticationUrl: string,  // Service URL
+  timeout?: number       // Optional timeout (Android only)
+)
+  .then(() => console.log('Authentication started'))
+  .catch(error => console.error('Error:', error));
 ```
 
 ### Event System
@@ -102,7 +130,12 @@ CieManager.removeAllListeners();
 
 ### Alert Messages
 
+
 **Note:** This feature is iOS-only; Android does not support alert messages.
+
+<img src="https://github.com/user-attachments/assets/eaebf481-f5db-476e-977e-25653606ab8f" width="200" />
+<img src="https://github.com/user-attachments/assets/dc7c5a81-954e-43dc-a468-6a2c17620eb1" width="200" />
+<img src="https://github.com/user-attachments/assets/f473b67f-c5a5-4954-9e85-f2b414db53f2" width="200" />
 
 Customize the NFC dialog messages using `CieManager.setAlertMessage(key, value)`:
 
@@ -128,34 +161,7 @@ CieManager.setAlertMessage(
 | `wrongPin2AttemptLeft` | PIN warning (2 attempts) | "PIN errato, hai ancora 2 tentativi"                                                              |
 | `genericError`         | Generic error            | "Qualcosa è andato storto"                                                                        |
 
-### Reading CIE Data
 
-#### Reading Attributes
-
-Read CIE attributes (card type and base64-encoded data):
-
-```typescript
-import { CieManager } from '@pagopa/io-react-native-cie';
-
-// Start reading with optional timeout (Android only)
-CieManager.startReadingAttributes(timeout?: number)
-  .then(() => console.log('Reading started'))
-  .catch(error => console.error('Error:', error));
-```
-
-#### Authentication
-
-Start the CIE authentication process:
-
-```typescript
-CieManager.startReading(
-  pin: string,           // CIE card PIN
-  authenticationUrl: string,  // Service URL
-  timeout?: number       // Optional timeout (Android only)
-)
-  .then(() => console.log('Authentication started'))
-  .catch(error => console.error('Error:', error));
-```
 
 ## Types
 
