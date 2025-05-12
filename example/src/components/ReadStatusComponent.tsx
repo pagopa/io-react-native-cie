@@ -4,7 +4,7 @@ import {
   IOText,
   Pictogram,
 } from '@pagopa/io-app-design-system';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
@@ -32,7 +32,7 @@ type Props = {
 
 export const ReadStatusComponent = ({ progress = 0, status, step }: Props) => {
   return (
-    <Animated.View layout={LinearTransition}>
+    <Animated.View layout={LinearTransition} style={styles.container}>
       <AnimatedCircularProgress
         size={300}
         width={10}
@@ -46,7 +46,7 @@ export const ReadStatusComponent = ({ progress = 0, status, step }: Props) => {
             <Animated.View layout={LinearTransition}>
               <Pictogram size={180} name={pictogramMap[status]} />
             </Animated.View>
-            {step && (
+            {status === 'reading' && step && (
               <IOText font="DMMono" color="black" weight="Bold" size={12}>
                 {step}
               </IOText>
@@ -57,3 +57,11 @@ export const ReadStatusComponent = ({ progress = 0, status, step }: Props) => {
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

@@ -1,7 +1,6 @@
 import {
   ButtonLink,
   ButtonSolid,
-  ContentWrapper,
   Divider,
   IOColors,
   ListItemInfo,
@@ -11,7 +10,7 @@ import {
 import { CieUtils } from '@pagopa/io-react-native-cie';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useAppStateActive } from '../hooks/useAppStateActive';
 
 export function HomeScreen() {
@@ -32,7 +31,7 @@ export function HomeScreen() {
   );
 
   return (
-    <ContentWrapper style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.pictogramContainer}>
         <Pictogram name="cie" size={180} />
       </View>
@@ -91,15 +90,14 @@ export function HomeScreen() {
           />
         </View>
       </VStack>
-    </ContentWrapper>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingBottom: 24,
+    marginHorizontal: 24,
     gap: 24,
   },
   pictogramContainer: {

@@ -1,5 +1,6 @@
 import {
   HeaderSecondLevel,
+  IOColors,
   IOThemeContextProvider,
   ToastProvider,
 } from '@pagopa/io-app-design-system';
@@ -17,6 +18,11 @@ import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
 
 const RootStack = createNativeStackNavigator({
+  screenOptions: {
+    contentStyle: {
+      backgroundColor: IOColors.white,
+    },
+  },
   screens: {
     Home: {
       screen: HomeScreen,

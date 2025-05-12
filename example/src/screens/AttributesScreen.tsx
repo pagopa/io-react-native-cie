@@ -1,11 +1,7 @@
-import {
-  ButtonSolid,
-  ContentWrapper,
-  IOToast,
-} from '@pagopa/io-app-design-system';
+import { ButtonSolid, IOToast } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
 import {
@@ -19,30 +15,26 @@ export function AttributesScreen() {
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
-    // Start listening for NFC events
-    const unsubscribeEvent = CieManager.addEventListener((e) => {
-      setEvent(e);
-    });
-
-    const unsubscribeError = CieManager.addErrorListener((error) => {
-      setResult(error);
-      setStatus('error');
-      setEvent(undefined);
-      IOToast.error('Error while reading attributes');
-    });
-
-    const unsubscribeAttributesSuccess =
+    const cleanup = [
+      // Start listening for NFC events
+      CieManager.addEventListener(setEvent),
+      // Start listening for errors
+      CieManager.addErrorListener((error) => {
+        setResult(error);
+        setStatus('error');
+        IOToast.error('Error while reading attributes');
+      }),
+      // Start listening for attributes success
       CieManager.addAttributesSuccessListener((attributes) => {
         setResult(attributes);
         setStatus('success');
         IOToast.success('Attributes read successfully');
-      });
+      }),
+    ];
 
     return () => {
       // Remove the event listener on unmount
-      unsubscribeEvent();
-      unsubscribeError();
-      unsubscribeAttributesSuccess();
+      cleanup.forEach((remove) => remove());
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
@@ -52,7 +44,7 @@ export function AttributesScreen() {
     setEvent(undefined);
     setResult(null);
     setStatus('reading');
-    setEvent(undefined);
+
     try {
       await CieManager.startReadingAttributes();
     } catch (e) {
@@ -69,7 +61,7 @@ export function AttributesScreen() {
   };
 
   return (
-    <ContentWrapper style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.progressContainer}>
         <ReadStatusComponent
           progress={event?.progress}
@@ -89,17 +81,15 @@ export function AttributesScreen() {
           status === 'reading' ? handleStopReading() : handleStartReading()
         }
       />
-    </ContentWrapper>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    marginHorizontal: 24,
     gap: 24,
-    backgroundColor: 'white',
-    paddingBottom: 24,
   },
   progressContainer: {
     flex: 1,

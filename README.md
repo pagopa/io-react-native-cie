@@ -10,12 +10,11 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 - [Example App](#example-app)
 - [Usage](#usage)
   - [Check NFC Status](#check-nfc-status)
-  - [Listening for events](#listening-for-events)
-  - [Update alert messages (iOS Only)](#update-alert-messages-ios-only)
-  - [Read CIE Attributes](#read-cie-attributes)
-  - [Start CIE Authentication](#start-cie-authentication)
+  - [Event System](#event-system)
+  - [iOS Alert Messages](#ios-alert-messages)
+  - [Reading CIE Data](#reading-cie-data)
 - [Types](#types)
-- [Error Codes](#error-codes)
+- [Error Handling](#error-handling)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -55,17 +54,20 @@ await CieUtils.isNfcEnabled();
 await CieUtils.isCieAuthenticationSupported();
 ```
 
-### Listening for events
+### Event System
 
-This library uses an event-driven approach to deliver information about the CIE reading and authentication process. Events are emitted to notify your application about the progress, success, or failure of NFC operations. You can subscribe to these events using the provided listener methods, and it is important to unsubscribe when the operation is complete or when your component unmounts to avoid memory leaks.
+The library uses an event-driven approach for NFC operations. Events are emitted to notify your application about progress, success, or failure. Each listener method returns a cleanup function that should be called when the operation is complete or when your component unmounts.
 
-#### How it works
+#### Available Event Listeners
 
-- **Event emission:** As the CIE reading or authentication progresses, the library emits events such as reading progress updates, successful reads, or errors.
-- **Event listeners:** You can register callback functions to handle these events using methods like `addEventListener`, `addErrorListener`, `addSuccessListener`, and `addAttributesSuccessListener`.
-- **Unsubscribing:** Each listener method returns a function that you should call to remove the listener when it is no longer needed (e.g., in a React component's cleanup function).
+| Listener Type                  | Description                | Cleanup Method           |
+| ------------------------------ | -------------------------- | ------------------------ |
+| `addEventListener`             | General NFC events         | Returns cleanup function |
+| `addErrorListener`             | NFC error events           | Returns cleanup function |
+| `addSuccessListener`           | Authentication success     | Returns cleanup function |
+| `addAttributesSuccessListener` | Successful attribute reads | Returns cleanup function |
 
-#### Example: Listening and unsubscribing
+#### Example Usage
 
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
@@ -73,192 +75,105 @@ import { useEffect } from 'react';
 
 const useCieEvents = () => {
   useEffect(() => {
-    // Listen for NFC events
-    const removeEventListener = CieManager.addEventListener((event) => {
-      console.info('NFC Event', event);
-    });
-
-    // Listen for NFC errors
-    const removeErrorListener = CieManager.addErrorListener((error) => {
-      console.error('NFC Error', error);
-    });
-
-    // Listen for successful attribute reads
-    const removeAttributesSuccessListener =
+    // Register all event listeners
+    const cleanup = [
+      CieManager.addEventListener((event) => {
+        console.info('NFC Event', event);
+      }),
+      CieManager.addErrorListener((error) => {
+        console.error('NFC Error', error);
+      }),
       CieManager.addAttributesSuccessListener((attributes) => {
         console.log('CIE Attributes:', attributes);
-      });
+      }),
+    ];
 
-    // Cleanup: unsubscribe from all events when the component unmounts
-    return () => {
-      removeEventListener();
-      removeErrorListener();
-      removeAttributesSuccessListener();
-    };
+    // Cleanup all listeners on unmount
+    return () => cleanup.forEach((remove) => remove());
   }, []);
 };
 ```
 
-You can use similar patterns for authentication events with `addSuccessListener`. Always ensure you unsubscribe from listeners to prevent memory leaks and unintended side effects.
-
-#### Removing all listeners
-
-If you need to remove all event listeners at once (for example, during a global cleanup or when resetting the NFC state), you can use the `CieManager.removeAllListeners()` method. This is useful when you want to ensure that no event handlers remain active, especially in scenarios where multiple listeners may have been registered.
+To remove all listeners at once:
 
 ```typescript
-import { CieManager } from '@pagopa/io-react-native-cie';
-
-// Remove all event listeners
 CieManager.removeAllListeners();
 ```
 
-Use this method with caution, as it will remove all registered listeners for all event types. In most cases, prefer removing only the listeners you have registered, but `removeAllListeners` can be helpful for global teardown or debugging situations.
+### iOS Alert Messages
 
-### Update alert messages (iOS only)
+**Note:** This feature is iOS-only; Android does not support alert messages.
 
-**Note:** This feature is only available on iOS; on Android, alert messages are not supported and calling this method has no effect.
-
-On iOS, when performing NFC operations, the system presents a modal dialog to the user to guide them through the NFC reading process. This dialog can display custom alert messages to provide clear instructions, feedback, or error information during the CIE reading and authentication process.
-
-You can update these alert messages at runtime using the `CieManager.setAlertMessage(key, value)` method. This allows you to tailor the dialog content to your application's context or localization needs.
-
-#### Usage Example
+Customize the NFC dialog messages using `CieManager.setAlertMessage(key, value)`:
 
 ```typescript
-import { CieManager } from '@pagopa/io-react-native-cie';
-
-// Set a custom instruction message for the NFC dialog
 CieManager.setAlertMessage(
   'readingInstructions',
   'Hold your iPhone near your CIE card to begin scanning.'
 );
 ```
 
-#### Available Alert Message Keys
+#### Available Alert Messages
 
-The following keys can be used to customize specific messages shown in the iOS NFC dialog:
+| Key                    | Description              | Default Message                                     |
+| ---------------------- | ------------------------ | --------------------------------------------------- |
+| `readingInstructions`  | Pre-scan instructions    | "Hold your iPhone near your CIE card"               |
+| `moreTags`             | Multiple tags detected   | "Multiple tags detected. Please remove all but one" |
+| `readingInProgress`    | Reading status           | "Reading in progress..."                            |
+| `readingSuccess`       | Success message          | "Reading completed successfully"                    |
+| `invalidCard`          | Invalid card error       | "Invalid or unsupported card"                       |
+| `tagLost`              | Card removed error       | "Card removed during reading"                       |
+| `cardLocked`           | Card locked error        | "Card is locked"                                    |
+| `wrongPin1AttemptLeft` | PIN warning (1 attempt)  | "Wrong PIN. 1 attempt remaining"                    |
+| `wrongPin2AttemptLeft` | PIN warning (2 attempts) | "Wrong PIN. 2 attempts remaining"                   |
+| `genericError`         | Generic error            | "An error occurred"                                 |
 
-| Key                    | Description                                                                   |
-| ---------------------- | ----------------------------------------------------------------------------- |
-| `readingInstructions`  | Instructions shown before scanning starts (e.g., how to position the card).   |
-| `moreTags`             | Prompt shown when multiple NFC tags are detected; asks user to remove extras. |
-| `readingInProgress`    | Message shown while the card is being read.                                   |
-| `readingSuccess`       | Message shown when the card has been read successfully.                       |
-| `invalidCard`          | Error shown if the detected card is not valid or not supported.               |
-| `tagLost`              | Error shown if the card is removed or lost during reading.                    |
-| `cardLocked`           | Error shown if the card is locked (e.g., after too many wrong PIN attempts).  |
-| `wrongPin1AttemptLeft` | Warning shown after a wrong PIN, with 1 attempt left.                         |
-| `wrongPin2AttemptLeft` | Warning shown after a wrong PIN, with 2 attempts left.                        |
-| `genericError`         | Generic error message for unexpected failures.                                |
+### Reading CIE Data
 
-These keys map to different stages and error conditions in the NFC reading process. Setting them appropriately ensures users receive clear, actionable feedback throughout the CIE operation.
+#### Reading Attributes
 
-### Read CIE Attributes
-
-CIE attributes are key data stored on the Electronic Identity Card (CIE), such as the card type and a base64-encoded string of attributes.
-
-> **Note:** The `timeout` parameter is available only on **Android**. On iOS, this parameter is ignored.
-
-Use `startReadingAttributes(timeout?)` to begin reading. The optional `timeout` parameter (in milliseconds, default: 10000) controls how long the operation will wait. If the process fails to start (e.g., NFC unavailable), it throws an error.
-
-#### Example
+Read CIE attributes (card type and base64-encoded data):
 
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
 
-const removeAttributesSuccessListener = CieManager.addAttributesSuccessListener(
-  (attributes) => {
-    console.log('CIE type:', attributes.type);
-    console.log('base64 attributes:', attributes.base64);
-  }
-);
-
-// Start with default timeout
-CieManager.startReadingAttributes()
-  .then(() => {
-    console.log('Attribute reading started');
-  })
-  .catch((error) => {
-    console.error('Error starting attribute reading:', error);
-  });
-
-// When done, remove the listener
-// removeAttributesSuccessListener();
+// Start reading with optional timeout (Android only)
+CieManager.startReadingAttributes(timeout?: number)
+  .then(() => console.log('Reading started'))
+  .catch(error => console.error('Error:', error));
 ```
 
-### Start CIE Authentication
+#### Authentication
 
-To start the CIE reading and authentication process, use `startReading(pin, authenticationUrl, timeout?)`. This function requires the CIE card PIN, the authentication service URL, and an optional timeout in milliseconds (default: 10000).
-
-> **Note:** The `timeout` parameter is available only on **Android**. On iOS, this parameter is ignored.
-
-It returns a Promise and throws if the process fails to start (e.g., invalid PIN format/length, NFC unavailable).
-
-#### Example
+Start the CIE authentication process:
 
 ```typescript
-import { CieManager } from '@pagopa/io-react-native-cie';
-
-// Listen for authentication success
-const removeSuccessListener = CieManager.addSuccessListener((url) => {
-  console.log('Authentication URL:', url);
-});
-
-// Start authentication with default timeout
-CieManager.startReading('12345678', 'https://idserver.example.com/auth')
-  .then(() => {
-    console.log('Authentication started');
-  })
-  .catch((error) => {
-    console.error('Error starting authentication:', error);
-  });
-
-// When done, remove the listener
-// removeSuccessListener();
+CieManager.startReading(
+  pin: string,           // CIE card PIN
+  authenticationUrl: string,  // Service URL
+  timeout?: number       // Optional timeout (Android only)
+)
+  .then(() => console.log('Authentication started'))
+  .catch(error => console.error('Error:', error));
 ```
 
 ## Types
 
-### `CieAttributes`
-
-Object containing the base64-encoded CIE attributes and the NFC chip type (manufacturer):
+### Core Types
 
 ```typescript
 type CieAttributes = {
-  type: string;
+  type: CieType;
   base64: string;
 };
-```
 
-Possible values for the CIE type:
+type CieType = 'NXP' | 'GEMALTO' | 'GEMALTO_2' | 'ACTALIS' | 'ST' | 'UNKNOWN';
 
-| Name      |
-| --------- |
-| NXP       |
-| GEMALTO   |
-| GEMALTO_2 |
-| ACTALIS   |
-| ST        |
-| UNKNOWN   |
-
-### `NfcEvent`
-
-Event emitted during the CIE reading process. Contains the event name and the associated reading progress value.
-
-```typescript
 type NfcEvent = {
   name: NfcEventName;
   progress: number;
 };
-```
 
-**Note:** event names may differ on Android an iOS, refer to the specific platform native package for the error list
-
-### `NfcError`
-
-Error that may be emitted during the CIE reading process:
-
-```typescript
 type NfcError = {
   name: string;
   message?: string;
@@ -266,14 +181,14 @@ type NfcError = {
 };
 ```
 
-**Note:** error names may differ on Android an iOS, refer to the specific platform native package for the error list
+## Error Handling
 
-## Error Codes
+### Common Error Codes
 
-|         Type          |  Platform   | Description                             |
-| :-------------------: | :---------: | --------------------------------------- |
-| `PIN_REGEX_NOT_VALID` | iOS/Android | Card PIN does not match accepted format |
-|  `UNKNOWN_EXCEPTION`  | iOS/Android | Unexpected error                        |
+| Error Code            | Platform    | Description        | Resolution                                |
+| --------------------- | ----------- | ------------------ | ----------------------------------------- |
+| `PIN_REGEX_NOT_VALID` | iOS/Android | Invalid PIN format | Ensure PIN matches required format        |
+| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error   | Check device compatibility and NFC status |
 
 ## Contributing
 

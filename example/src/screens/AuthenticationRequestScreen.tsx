@@ -1,6 +1,5 @@
 import {
   ButtonSolid,
-  ContentWrapper,
   IOToast,
   ListItemHeader,
   OTPInput,
@@ -12,6 +11,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -31,29 +31,27 @@ export function AuthenticationRequestScreen() {
   const [event, setEvent] = useState<NfcEvent>();
 
   useEffect(() => {
-    // Start listening for NFC events
-    const unsubscribeEvent = CieManager.addEventListener((e) => {
-      setEvent(e);
-    });
-
-    const unsubscribeError = CieManager.addErrorListener((error) => {
-      setStatus('error');
-      setEvent(undefined);
-      Alert.alert('Error', JSON.stringify(error, undefined, 2));
-    });
-
-    const unsubscribeSuccess = CieManager.addSuccessListener((uri) => {
-      setStatus('success');
-      navigation.dispatch(
-        StackActions.replace('Authentication', { authUrl: uri })
-      );
-    });
+    const cleanup = [
+      // Start listening for NFC events
+      CieManager.addEventListener(setEvent),
+      // Start listening for errors
+      CieManager.addErrorListener((error) => {
+        setStatus('error');
+        setEvent(undefined);
+        Alert.alert('Error', JSON.stringify(error, undefined, 2));
+      }),
+      // Start listening for success
+      CieManager.addSuccessListener((uri) => {
+        setStatus('success');
+        navigation.dispatch(
+          StackActions.replace('Authentication', { authUrl: uri })
+        );
+      }),
+    ];
 
     return () => {
       // Remove the event listener on unmount
-      unsubscribeEvent();
-      unsubscribeError();
-      unsubscribeSuccess();
+      cleanup.forEach((remove) => remove());
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
@@ -70,8 +68,7 @@ export function AuthenticationRequestScreen() {
     try {
       await CieManager.startReading(code, authUrl);
     } catch (e) {
-      console.error('Error starting reading', JSON.stringify(e, null, 2));
-      IOToast.error('Unable to start reading attributes');
+      IOToast.error('Unable to start authentication');
     }
   };
 
@@ -97,9 +94,9 @@ export function AuthenticationRequestScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={styles.keyboardAvoidingView}
     >
-      <ContentWrapper style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -118,18 +115,19 @@ export function AuthenticationRequestScreen() {
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
         />
-      </ContentWrapper>
+      </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
-    padding: 16,
+    marginHorizontal: 24,
     gap: 24,
-    backgroundColor: 'white',
-    paddingBottom: 24,
   },
   progressContainer: {
     flex: 1,
