@@ -36,7 +36,6 @@ export function AttributesScreen() {
       CieManager.addAttributesSuccessListener((attributes) => {
         setResult(attributes);
         setStatus('success');
-        setEvent(undefined);
         IOToast.success('Attributes read successfully');
       });
 
@@ -58,6 +57,7 @@ export function AttributesScreen() {
     try {
       await CieManager.startReadingAttributes();
     } catch (e) {
+      setStatus('error');
       IOToast.error('Unable to start reading attributes');
     }
   };

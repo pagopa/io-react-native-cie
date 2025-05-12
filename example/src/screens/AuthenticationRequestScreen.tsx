@@ -45,7 +45,6 @@ export function AuthenticationRequestScreen() {
 
     const unsubscribeSuccess = CieManager.addSuccessListener((uri) => {
       setStatus('success');
-      setEvent(undefined);
       navigation.dispatch(
         StackActions.replace('Authentication', { authUrl: uri })
       );

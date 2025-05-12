@@ -27,7 +27,7 @@ RCT_EXTERN_METHOD(startReadingAttributes:   (NSNumber)timeout
                   withResolver:             (RCTPromiseResolveBlock)resolve
                   withRejecter:             (RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startReading:             (NSNumber)pin
+RCT_EXTERN_METHOD(startReading:             (NSString)pin
                   withAuthUrl:              (NSString)authUrl
                   withTimeout:              (NSNumber)timeout
                   withResolver:             (RCTPromiseResolveBlock)resolve
