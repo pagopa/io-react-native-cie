@@ -5,12 +5,10 @@ export { CieUtils, CieManager };
 
 export type {
   NfcEvent,
-  NfcEventName,
-  NfcEventHandler,
   NfcError,
-  NfcErrorName,
-  NfcErrorHandler,
   CieAttributes,
+  NfcEventHandler,
+  NfcErrorHandler,
   AttributesSuccessHandler,
   SuccessHandler,
 } from './manager/types';

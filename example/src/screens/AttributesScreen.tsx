@@ -3,7 +3,7 @@ import {
   ContentWrapper,
   IOToast,
 } from '@pagopa/io-app-design-system';
-import { CieManager, type NfcEventName } from '@pagopa/io-react-native-cie';
+import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
@@ -15,16 +15,14 @@ import {
 
 export function AttributesScreen() {
   const [status, setStatus] = useState<ReadStatus>('idle');
-  const [event, setEvent] = useState<NfcEventName>();
-  const [progress, setProgress] = useState<number>(0);
+  const [event, setEvent] = useState<NfcEvent>();
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
     // Start listening for NFC events
     const unsubscribeEvent = CieManager.addEventListener((e) => {
       console.info('NFC Event', e);
-      setEvent(e.name);
-      setProgress(e.progress * 100);
+      setEvent(e);
     });
 
     const unsubscribeError = CieManager.addErrorListener((error) => {
@@ -53,7 +51,7 @@ export function AttributesScreen() {
   }, []);
 
   const handleStartReading = async () => {
-    setProgress(0);
+    setEvent(undefined);
     setResult(null);
     setStatus('reading');
     setEvent(undefined);
@@ -65,7 +63,7 @@ export function AttributesScreen() {
   };
 
   const handleStopReading = () => {
-    setProgress(0);
+    setEvent(undefined);
     setResult(null);
     setStatus('idle');
     CieManager.stopReading();
@@ -74,7 +72,11 @@ export function AttributesScreen() {
   return (
     <ContentWrapper style={styles.container}>
       <View style={styles.progressContainer}>
-        <ReadStatusComponent progress={progress} status={status} step={event} />
+        <ReadStatusComponent
+          progress={event?.progress}
+          status={status}
+          step={event?.name}
+        />
       </View>
       <Animated.View
         style={styles.attributesContainer}

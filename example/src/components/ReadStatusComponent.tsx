@@ -25,18 +25,18 @@ const statusColorMap: Record<ReadStatus, IOColors> = {
 };
 
 type Props = {
-  progress: number;
+  progress?: number;
   status: ReadStatus;
   step?: string;
 };
 
-export const ReadStatusComponent = ({ progress, status, step }: Props) => {
+export const ReadStatusComponent = ({ progress = 0, status, step }: Props) => {
   return (
     <Animated.View layout={LinearTransition}>
       <AnimatedCircularProgress
         size={300}
         width={10}
-        fill={progress}
+        fill={progress * 100}
         tintColor={IOColors[statusColorMap[status]]}
         backgroundColor={IOColors['grey-100']}
         padding={8}

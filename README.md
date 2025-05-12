@@ -169,7 +169,7 @@ import { CieManager } from '@pagopa/io-react-native-cie';
 const removeAttributesSuccessListener = CieManager.addAttributesSuccessListener(
   (attributes) => {
     console.log('CIE type:', attributes.type);
-    console.log('CIE base64:', attributes.base64);
+    console.log('base64 attributes:', attributes.base64);
   }
 );
 
@@ -225,14 +225,12 @@ Object containing the base64-encoded CIE attributes and the NFC chip type (manuf
 
 ```typescript
 type CieAttributes = {
-  type: CieType;
+  type: string;
   base64: string;
 };
 ```
 
-### `CieType`
-
-Possible values for the NFC chip manufacturer:
+Possible values for the CIE type:
 
 | Name      |
 | --------- |
@@ -254,78 +252,21 @@ type NfcEvent = {
 };
 ```
 
-### `NfcEventName`
-
-List of all events emitted during the CIE reading process:
-
-| Name                          |
-| ----------------------------- |
-| ON_TAG_DISCOVERED             |
-| ON_TAG_DISCOVERED_NOT_CIE     |
-| CONNECTED                     |
-| SELECT_IAS_SERVICE_ID         |
-| SELECT_CIE_SERVICE_ID         |
-| SELECT_READ_FILE_SERVICE_ID   |
-| READ_FILE_SERVICE_ID_RESPONSE |
-| SELECT_IAS                    |
-| SELECT_CIE                    |
-| DH_INIT_GET_G                 |
-| DH_INIT_GET_P                 |
-| DH_INIT_GET_Q                 |
-| SELECT_ROOT                   |
-| SELECT_FOR_READ_FILE          |
-| READ_FILE                     |
-| INIT_EXTERNAL_AUTHENTICATION  |
-| SET_MSE                       |
-| D_H_KEY_EXCHANGE_GET_DATA     |
-| SIGN1_SELECT                  |
-| SIGN1_VERIFY_CERT             |
-| SET_CHALLENGE_RESPONSE        |
-| GET_CHALLENGE_RESPONSE        |
-| EXTERNAL_AUTHENTICATION       |
-| INTERNAL_AUTHENTICATION       |
-| GIVE_RANDOM                   |
-| VERIFY_PIN                    |
-| READ_FILE_SM                  |
-| SIGN                          |
-| SIGN_WITH_CIPHER              |
+**Note:** event names may differ on Android an iOS, refer to the specific platform native package for the error list
 
 ### `NfcError`
 
-Error that may be emitted during the CIE reading process. Contains the error name, an optional message, and the number of failed reading attempts (if applicable).
+Error that may be emitted during the CIE reading process:
 
 ```typescript
 type NfcError = {
-  name: NfcErrorName;
+  name: string;
   message?: string;
   attempts?: number;
 };
 ```
 
-### `NfcErrorName`
-
-List of all possible errors that can be emitted:
-
-| Error Name                   |
-| ---------------------------- |
-| NOT_A_CIE                    |
-| PIN_REGEX_NOT_VALID          |
-| PIN_BLOCKED                  |
-| WRONG_PIN                    |
-| APDU_ERROR                   |
-| VERIFY_SM_DATA_OBJECT_LENGTH |
-| VERIFY_SM_MAC_LENGTH         |
-| VERIFY_SM_NOT_SAME_MAC       |
-| NOT_EXPECTED_SM_TAG          |
-| CHIP_AUTH_ERROR              |
-| EXTENDED_APDU_NOT_SUPPORTED  |
-| FAIL_TO_CONNECT_WITH_TAG     |
-| TAG_LOST                     |
-| STOP_NFC_ERROR               |
-| SELECT_ROOT_EXCEPTION        |
-| GENERAL_EXCEPTION            |
-| ASN_1_NOT_RIGHT_LENGTH       |
-| ASN_1_NOT_VALID              |
+**Note:** error names may differ on Android an iOS, refer to the specific platform native package for the error list
 
 ## Error Codes
 

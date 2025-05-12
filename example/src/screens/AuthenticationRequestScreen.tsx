@@ -5,7 +5,7 @@ import {
   ListItemHeader,
   OTPInput,
 } from '@pagopa/io-app-design-system';
-import { CieManager, type NfcEventName } from '@pagopa/io-react-native-cie';
+import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
@@ -28,15 +28,13 @@ export function AuthenticationRequestScreen() {
   const [authUrl, setAuthUrl] = useState<string>();
   const [code, setCode] = useState<string>('');
   const [status, setStatus] = useState<ReadStatus>('idle');
-  const [event, setEvent] = useState<NfcEventName>();
-  const [progress, setProgress] = useState<number>(0);
+  const [event, setEvent] = useState<NfcEvent>();
 
   useEffect(() => {
     // Start listening for NFC events
     const unsubscribeEvent = CieManager.addEventListener((e) => {
       console.info('NFC Event', e);
-      setProgress(e.progress * 100);
-      setEvent(e.name);
+      setEvent(e);
     });
 
     const unsubscribeError = CieManager.addErrorListener((error) => {
@@ -68,7 +66,7 @@ export function AuthenticationRequestScreen() {
       return;
     }
 
-    setProgress(0);
+    setEvent(undefined);
     setStatus('reading');
 
     try {
@@ -80,7 +78,7 @@ export function AuthenticationRequestScreen() {
   };
 
   const handleStopReading = () => {
-    setProgress(0);
+    setEvent(undefined);
     setStatus('idle');
     CieManager.stopReading();
   };
@@ -106,9 +104,9 @@ export function AuthenticationRequestScreen() {
       <ContentWrapper style={styles.container}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
-            progress={progress}
+            progress={event?.progress}
             status={status}
-            step={event}
+            step={event?.name}
           />
         </View>
         <View>
