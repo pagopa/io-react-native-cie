@@ -1,30 +1,12 @@
-<!--- Please always add a PR description as if nobody knows anything about the context these changes come from. -->
-<!--- Even if we are all from our internal team, we may not be on the same page. -->
-<!--- Write this PR as you were contributing to a public OSS project, where nobody knows you and you have to earn their trust. -->
-<!--- This will improve our projects in the long run! Thanks. -->
+## Short description
 
-#### List of Changes
+Include a summary of the changes.
 
-<!--- Describe your changes in detail -->
+## List of changes proposed in this pull request
 
-#### Motivation and Context
+- Feature A
+- Feature B
 
-<!--- Why is this change required? What problem does it solve? -->
+## How to test
 
-#### How Has This Been Tested?
-
-<!--- Please describe in detail how you tested your changes. -->
-<!--- Include details of your testing environment, tests ran to see how -->
-<!--- your change affects other areas of the code, etc. -->
-
-#### Screenshots (if appropriate):
-
-<!--- Attach screenshots in case changes impact UI. -->
-
-#### Checklist:
-
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
-<!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
-
-- [ ] My change requires a change to the documentation.
-- [ ] I have updated the documentation accordingly.
+Describe the tests that you ran to verify your changes. Provide instructions so we can reproduce.
