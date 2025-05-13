@@ -33,7 +33,12 @@ export function AuthenticationRequestScreen() {
   useEffect(() => {
     const cleanup = [
       // Start listening for NFC events
-      CieManager.addEventListener(setEvent),
+      CieManager.addEventListener((e) => {
+        setEvent(e);
+        CieManager.setCurrentAlertMessage(
+          `Reading in progress\n ${getProgressEmojis(e.progress)}`
+        );
+      }),
       // Start listening for errors
       CieManager.addErrorListener((error) => {
         setStatus('error');
@@ -119,6 +124,17 @@ export function AuthenticationRequestScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const getProgressEmojis = (progress: number) => {
+  // Clamp progress between 0 and 1
+  progress = Math.max(0, Math.min(1, progress));
+
+  const totalDots = 10; // Length of the progress bar
+  const blueDots = Math.round(progress * totalDots);
+  const whiteDots = totalDots - blueDots;
+
+  return '🔵'.repeat(blueDots) + '⚪'.repeat(whiteDots);
+};
 
 const styles = StyleSheet.create({
   keyboardAvoidingView: {

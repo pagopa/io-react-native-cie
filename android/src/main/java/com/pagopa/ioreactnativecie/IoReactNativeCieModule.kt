@@ -96,6 +96,12 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     promise.resolve(null)
   }
 
+    @ReactMethod
+  fun setCurrentAlertMessage(value: String, promise: Promise) {
+    // Android does not support alert messages for NFC reading
+    promise.resolve(null)
+  }
+
   @ReactMethod
   fun setCustomIdpUrl(url: String) {
     cieSdk.withCustomIdpUrl(url)

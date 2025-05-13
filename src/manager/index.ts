@@ -153,6 +153,21 @@ export const setAlertMessage = (key: AlertMessageKey, value: string) => {
 };
 
 /**
+ * Updates the current displayed alert message for the CIE reading process.
+ *
+ * **Note**: Alert messages are only available on iOS
+ *
+ * @param value - The value of the alert message to set
+ * @example
+ * ```typescript
+ * CieManager.setCurrentAlertMessage('Please scan your CIE card');
+ * ```
+ */
+export const setCurrentAlertMessage = (value: string) => {
+  return IoReactNativeCie.setCurrentAlertMessage(value);
+};
+
+/**
  * Starts the process of reading attributes from the CIE card.
  *
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)

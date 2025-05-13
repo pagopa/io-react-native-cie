@@ -53,6 +53,7 @@ await CieUtils.isNfcEnabled();
 // Convenient method to check if CIE authentication is supported
 await CieUtils.isCieAuthenticationSupported();
 ```
+
 ### Reading CIE Data
 
 #### Reading Attributes
@@ -130,7 +131,6 @@ CieManager.removeAllListeners();
 
 ### Alert Messages
 
-
 **Note:** This feature is iOS-only; Android does not support alert messages.
 
 <img src="https://github.com/user-attachments/assets/eaebf481-f5db-476e-977e-25653606ab8f" width="200" />
@@ -144,6 +144,12 @@ CieManager.setAlertMessage(
   'readingInstructions',
   'Hold your iPhone near your CIE card to begin scanning.'
 );
+```
+
+You can update the currently displayed alert message (for example, during the reading process) using `CieManager.setCurrentAlertMessage(value)`:
+
+```typescript
+CieManager.setCurrentAlertMessage('Reading in progress, 80% completed');
 ```
 
 #### Available Alert Messages
@@ -160,8 +166,6 @@ CieManager.setAlertMessage(
 | `wrongPin1AttemptLeft` | PIN warning (1 attempt)  | "PIN errato, hai ancora 1 tentativo"                                                              |
 | `wrongPin2AttemptLeft` | PIN warning (2 attempts) | "PIN errato, hai ancora 2 tentativi"                                                              |
 | `genericError`         | Generic error            | "Qualcosa è andato storto"                                                                        |
-
-
 
 ## Types
 

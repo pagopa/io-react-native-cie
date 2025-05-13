@@ -21,6 +21,8 @@ RCT_EXTERN_METHOD(openNfcSettings:  (RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(setAlertMessage:  (NSString)key
                   withValue:        (NSString)value)
 
+RCT_EXTERN_METHOD(setCurrentAlertMessage:  (NSString)value)
+
 RCT_EXTERN_METHOD(setCustomIdpUrl:  (NSString)url)
 
 RCT_EXTERN_METHOD(startReadingAttributes:   (NSNumber)timeout
