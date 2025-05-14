@@ -57,7 +57,7 @@ jobs:
               JIRA_COMMENT_MARKDOWN+="- [$ISSUE](https://pagopa.atlassian.net/browse/$ISSUE)"$'\n'
             done
 
-            echo "Gira comment markdown: $JIRA_COMMENT_MARKDOWN"          
+            echo "Jira comment markdown: $JIRA_COMMENT_MARKDOWN"          
             COMMENT_BODY=$JIRA_COMMENT_MARKDOWN
           else 
             COMMENT_BODY="${{ env.COMMENT_TITLE }}"$'\n\n'
