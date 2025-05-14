@@ -12,7 +12,6 @@ import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.pagopa.ioreactnativecie.cie.Atr
 import com.pagopa.ioreactnativecie.cie.CieType
-import it.pagopa.io.app.cie.CieLogger
 import it.pagopa.io.app.cie.CieSDK
 import it.pagopa.io.app.cie.cie.CieAtrCallback
 import it.pagopa.io.app.cie.cie.NfcError
