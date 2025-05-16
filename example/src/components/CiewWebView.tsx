@@ -9,22 +9,6 @@ const defaultUserAgent = Platform.select({
   default: undefined,
 });
 
-/**
- * This JS is injection on every page load. It tries to decrease to 0 the sleeping time of a script.
- * That sleeping is used to allow user to read page content until the content changes to an automatic redirect.
- * This script also tries also to call apriIosUL.
- * If it is defined it starts the authentication process (iOS only).
- */
-const injectJs = Platform.select({
-  ios: `
-  seconds = 0;
-  if(typeof apriIosUL !== 'undefined' && apriIosUL !== null){
-    apriIosUL();
-  }
-`,
-  default: undefined,
-});
-
 type CiewWebViewProps = {
   uri: string;
   onAuthUrlChange: (url: string) => void;
@@ -43,13 +27,6 @@ export const CiewWebView = ({ uri, onAuthUrlChange }: CiewWebViewProps) => {
       ref={webView}
       userAgent={defaultUserAgent}
       javaScriptEnabled={true}
-      injectedJavaScript={injectJs}
-      onLoadEnd={() => {
-        // inject JS on every page load end
-        if (injectJs && webView.current) {
-          webView.current.injectJavaScript(injectJs);
-        }
-      }}
       onShouldStartLoadWithRequest={({ url }: WebViewNavigation) => {
         if (authUrl) {
           return false;
