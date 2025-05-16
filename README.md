@@ -11,8 +11,21 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 - [Usage](#usage)
   - [Check NFC Status](#check-nfc-status)
   - [Reading CIE Data](#reading-cie-data)
+    - [Reading Attributes](#reading-attributes)
+    - [Authentication](#authentication)
   - [Event System](#event-system)
+    - [NFC read events](#nfc-read-events)
+    - [NFC error events](#nfc-error-events)
+    - [Available Event Listeners](#available-event-listeners)
+    - [Example Usage](#example-usage)
   - [Alert Messages](#alert-messages)
+    - [Available Alert Messages](#available-alert-messages)
+- [NFC Events](#nfc-events)
+  - [iOS](#ios)
+  - [Android](#android)
+- [NFC Errors](#nfc-errors)
+  - [iOS](#ios-1)
+  - [Android](#android-1)
 - [Types](#types)
 - [Errors](#errors)
 - [Contributing](#contributing)
@@ -87,7 +100,141 @@ CieManager.startReading(
 
 The library uses an event-driven approach for NFC operations. Events are emitted to notify your application about progress, success, or failure. Each listener method returns a cleanup function that should be called when the operation is complete or when your component unmounts.
 
-#### Available Event Listeners
+#### NFC read events
+
+List of events that are emitted during CIE reading process
+
+<details>
+  <summary>iOS</summary>
+
+| Event                       | Description                                                |
+| --------------------------- | ---------------------------------------------------------- |
+| ON_TAG_DISCOVERED           | Tag has been discovered                                    |
+| ON_TAG_DISCOVERED_NOT_CIE   | Discovered tag is not a CIE                                |
+| CONNECTED                   | Connected to tag                                           |
+| GET_SERVICE_ID              | Get CIE serviceId                                          |
+| SELECT_IAS                  | Select IAS Application                                     |
+| SELECT_CIE                  | Select CIE Application                                     |
+| DH_INIT_GET_G               | Get DiffieHellman G parameter                              |
+| DH_INIT_GET_P               | Get DiffieHellman P parameter                              |
+| DH_INIT_GET_Q               | Get DiffieHellman Q parameter                              |
+| READ_CHIP_PUBLIC_KEY        | Retrive internal authentication key                        |
+| SELECT_FOR_READ_FILE        | Select file                                                |
+| READ_FILE                   | Read file                                                  |
+| GET_D_H_EXTERNAL_PARAMETERS | Retrive Diffie Hellman external authenticationl parameters |
+| SET_D_H_PUBLIC_KEY          | Set Diffie Hellman internal key                            |
+| GET_ICC_PUBLIC_KEY          | Retrive ICC Public Key                                     |
+| CHIP_SET_KEY                | Select key for certificate validation                      |
+| CHIP_VERIFY_CERTIFICATE     | Certificate validation                                     |
+| CHIP_SET_CAR                | Select key for external authentication                     |
+| CHIP_GET_CHALLENGE          | Get challenge for external authentication                  |
+| CHIP_ANSWER_CHALLENGE       | Responds to challenge for external authentication          |
+| SELECT_KEY                  | Select key                                                 |
+| VERIFY_PIN                  | Verify CIE Pin                                             |
+| SIGN                        | Sign data                                                  |
+| READ_CERTIFICATE            | Read CIE User Certificate                                  |
+| SELECT_ROOT                 | Select Root Application                                    |
+
+</details>
+
+<details>
+
+  <summary>Android</summary>
+
+| Event                         | Description                                            |
+| ----------------------------- | ------------------------------------------------------ |
+| ON_TAG_DISCOVERED             | Tag has been discovered                                |
+| ON_TAG_DISCOVERED_NOT_CIE     | Discovered tag is not a CIE                            |
+| CONNECTED                     | Connected to tag                                       |
+| SELECT_IAS_SERVICE_ID         | Selects internal authentication service for service ID |
+| SELECT_CIE_SERVICE_ID         | Selects CIE service ID                                 |
+| SELECT_READ_FILE_SERVICE_ID   | Selects read file service ID                           |
+| READ_FILE_SERVICE_ID_RESPONSE | Reads file service ID response                         |
+| SELECT_IAS                    | Selects internal authentication service                |
+| SELECT_CIE                    | Selects CIE application                                |
+| DH_INIT_GET_G                 | Gets G for Diffie-Hellman initialization               |
+| DH_INIT_GET_P                 | Gets P for Diffie-Hellman initialization               |
+| DH_INIT_GET_Q                 | Gets Q for Diffie-Hellman initialization               |
+| SELECT_FOR_READ_FILE          | Selects for reading a file                             |
+| READ_FILE                     | Reads a file                                           |
+| INIT_EXTERNAL_AUTHENTICATION  | Initializes external authentication                    |
+| SET_MSE                       | Sets MSE                                               |
+| D_H_KEY_EXCHANGE_GET_DATA     | Exchanges Diffie-Hellman data                          |
+| SIGN1_SELECT                  | Selects SIGN1 message                                  |
+| SIGN1_VERIFY_CERT             | Verifies SIGN1 certificate                             |
+| SET_CHALLENGE_RESPONSE        | Sets challenge response                                |
+| GET_CHALLENGE_RESPONSE        | Gets challenge response                                |
+| EXTERNAL_AUTHENTICATION       | Performs external authentication                       |
+| INTERNAL_AUTHENTICATION       | Performs internal authentication                       |
+| GIVE_RANDOM                   | Provides random data                                   |
+| VERIFY_PIN                    | Verifies PIN                                           |
+| READ_FILE_SM                  | Reads file with secure messaging                       |
+| SIGN                          | Signs data                                             |
+| SIGN_WITH_CIPHER              | Signs with cipher                                      |
+| SELECT_ROOT                   | Selects root                                           |
+
+</details>
+
+#### NFC error events
+
+List of error event that may be emitted during CIE reading process
+
+<details>
+  <summary>iOS</summary>
+
+| Error                                           | Description                                   |
+| ----------------------------------------------- | --------------------------------------------- |
+| scanNotSupported                                | This device doesn't support tag scanning      |
+| responseError(let apduStatus)                   | apduStatus.description                        |
+| invalidTag                                      | Error reading tag                             |
+| sendCommandForResponse                          | Send command to read response                 |
+| missingAuthenticationUrl                        | Missing authentication url                    |
+| emptyPin                                        | Empty pin                                     |
+| missingDeepLinkParameters                       | Missing deeplink parameters                   |
+| errorBuildingApdu                               | Error building apdu                           |
+| errorDecodingAsn1                               | Error decoding asn1                           |
+| secureMessagingHashMismatch                     | Secure messaging hash mismatch                |
+| secureMessagingRequired                         | Secure messaging required                     |
+| chipAuthenticationFailed                        | Chip authentication failed                    |
+| commonCryptoError(let status, let functionName) | Error in \(functionName) \(status)            |
+| sslError(let status, let functionName)          | Error in \(functionName) \(status)            |
+| tlsUnsupportedAlgorithm                         | TLS Unsupported Algorithm                     |
+| tlsHashingFailed                                | Failed to hash                                |
+| idpEmptyBody                                    | Idp Empty response                            |
+| idpCodeNotFound                                 | Idp Code not found                            |
+| wrongPin(let remainingTries)                    | Wrong pin. Remaining tries: \(remainingTries) |
+| cardBlocked                                     | Card blocked                                  |
+| genericError                                    | Generic error                                 |
+
+</details>
+
+<details>
+  <summary>Android</summary>
+
+| Error                        | Description                                     |
+| ---------------------------- | ----------------------------------------------- |
+| NOT_A_CIE                    | The tag is not a CIE card                       |
+| PIN_REGEX_NOT_VALID          | The PIN format is not valid                     |
+| PIN_BLOCKED                  | The PIN is blocked                              |
+| WRONG_PIN                    | The PIN entered is incorrect                    |
+| APDU_ERROR                   | An APDU error occurred                          |
+| VERIFY_SM_DATA_OBJECT_LENGTH | Secure messaging data object has invalid length |
+| VERIFY_SM_MAC_LENGTH         | Secure messaging MAC has invalid length         |
+| VERIFY_SM_NOT_SAME_MAC       | Secure messaging MAC does not match             |
+| NOT_EXPECTED_SM_TAG          | Unexpected secure messaging tag                 |
+| CHIP_AUTH_ERROR              | Chip authentication failed                      |
+| EXTENDED_APDU_NOT_SUPPORTED  | Extended APDU is not supported                  |
+| FAIL_TO_CONNECT_WITH_TAG     | Failed to connect with the tag                  |
+| TAG_LOST                     | The tag was lost during the operation           |
+| STOP_NFC_ERROR               | Error occurred while stopping NFC               |
+| SELECT_ROOT_EXCEPTION        | Exception occurred while selecting root         |
+| GENERAL_EXCEPTION            | A general exception occurred                    |
+| ASN_1_NOT_RIGHT_LENGTH       | ASN.1 data has incorrect length                 |
+| ASN_1_NOT_VALID              | ASN.1 data is not valid                         |
+
+</details>
+
+#### Event Listeners
 
 | Listener Type                  | Description                |
 | ------------------------------ | -------------------------- |
@@ -156,7 +303,7 @@ CieManager.setCurrentAlertMessage('Reading in progress, 80% completed');
 
 | Key                    | Description              | Default Message                                                                                   |
 | ---------------------- | ------------------------ | ------------------------------------------------------------------------------------------------- |
-| `readingInstructions`  | Pre-scan instructions    | "Tieni la tua carta d’identità elettronica sul retro dell’iPhone, nella parte in alto."           |
+| `readingInstructions`  | Pre-scan instructions    | "Tieni la tua carta d'identità elettronica sul retro dell'iPhone, nella parte in alto."           |
 | `moreTags`             | Multiple tags detected   | "Sono stati individuate più carte NFC. Per favore avvicina una carta alla volta."                 |
 | `readingInProgress`    | Reading status           | "Lettura in corso, tieni ferma la carta ancora per qualche secondo..."                            |
 | `readingSuccess`       | Success message          | "Lettura avvenuta con successo. Puoi rimuovere la carta mentre completiamo la verifica dei dati." |
@@ -198,6 +345,9 @@ type NfcError = {
 Error event that may be sent during the CIE reading process. Contains the name of the error and an optional message. Error names and order may vary based on the platform.
 
 ## Errors
+
+The CIE reading function may throw exceptions if the reading process cannot be initiated. These exceptions indicate issues with input validation or system compatibility.
+Below is a comprehensive list of possible exceptions that may be thrown during initialization:
 
 | Error Code            | Platform    | Description        | Resolution                                |
 | --------------------- | ----------- | ------------------ | ----------------------------------------- |
