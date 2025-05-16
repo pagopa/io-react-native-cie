@@ -8,6 +8,7 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 
 - [Installation](#installation)
 - [Example App](#example-app)
+- [API](#api)
 - [Usage](#usage)
   - [Check NFC Status](#check-nfc-status)
   - [Reading CIE Data](#reading-cie-data)
@@ -44,6 +45,28 @@ yarn add @pagopa/io-react-native-cie
 A fully working example app demonstrating how to use this package is available in the [example](./example) directory.
 
 To run the example app, follow the instructions in [example/README.md](./example/README.md).
+
+## API
+
+List of available functions
+
+| Function                                                                      | Return             | Descrizione                                                   |
+| :---------------------------------------------------------------------------- | :----------------- | :------------------------------------------------------------ |
+| `hasNFCFeature()`                                                             | `Promise<boolean>` | (Android) Checks if the device supports NFC feature           |
+| `isNfcEnabled()`                                                              | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled              |
+| `isCieAuthenticationSupported()`                                              | `Promise<boolean>` | (Android) Checks if the device supports CIE autentication     |
+| `openNfcSettings()`                                                           | `Promise<void>`    | (Android) Opens NFC system settings page                      |
+| `addEventListener(listener: (event: NfcEvent) => void)`                       | `() => void`       | Adds a NFC event listener                                     |
+| `addErrorListener(listener: (error: NfcError) => void)`                       | `() => void`       | Adds a NFC error listener                                     |
+| `addAttributesSuccessListener(listener: (attributes: CieAttributes) => void)` | `() => void`       | Adds a CIE attributes read success listener                   |
+| `addSuccessListener(listener: (uri: string) => void)`                         | `() => void`       | Adds a CIE authentication success listener                    |
+| `removeAllListeners()`                                                        | `void`             | Removes all registered listeners                              |
+| `setCustomIdpUrl(url: string)`                                                | `void`             | Updates IDP url                                               |
+| `setAlertMessage(key: AlertMessageKey, value: string)`                        | `void`             | (iOS) Updates iOS NFC modal alert message                     |
+| `setCurrentAlertMessage(value: string)`                                       | `void`             | (iOS) Updates currently displayed iOS NFC modal alert message |
+| `startReadingAttributes(timeout: number)`                                     | `Promise<void`     | Start the CIE attributes reading process                      |
+| `startReading(pin: string, authenticationUrl: string, timeout: number)`       | `Promise<void`     | Start the CIE reading process fro authentication              |
+| `stopReading()`                                                               | `Promise<void`     | (Android) Stops all reading process                           |
 
 ## Usage
 
@@ -349,10 +372,11 @@ Error event that may be sent during the CIE reading process. Contains the name o
 The CIE reading function may throw exceptions if the reading process cannot be initiated. These exceptions indicate issues with input validation or system compatibility.
 Below is a comprehensive list of possible exceptions that may be thrown during initialization:
 
-| Error Code            | Platform    | Description        | Resolution                                |
-| --------------------- | ----------- | ------------------ | ----------------------------------------- |
-| `PIN_REGEX_NOT_VALID` | iOS/Android | Invalid PIN format | Ensure PIN matches required format        |
-| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error   | Check device compatibility and NFC status |
+| Error Code            | Platform    | Description        |
+| --------------------- | ----------- | ------------------ |
+| `PIN_REGEX_NOT_VALID` | Android     | Invalid PIN format |
+| `THREADING_ERROR`     | iOS         | Unexpected error   |
+| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error   |
 
 ## Contributing
 
