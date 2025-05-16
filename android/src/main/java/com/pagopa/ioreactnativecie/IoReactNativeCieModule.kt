@@ -9,6 +9,7 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.pagopa.ioreactnativecie.cie.Atr
+import it.pagopa.io.app.cie.CieLogger
 import it.pagopa.io.app.cie.CieSDK
 import it.pagopa.io.app.cie.cie.CieAtrCallback
 import it.pagopa.io.app.cie.cie.NfcError
@@ -21,6 +22,10 @@ typealias ME = IoReactNativeCieModule.Companion.ModuleException
 
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
+
+  init {
+    CieLogger.enabled = BuildConfig.DEBUG
+  }
 
   override fun getName(): String {
     return NAME
