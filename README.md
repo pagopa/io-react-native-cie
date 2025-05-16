@@ -4,6 +4,9 @@
 
 Module to handle CIE (Electronic Identity Card) operations natively in React Native apps.
 
+> [!CAUTION]
+> If you are migrating from `io-cie-sdk` please read the [migration guide](/docs/migrate-from-io-cie-sdk.md) carefully
+
 ## Table of Contents
 
 - [Installation](#installation)
