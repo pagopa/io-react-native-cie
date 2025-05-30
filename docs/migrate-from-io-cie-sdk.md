@@ -33,13 +33,13 @@
 | `ON_CARD_PIN_LOCKED`          | `CARD_BLOCKED`              |       |
 | `PIN Locked`                  | `CARD_BLOCKED`              |       |
 | `ON_PIN_ERROR`                | `WRONG_PIN`                 |       |
-| `PIN_INPUT_ERROR`             |                             | Moved to exceptions  |
+| `PIN_INPUT_ERROR`             |                             | Moved to exceptions, trhowed by `startReading(pin: string, authenticationUrl: string, timeout: number)`  |
 | `CERTIFICATE_EXPIRED`         | `CERTIFICATE_EXPIRED`       |       |
 | `CERTIFICATE_REVOKED`         | `CERTIFICATE_REVOKED`       |       |
 | `AUTHENTICATION_ERROR`        | `AUTHENTICATION_ERROR`      |       |
 | `ON_NO_INTERNET_CONNECTION`   | `NO_INTERNET_CONNECTION`    |       |
-| `STOP_NFC_ERROR`              |                             | Moved to exceptions      |
-| `START_NFC_ERROR`             |                             | Moved to exceptions      |
+| `STOP_NFC_ERROR`              |                             | Moved to exceptions, trhowed by `stopReading()`      |
+| `START_NFC_ERROR`             |                             | Moved to exceptions, trhowed by `startReading(pin: string, authenticationUrl: string, timeout: number)`      |
 | `EXTENDED_APDU_NOT_SUPPORTED` | `APDU_ERROR`                |       |
 | `Transmission Error`          | `GENERIC_ERROR`             |       |
 
