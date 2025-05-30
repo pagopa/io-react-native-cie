@@ -43,7 +43,3 @@
 | `EXTENDED_APDU_NOT_SUPPORTED` | `APDU_ERROR`                |       |
 | `Transmission Error`          | `GENERIC_ERROR`             |       |
 
-
-### Usage
-
-TBD
