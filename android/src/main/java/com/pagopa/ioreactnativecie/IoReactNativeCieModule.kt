@@ -17,6 +17,7 @@ import it.pagopa.io.app.cie.cie.NfcEvent
 import it.pagopa.io.app.cie.network.NetworkCallback
 import it.pagopa.io.app.cie.network.NetworkError
 import it.pagopa.io.app.cie.nfc.NfcEvents
+import java.net.URL
 
 typealias ME = IoReactNativeCieModule.Companion.ModuleException
 
@@ -117,7 +118,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       cieSdk.startReadingCieAtr(timeout, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_EVENT, WritableNativeMap().apply {
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
               putString("name", event.name)
               putDouble(
                 "progress",
@@ -128,21 +129,16 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
         override fun error(error: NfcError) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
-              putString("name", error.name)
-              error.numberOfAttempts?.let {
-                putInt("numberOfAttempts", it)
-              }
-              error.msg?.let {
-                putString("message", it)
-              }
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
             })
 
         }
       }, object : CieAtrCallback {
         override fun onSuccess(atr: ByteArray) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_ATTRIBUTES_SUCCESS, WritableNativeMap().apply {
+            .emit(EventType.ATTRIBUTES_SUCCESS.value, WritableNativeMap().apply {
               putString("base64", Base64.encodeToString(atr, Base64.DEFAULT))
               putString("type", Atr(atr).getCieType().name)
             })
@@ -150,14 +146,9 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
         override fun onError(error: NfcError) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
-              putString("name", error.name)
-              error.numberOfAttempts?.let {
-                putInt("numberOfAttempts", it)
-              }
-              error.msg?.let {
-                putString("message", it)
-              }
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
             })
         }
       })
@@ -185,13 +176,18 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       return;
     }
 
-    cieSdk.withUrl(authenticationUrl)
+    try {
+      cieSdk.withUrl(URL(authenticationUrl).toString())
+    } catch (e: Exception) {
+      ME.INVALID_AUTH_URL.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty()))
+      return
+    }
 
     try {
       cieSdk.startReading(timeout, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_EVENT, WritableNativeMap().apply {
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
               putString("name", event.name)
               putDouble(
                 "progress", (event.numerator.toDouble() / NfcEvent.totalNumeratorEvent.toDouble())
@@ -201,30 +197,23 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
         override fun error(error: NfcError) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
-              putString("name", error.name)
-              error.numberOfAttempts?.let {
-                putInt("numberOfAttempts", it)
-              }
-              error.msg?.let {
-                putString("msg", it)
-              }
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("msg", it) }
             })
 
         }
       }, object : NetworkCallback {
         override fun onSuccess(url: String) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_READ_SUCCESS, url)
+            .emit(EventType.READ_SUCCESS.value, url)
         }
 
-        override fun onError(e: NetworkError) {
+        override fun onError(networkError: NetworkError) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_ON_ERROR, WritableNativeMap().apply {
-              putString("name", e.name)
-              e.msg?.let {
-                putString("message", it)
-              }
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNetworkError(networkError).name)
+              networkError.msg?.let { putString("message", it) }
             })
         }
       })
@@ -241,19 +230,58 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     cieSdk.stopNFCListening()
   }
 
+  fun mapNfcError(error: NfcError): ErrorType {
+    return when (error) {
+      NfcError.NOT_A_CIE -> ErrorType.NOT_A_CIE
+      NfcError.TAG_LOST -> ErrorType.TAG_LOST
+      NfcError.APDU_ERROR -> ErrorType.APDU_ERROR
+      NfcError.EXTENDED_APDU_NOT_SUPPORTED -> ErrorType.APDU_ERROR
+      NfcError.WRONG_PIN -> ErrorType.WRONG_PIN
+      NfcError.PIN_BLOCKED -> ErrorType.CARD_BLOCKED
+      else -> ErrorType.GENERIC_ERROR
+    }
+  }
+
+  fun mapNetworkError(error: NetworkError): ErrorType {
+    return when (error) {
+      NetworkError.NO_INTERNET_CONNECTION -> ErrorType.NO_INTERNET_CONNECTION
+      NetworkError.CERTIFICATE_EXPIRED -> ErrorType.CERTIFICATE_EXPIRED
+      NetworkError.CERTIFICATE_REVOKED -> ErrorType.CERTIFICATE_REVOKED
+      NetworkError.AUTHENTICATION_ERROR -> ErrorType.AUTHENTICATION_ERROR
+      else -> ErrorType.GENERIC_ERROR
+    }
+  }
+
   companion object {
     const val NAME = "IoReactNativeCie"
     const val ERROR_USER_INFO_KEY = "error"
 
-    const val EVENT_ON_EVENT = "onEvent"
-    const val EVENT_ON_ERROR = "onError"
-    const val EVENT_ON_ATTRIBUTES_SUCCESS = "onAttributesSuccess"
-    const val EVENT_ON_READ_SUCCESS = "onReadSuccess"
+    enum class EventType(val value: String) {
+      EVENT("onEvent"),
+      ERROR("onError"),
+      ATTRIBUTES_SUCCESS("onAttributesSuccess"),
+      READ_SUCCESS("onReadSuccess")
+    }
+
+    enum class ErrorType {
+      NOT_A_CIE,
+      TAG_LOST,
+      APDU_ERROR,
+      WRONG_PIN,
+      CARD_BLOCKED,
+      NO_INTERNET_CONNECTION,
+      CERTIFICATE_EXPIRED,
+      CERTIFICATE_REVOKED,
+      AUTHENTICATION_ERROR,
+      GENERIC_ERROR,
+    }
 
     enum class ModuleException(
       val ex: Exception
     ) {
-      PIN_REGEX_NOT_VALID(Exception("PIN_REGEX_NOT_VALID")), UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
+      PIN_REGEX_NOT_VALID(Exception("PIN_REGEX_NOT_VALID")),
+      INVALID_AUTH_URL(Exception("INVALID_AUTH_URL")),
+      UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
 
       fun reject(
         promise: Promise, vararg args: Pair<String, String>

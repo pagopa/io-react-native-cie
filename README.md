@@ -18,10 +18,10 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
     - [Reading Attributes](#reading-attributes)
     - [Authentication](#authentication)
   - [Event System](#event-system)
+    - [Event Listeners](#event-listeners)
+    - [Example Usage](#example-usage)
     - [NFC read events](#nfc-read-events)
     - [NFC error events](#nfc-error-events)
-    - [Available Event Listeners](#available-event-listeners)
-    - [Example Usage](#example-usage)
   - [Alert Messages](#alert-messages)
     - [Available Alert Messages](#available-alert-messages)
 - [NFC Events](#nfc-events)
@@ -97,15 +97,14 @@ await CieUtils.isCieAuthenticationSupported();
 
 #### Reading Attributes
 
-Read CIE attributes (card type and base64-encoded data):
+Read CIE attributes (card type and base64-encoded data) with optional timeout (Android only)
 
 ```typescript
 import { CieManager } from '@pagopa/io-react-native-cie';
 
-// Start reading with optional timeout (Android only)
-CieManager.startReadingAttributes(timeout?: number)
+CieManager.startReadingAttributes()
   .then(() => console.log('Reading started'))
-  .catch(error => console.error('Error:', error));
+  .catch((error) => console.error('Error:', error));
 ```
 
 #### Authentication
@@ -113,22 +112,60 @@ CieManager.startReadingAttributes(timeout?: number)
 Start the CIE authentication process:
 
 ```typescript
-CieManager.startReading(
-  pin: string,           // CIE card PIN
-  authenticationUrl: string,  // Service URL
-  timeout?: number       // Optional timeout (Android only)
-)
+CieManager.startReading('12345678', 'https//auth-url.it')
   .then(() => console.log('Authentication started'))
-  .catch(error => console.error('Error:', error));
+  .catch((error) => console.error('Error:', error));
 ```
 
 ### Event System
 
-The library uses an event-driven approach for NFC operations. Events are emitted to notify your application about progress, success, or failure. Each listener method returns a cleanup function that should be called when the operation is complete or when your component unmounts.
+The library uses an event-driven approach for NFC operations and read results. Events are emitted to notify your application about progress, success, or failure. Each listener method returns a cleanup function that should be called when the operation is complete or when your component unmounts.
+
+#### Event Listeners
+
+| Listener Type                  | Description                                                                           |
+| ------------------------------ | ------------------------------------------------------------------------------------- |
+| `addEventListener`             | NFC events emitted during the reading process which indicates the reading progression |
+| `addErrorListener`             | NFC error events emitted if the reading process fails                                 |
+| `addSuccessListener`           | Authentication success event                                                          |
+| `addAttributesSuccessListener` | Successful attribute reads                                                            |
+
+#### Example Usage
+
+```typescript
+import { CieManager } from '@pagopa/io-react-native-cie';
+import { useEffect } from 'react';
+
+// ...
+
+useEffect(() => {
+  // Register all event listeners
+  const cleanup = [
+    CieManager.addEventListener((event) => {
+      console.info('NFC Event', event);
+    }),
+    CieManager.addErrorListener((error) => {
+      console.error('NFC Error', error);
+    }),
+    CieManager.addSuccessListener((url) => {
+      console.log('Auth url:', url);
+    }),
+  ];
+
+  // Cleanup all listeners on unmount
+  return () => cleanup.forEach((remove) => remove());
+}, []);
+```
+
+To remove all listeners at once:
+
+```typescript
+CieManager.removeAllListeners();
+```
 
 #### NFC read events
 
-List of events that are emitted during CIE reading process
+List of events that are emitted during CIE reading process. Event names may differs based on the platform
 
 <details>
   <summary>iOS</summary>
@@ -205,102 +242,19 @@ List of events that are emitted during CIE reading process
 
 List of error event that may be emitted during CIE reading process
 
-<details>
-  <summary>iOS</summary>
-
-| Error                                           | Description                                   |
-| ----------------------------------------------- | --------------------------------------------- |
-| scanNotSupported                                | This device doesn't support tag scanning      |
-| responseError(let apduStatus)                   | apduStatus.description                        |
-| invalidTag                                      | Error reading tag                             |
-| sendCommandForResponse                          | Send command to read response                 |
-| missingAuthenticationUrl                        | Missing authentication url                    |
-| emptyPin                                        | Empty pin                                     |
-| missingDeepLinkParameters                       | Missing deeplink parameters                   |
-| errorBuildingApdu                               | Error building apdu                           |
-| errorDecodingAsn1                               | Error decoding asn1                           |
-| secureMessagingHashMismatch                     | Secure messaging hash mismatch                |
-| secureMessagingRequired                         | Secure messaging required                     |
-| chipAuthenticationFailed                        | Chip authentication failed                    |
-| commonCryptoError(let status, let functionName) | Error in \(functionName) \(status)            |
-| sslError(let status, let functionName)          | Error in \(functionName) \(status)            |
-| tlsUnsupportedAlgorithm                         | TLS Unsupported Algorithm                     |
-| tlsHashingFailed                                | Failed to hash                                |
-| idpEmptyBody                                    | Idp Empty response                            |
-| idpCodeNotFound                                 | Idp Code not found                            |
-| wrongPin(let remainingTries)                    | Wrong pin. Remaining tries: \(remainingTries) |
-| cardBlocked                                     | Card blocked                                  |
-| genericError                                    | Generic error                                 |
-
-</details>
-
-<details>
-  <summary>Android</summary>
-
-| Error                        | Description                                     |
-| ---------------------------- | ----------------------------------------------- |
-| NOT_A_CIE                    | The tag is not a CIE card                       |
-| PIN_REGEX_NOT_VALID          | The PIN format is not valid                     |
-| PIN_BLOCKED                  | The PIN is blocked                              |
-| WRONG_PIN                    | The PIN entered is incorrect                    |
-| APDU_ERROR                   | An APDU error occurred                          |
-| VERIFY_SM_DATA_OBJECT_LENGTH | Secure messaging data object has invalid length |
-| VERIFY_SM_MAC_LENGTH         | Secure messaging MAC has invalid length         |
-| VERIFY_SM_NOT_SAME_MAC       | Secure messaging MAC does not match             |
-| NOT_EXPECTED_SM_TAG          | Unexpected secure messaging tag                 |
-| CHIP_AUTH_ERROR              | Chip authentication failed                      |
-| EXTENDED_APDU_NOT_SUPPORTED  | Extended APDU is not supported                  |
-| FAIL_TO_CONNECT_WITH_TAG     | Failed to connect with the tag                  |
-| TAG_LOST                     | The tag was lost during the operation           |
-| STOP_NFC_ERROR               | Error occurred while stopping NFC               |
-| SELECT_ROOT_EXCEPTION        | Exception occurred while selecting root         |
-| GENERAL_EXCEPTION            | A general exception occurred                    |
-| ASN_1_NOT_RIGHT_LENGTH       | ASN.1 data has incorrect length                 |
-| ASN_1_NOT_VALID              | ASN.1 data is not valid                         |
-
-</details>
-
-#### Event Listeners
-
-| Listener Type                  | Description                |
-| ------------------------------ | -------------------------- |
-| `addEventListener`             | General NFC events         |
-| `addErrorListener`             | NFC error events           |
-| `addSuccessListener`           | Authentication success     |
-| `addAttributesSuccessListener` | Successful attribute reads |
-
-#### Example Usage
-
-```typescript
-import { CieManager } from '@pagopa/io-react-native-cie';
-import { useEffect } from 'react';
-
-// ...
-
-useEffect(() => {
-  // Register all event listeners
-  const cleanup = [
-    CieManager.addEventListener((event) => {
-      console.info('NFC Event', event);
-    }),
-    CieManager.addErrorListener((error) => {
-      console.error('NFC Error', error);
-    }),
-    CieManager.addSuccessListener((url) => {
-      console.log('Auth url:', url);
-    }),
-  ];
-
-  // Cleanup all listeners on unmount
-  return () => cleanup.forEach((remove) => remove());
-}, []);
-```
-
-To remove all listeners at once:
-
-```typescript
-CieManager.removeAllListeners();
-```
+| Error                  | Description                            |
+| ---------------------- | -------------------------------------- |
+| NOT_A_CIE              | Discovered tag is not a CIE            |
+| TAG_LOST               | Tag was lost during read operation     |
+| CANCELLED_BY_USER      | (iOS only) Read was cancelled by user  |
+| APDU_ERROR             | Protocol error or not supported        |
+| CARD_BLOCKED           | Too many PIN attempts, card is blocked |
+| WRONG_PIN              | Wrong PIN                              |
+| NO_INTERNET_CONNECTION | Missing internet connection            |
+| CERTIFICATE_EXPIRED    | CIE expired                            |
+| CERTIFICATE_REVOKED    | CIE revoked                            |
+| AUTHENTICATION_ERROR   | unable to complete authentication      |
+| GENERIC_ERROR          | Unmapped or unexpected error           |
 
 ### Alert Messages
 
@@ -363,7 +317,7 @@ Event sent during the CIE reading process. Contains the name of the event and th
 
 ```typescript
 type NfcError = {
-  name: string;
+  name: NfcErrorName;
   message?: string;
 };
 ```
@@ -375,11 +329,12 @@ Error event that may be sent during the CIE reading process. Contains the name o
 The CIE reading function may throw exceptions if the reading process cannot be initiated. These exceptions indicate issues with input validation or system compatibility.
 Below is a comprehensive list of possible exceptions that may be thrown during initialization:
 
-| Error Code            | Platform    | Description        |
-| --------------------- | ----------- | ------------------ |
-| `PIN_REGEX_NOT_VALID` | Android     | Invalid PIN format |
-| `THREADING_ERROR`     | iOS         | Unexpected error   |
-| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error   |
+| Error Code            | Platform    | Description             |
+| --------------------- | ----------- | ----------------------- |
+| `PIN_REGEX_NOT_VALID` | ios/Android | Invalid PIN format      |
+| `INVALID_AUTH_URL`    | ios/Android | Invalid auth url format |
+| `THREADING_ERROR`     | iOS         | Unexpected error        |
+| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error        |
 
 ## Contributing
 

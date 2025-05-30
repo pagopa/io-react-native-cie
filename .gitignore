@@ -82,3 +82,6 @@ lib/
 # React Native Codegen
 ios/generated
 android/generated
+
+# SPM
+**/.spm.pods/

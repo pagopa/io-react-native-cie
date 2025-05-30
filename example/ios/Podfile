@@ -33,3 +33,6 @@ target 'IoReactNativeCieExample' do
     )
   end
 end
+
+# TODO: remove once CieSDK is released to cocoapods
+spm_pkg "CieSDK", :url => "https://github.com/pagopa/cie-sdk-ios", :branch => "main"

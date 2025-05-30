@@ -1,7 +1,7 @@
-import { ButtonSolid, IOToast } from '@pagopa/io-app-design-system';
+import { ButtonSolid } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
 import {
@@ -22,13 +22,15 @@ export function AttributesScreen() {
       CieManager.addErrorListener((error) => {
         setResult(error);
         setStatus('error');
-        IOToast.error('Error while reading attributes');
+        Alert.alert(
+          'Error while reading attributes',
+          JSON.stringify(error, undefined, 2)
+        );
       }),
       // Start listening for attributes success
       CieManager.addAttributesSuccessListener((attributes) => {
         setResult(attributes);
         setStatus('success');
-        IOToast.success('Attributes read successfully');
       }),
     ];
 
@@ -49,7 +51,10 @@ export function AttributesScreen() {
       await CieManager.startReadingAttributes();
     } catch (e) {
       setStatus('error');
-      IOToast.error('Unable to start reading attributes');
+      Alert.alert(
+        'Error while reading attributes',
+        JSON.stringify(e, undefined, 2)
+      );
     }
   };
 

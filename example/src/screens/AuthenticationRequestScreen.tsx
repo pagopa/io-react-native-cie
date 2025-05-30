@@ -1,6 +1,5 @@
 import {
   ButtonSolid,
-  IOToast,
   ListItemHeader,
   OTPInput,
 } from '@pagopa/io-app-design-system';
@@ -73,7 +72,7 @@ export function AuthenticationRequestScreen() {
     try {
       await CieManager.startReading(code, authUrl);
     } catch (e) {
-      IOToast.error('Unable to start authentication');
+      Alert.alert('Unable to read CIE', JSON.stringify(e, undefined, 2));
     }
   };
 

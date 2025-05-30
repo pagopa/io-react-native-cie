@@ -21,8 +21,8 @@ export const AlertMessageKey = z.enum([
 export type AlertMessageKey = z.infer<typeof AlertMessageKey>;
 
 /**
- * Event emitted during the CIE reading process.
- * It contains the name of the event and the progress of the reading up to that point
+ * Event emitted during the CIE reading process with the name of the event and the progress of the reading up to that point.
+ * Event names may differ based on the platform.
  */
 export const NfcEvent = z.object({
   name: z.string(),
@@ -32,11 +32,30 @@ export const NfcEvent = z.object({
 export type NfcEvent = z.infer<typeof NfcEvent>;
 
 /**
+ * Name of the error emitted during the CIE reading process
+ */
+export const NfcErrorName = z.enum([
+  'NOT_A_CIE',
+  'TAG_LOST',
+  'CANCELLED_BY_USER',
+  'APDU_ERROR',
+  'WRONG_PIN',
+  'CARD_BLOCKED',
+  'NO_INTERNET_CONNECTION',
+  'CERTIFICATE_EXPIRED',
+  'CERTIFICATE_REVOKED',
+  'AUTHENTICATION_ERROR',
+  'GENERIC_ERROR',
+]);
+
+export type NfcErrorName = z.infer<typeof NfcErrorName>;
+
+/**
  * Represent an NFC error emitted during the CIE reading process
  * It contains the name of the error, the message and the number of attempts
  */
 export const NfcError = z.object({
-  name: z.string(),
+  name: NfcErrorName,
   message: z.string().optional(),
 });
 
