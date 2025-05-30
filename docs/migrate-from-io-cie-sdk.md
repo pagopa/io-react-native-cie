@@ -22,30 +22,27 @@
 | `removeAllListeners()`                                                      | `removeAllListeners()`                                                  |                                                                                   |
 | `setAlertMessage(key: iOSAlertMessageKeys, value: string)`                  | `setAlertMessage(key: AlertMessageKey, value: string)`                  |                                                                                   |
 
-### Events
+### Error events
 
 | `io-cie-sdk`                  | `io-react-native-cie`       | Notes |
 | :---------------------------- | :-------------------------- | :---- |
 | `ON_TAG_DISCOVERED_NOT_CIE`   | `ON_TAG_DISCOVERED_NOT_CIE` |       |
-| `TAG_ERROR_NFC_NOT_SUPPORTED` |                             |       |
-| `ON_TAG_DISCOVERED`           |                             |       |
-| `ON_TAG_LOST`                 |                             |       |
-| `ON_CARD_PIN_LOCKED`          |                             |       |
-| `PIN Locked`                  |                             |       |
-| `ON_PIN_ERROR`                |                             |       |
-| `PIN_INPUT_ERROR`             |                             |       |
-| `CERTIFICATE_EXPIRED`         |                             |       |
-| `CERTIFICATE_REVOKED`         |                             |       |
-| `AUTHENTICATION_ERROR`        |                             |       |
-| `ON_NO_INTERNET_CONNECTION`   |                             |       |
-| `STOP_NFC_ERROR`              |                             |       |
-| `START_NFC_ERROR`             |                             |       |
-| `EXTENDED_APDU_NOT_SUPPORTED` |                             |       |
-| `Transmission Error`          |                             |       |
+| `TAG_ERROR_NFC_NOT_SUPPORTED` | `ON_TAG_DISCOVERED_NOT_CIE` |       |
+| `ON_TAG_DISCOVERED`           | `ON_TAG_DISCOVERED`         |       |
+| `ON_TAG_LOST`                 | `TAG_LOST`                  |       |
+| `ON_CARD_PIN_LOCKED`          | `CARD_BLOCKED`              |       |
+| `PIN Locked`                  | `CARD_BLOCKED`              |       |
+| `ON_PIN_ERROR`                | `WRONG_PIN`                 |       |
+| `PIN_INPUT_ERROR`             |                             | Moved to exceptions  |
+| `CERTIFICATE_EXPIRED`         | `CERTIFICATE_EXPIRED`       |       |
+| `CERTIFICATE_REVOKED`         | `CERTIFICATE_REVOKED`       |       |
+| `AUTHENTICATION_ERROR`        | `AUTHENTICATION_ERROR`      |       |
+| `ON_NO_INTERNET_CONNECTION`   | `NO_INTERNET_CONNECTION`    |       |
+| `STOP_NFC_ERROR`              |                             | Moved to exceptions      |
+| `START_NFC_ERROR`             |                             | Moved to exceptions      |
+| `EXTENDED_APDU_NOT_SUPPORTED` | `APDU_ERROR`                |       |
+| `Transmission Error`          | `GENERIC_ERROR`             |       |
 
-### Errors
-
-TBD
 
 ### Usage
 
