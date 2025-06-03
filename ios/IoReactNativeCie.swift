@@ -171,7 +171,7 @@ class IoReactNativeCie: RCTEventEmitter {
       return ErrorType.WRONG_PIN
     case .cardBlocked:
       return ErrorType.CARD_BLOCKED
-    case .sslError(let status, let functionName):
+    case .sslError:
       return ErrorType.CERTIFICATE_EXPIRED
     default:
       return ErrorType.GENERIC_ERROR
