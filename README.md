@@ -10,6 +10,7 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 ## Table of Contents
 
 - [Installation](#installation)
+- [Setup](#setup)
 - [Example App](#example-app)
 - [API](#api)
 - [Usage](#usage)
@@ -42,6 +43,38 @@ npm install @pagopa/io-react-native-cie
 # or
 yarn add @pagopa/io-react-native-cie
 ```
+
+### iOS
+
+```sh
+cd ios && bundle exec pod install && cd ..
+```
+
+## Setup
+
+### iOS
+
+1. In Apple developer site, enable capability for NFC.
+2. Add `NFCReaderUsageDescription` into your `info.plist`, for example:
+   ```xml
+   <key>NFCReaderUsageDescription</key>
+   <string>We need to use NFC</string>
+   ```
+   [More info on Apple's doc](https://developer.apple.com/documentation/bundleresources/information-property-list/nfcreaderusagedescription?language=objc)
+3. Add the required ISO7816 identifiers into your `info.plist`
+   ```xml
+   <key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+   <array>
+     <string>com.apple.developer.nfc.readersession.iso7816.select-identifiers</string>
+     <string>A0000000308000000009816001</string>
+     <string>A00000000039</string>
+     <string>A0000002471001</string>
+     <string>00000000000000</string>
+   </array>
+   ```
+   [More info on Apple's doc](https://developer.apple.com/documentation/corenfc/nfciso7816tag).
+4. In Xcode's **Signing & Capabilities** tab, make sure **Near Field Communication Tag Reading** capability had been added.
+   [More info on Apple's doc](https://developer.apple.com/documentation/bundleresources/entitlements/com_apple_developer_nfc_readersession_formats?language=objc).
 
 ## Example App
 
