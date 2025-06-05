@@ -65,7 +65,6 @@ cd ios && bundle exec pod install && cd ..
    ```xml
    <key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
    <array>
-     <string>com.apple.developer.nfc.readersession.iso7816.select-identifiers</string>
      <string>A0000000308000000009816001</string>
      <string>A00000000039</string>
      <string>A0000002471001</string>
