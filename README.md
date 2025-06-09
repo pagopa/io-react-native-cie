@@ -52,6 +52,18 @@ cd ios && bundle exec pod install && cd ..
 
 ## Setup
 
+### Android
+
+On Android you need to declare the following permission into your `AndroidManifest.xml`.
+More info in the [official Android documentation](https://developer.android.com/develop/connectivity/nfc/nfc):
+
+```xml
+  <!-- Required to access NFC hardware -->
+  <uses-permission android:name="android.permission.NFC" />
+  <!-- Required for authentication process -->
+  <uses-permission android:name="android.permission.INTERNET" />
+```
+
 ### iOS
 
 1. In Apple developer site, enable capability for NFC.
