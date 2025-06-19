@@ -103,10 +103,8 @@ List of available functions
 | `isNfcEnabled()`                                                              | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled              |
 | `isCieAuthenticationSupported()`                                              | `Promise<boolean>` | (Android) Checks if the device supports CIE autentication     |
 | `openNfcSettings()`                                                           | `Promise<void>`    | (Android) Opens NFC system settings page                      |
-| `addEventListener(listener: (event: NfcEvent) => void)`                       | `() => void`       | Adds a NFC event listener                                     |
-| `addErrorListener(listener: (error: NfcError) => void)`                       | `() => void`       | Adds a NFC error listener                                     |
-| `addAttributesSuccessListener(listener: (attributes: CieAttributes) => void)` | `() => void`       | Adds a CIE attributes read success listener                   |
-| `addSuccessListener(listener: (uri: string) => void)`                         | `() => void`       | Adds a CIE authentication success listener                    |
+| `addListener(event: CieEvent, listener: CieEventHandlers)`                       | `() => void`       | Adds a NFC event listener and returns a function to unsubscribe from the event                                    |
+| `removeListener(event: CieEvent)`                       | `void`       | Removes all listeners for the specified event                                     |
 | `removeAllListeners()`                                                        | `void`             | Removes all registered listeners                              |
 | `setCustomIdpUrl(url: string)`                                                | `void`             | Updates IDP url                                               |
 | `setAlertMessage(key: AlertMessageKey, value: string)`                        | `void`             | (iOS) Updates iOS NFC modal alert message                     |
