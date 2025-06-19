@@ -165,14 +165,29 @@ CieManager.startReading('12345678', 'https//auth-url.it')
 
 The library uses an event-driven approach for NFC operations and read results. Events are emitted to notify your application about progress, success, or failure. Each listener method returns a cleanup function that should be called when the operation is complete or when your component unmounts.
 
-#### Event Listeners
+#### Available events
 
-| Listener Type                  | Description                                                                           |
-| ------------------------------ | ------------------------------------------------------------------------------------- |
-| `addEventListener`             | NFC events emitted during the reading process which indicates the reading progression |
-| `addErrorListener`             | NFC error events emitted if the reading process fails                                 |
-| `addSuccessListener`           | Authentication success event                                                          |
-| `addAttributesSuccessListener` | Successful attribute reads                                                            |
+| Listener Type        | Description                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| `onEvent`            | NFC events emitted during the reading process which indicates the reading progression |
+| `onError`            | NFC error events emitted if the reading process fails                                 |
+| `onSuccess`          | Authentication success event                                                          |
+| `onAttributeSuccess` | Successful attribute reads                                                            |
+
+#### Listening for events
+
+You can register an event listiner with CieManager.addListener and remove it with the returned unregister function or by using CieManager.removeListener
+
+```typescript
+const unsubscribe = CieManager.addListener('onEvent', (event) => {
+  console.log(event);
+});
+
+// remove the listener with
+unsubscribe()
+// or
+CieManager.removeListener("onEvent);
+```
 
 #### Example Usage
 
@@ -185,13 +200,13 @@ import { useEffect } from 'react';
 useEffect(() => {
   // Register all event listeners
   const cleanup = [
-    CieManager.addEventListener((event) => {
+    CieManager.addListener('onEvent', (event) => {
       console.info('NFC Event', event);
     }),
-    CieManager.addErrorListener((error) => {
+    CieManager.addListener('onError', (error) => {
       console.error('NFC Error', error);
     }),
-    CieManager.addSuccessListener((url) => {
+    CieManager.addListener('onSuccess', (url) => {
       console.log('Auth url:', url);
     }),
   ];
