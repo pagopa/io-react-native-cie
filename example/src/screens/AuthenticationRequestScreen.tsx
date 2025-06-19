@@ -32,20 +32,20 @@ export function AuthenticationRequestScreen() {
   useEffect(() => {
     const cleanup = [
       // Start listening for NFC events
-      CieManager.addEventListener((e) => {
+      CieManager.addListener('onEvent', (e) => {
         setEvent(e);
         CieManager.setCurrentAlertMessage(
           `Reading in progress\n ${getProgressEmojis(e.progress)}`
         );
       }),
       // Start listening for errors
-      CieManager.addErrorListener((error) => {
+      CieManager.addListener('onError', (error) => {
         setStatus('error');
         setEvent(undefined);
         Alert.alert('Error', JSON.stringify(error, undefined, 2));
       }),
       // Start listening for success
-      CieManager.addSuccessListener((uri) => {
+      CieManager.addListener('onSuccess', (uri) => {
         setStatus('success');
         navigation.dispatch(
           StackActions.replace('Authentication', { authUrl: uri })

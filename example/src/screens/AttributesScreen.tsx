@@ -17,9 +17,9 @@ export function AttributesScreen() {
   useEffect(() => {
     const cleanup = [
       // Start listening for NFC events
-      CieManager.addEventListener(setEvent),
+      CieManager.addListener('onEvent', setEvent),
       // Start listening for errors
-      CieManager.addErrorListener((error) => {
+      CieManager.addListener('onError', (error) => {
         setResult(error);
         setStatus('error');
         Alert.alert(
@@ -28,7 +28,7 @@ export function AttributesScreen() {
         );
       }),
       // Start listening for attributes success
-      CieManager.addAttributesSuccessListener((attributes) => {
+      CieManager.addListener('onAttributesSuccess', (attributes) => {
         setResult(attributes);
         setStatus('success');
       }),

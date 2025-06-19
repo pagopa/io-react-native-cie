@@ -1,110 +1,40 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { IoReactNativeCie } from '../native';
-import {
-  AlertMessageKey,
-  type AttributesSuccessHandler,
-  type NfcErrorHandler,
-  type NfcEventHandler,
-  type SuccessHandler,
-} from './types';
-
-enum CieManagerEvent {
-  OnEvent = 'onEvent',
-  OnError = 'onError',
-  OnAttributesSuccess = 'onAttributesSuccess',
-  OnSuccess = 'onReadSuccess',
-}
+import { AlertMessageKey, type CieEvent, type CieEventHandlers } from './types';
 
 const DEFAULT_TIMEOUT = 10000;
 
 const eventEmitter = new NativeEventEmitter(NativeModules.IoReactNativeCie);
 
 /**
- * Adds an event listener for NFC events during CIE operations.
+ * Adds a listener for a specific CIE event.
  *
- * @param listener - Callback invoked with NFC event data ({ name: string, progress: number })
- * @returns Function to remove the event listener
+ * @param event - The event to listen to {@see CieEvent}
+ * @param listener - The listener to add {@see CieEventHandler}
+ * @returns Function to remove the listener
  * @example
  * ```typescript
- * const removeListener = CieManager.addEventListener(event => {
+ * const removeListener = CieManager.addListener('onEvent', event => {
  *   console.log(event.name, event.progress);
  * });
  * // ...
  * removeListener();
- * ```
  */
-const addEventListener = (listener: NfcEventHandler) => {
-  const subscription = eventEmitter.addListener(
-    CieManagerEvent.OnEvent,
-    listener
-  );
+const addListener = <E extends CieEvent>(
+  event: E,
+  listener: CieEventHandlers[E]
+) => {
+  const subscription = eventEmitter.addListener(event, listener);
   return subscription.remove;
 };
 
 /**
- * Adds an error listener for NFC/CIE operations.
+ * Removes a listener for a specific CIE event.
  *
- * @param listener - Callback invoked with error data ({ code: string, message: string })
- * @returns Function to remove the error listener
- * @example
- * ```typescript
- * const removeError = CieManager.addErrorListener(error => {
- *   console.error(error.code, error.message);
- * });
- * // ...
- * removeError();
- * ```
+ * @param event - The event to remove the listener from {@see CieEvent}
  */
-const addErrorListener = (listener: NfcErrorHandler) => {
-  const subscription = eventEmitter.addListener(
-    CieManagerEvent.OnError,
-    listener
-  );
-  return subscription.remove;
-};
-
-/**
- * Adds a listener for successful attribute reading from the CIE card.
- *
- * @param listener - Callback invoked with the attributes object
- * @returns Function to remove the attributes success listener
- * @example
- * ```typescript
- * const removeAttr = CieManager.addAttributesSuccessListener(attrs => {
- *   console.log(attrs);
- * });
- * // ...
- * removeAttr();
- * ```
- */
-const addAttributesSuccessListener = (listener: AttributesSuccessHandler) => {
-  const subscription = eventEmitter.addListener(
-    CieManagerEvent.OnAttributesSuccess,
-    listener
-  );
-  return subscription.remove;
-};
-
-/**
- * Adds a listener for successful CIE reading/authentication.
- *
- * @param listener - Callback invoked with authentication result data
- * @returns Function to remove the success listener
- * @example
- * ```typescript
- * const removeSuccess = CieManager.addSuccessListener(result => {
- *   console.log(result);
- * });
- * // ...
- * removeSuccess();
- * ```
- */
-const addSuccessListener = (listener: SuccessHandler) => {
-  const subscription = eventEmitter.addListener(
-    CieManagerEvent.OnSuccess,
-    listener
-  );
-  return subscription.remove;
+const removeListener = (event: CieEvent) => {
+  eventEmitter.removeAllListeners(event);
 };
 
 /**
@@ -116,9 +46,10 @@ const addSuccessListener = (listener: SuccessHandler) => {
  * ```
  */
 const removeAllListeners = () => {
-  Object.values(CieManagerEvent).forEach((event) => {
-    eventEmitter.removeAllListeners(event);
-  });
+  eventEmitter.removeAllListeners('onEvent');
+  eventEmitter.removeAllListeners('onError');
+  eventEmitter.removeAllListeners('onAttributesSuccess');
+  eventEmitter.removeAllListeners('onSuccess');
 };
 
 /**
@@ -226,12 +157,10 @@ const stopReading = async (): Promise<void> => {
 };
 
 export {
-  addEventListener,
-  addErrorListener,
-  addAttributesSuccessListener,
-  addSuccessListener,
-  setCustomIdpUrl,
+  addListener,
+  removeListener,
   removeAllListeners,
+  setCustomIdpUrl,
   startReadingAttributes,
   startReading,
   stopReading,

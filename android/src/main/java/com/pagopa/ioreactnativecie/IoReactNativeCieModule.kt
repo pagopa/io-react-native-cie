@@ -200,13 +200,14 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
             .emit(EventType.ERROR.value, WritableNativeMap().apply {
               putString("name", mapNfcError(error).name)
               error.msg?.let { putString("msg", it) }
+              error.numberOfAttempts?.let { putInt("attempts", it) }
             })
 
         }
       }, object : NetworkCallback {
         override fun onSuccess(url: String) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EventType.READ_SUCCESS.value, url)
+            .emit(EventType.SUCCESS.value, url)
         }
 
         override fun onError(networkError: NetworkError) {
@@ -260,7 +261,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       EVENT("onEvent"),
       ERROR("onError"),
       ATTRIBUTES_SUCCESS("onAttributesSuccess"),
-      READ_SUCCESS("onReadSuccess")
+      SUCCESS("onSuccess")
     }
 
     enum class ErrorType {

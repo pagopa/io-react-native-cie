@@ -4,69 +4,69 @@ import React
 @objc(IoReactNativeCie)
 class IoReactNativeCie: RCTEventEmitter {
   private typealias ME = ModuleException
-
+  
   private let cieSdk: CieDigitalId
-
+  
   override init() {
-    #if DEBUG
-      self.cieSdk = CieDigitalId.init(.console)
-    #else
-      self.cieSdk = CieDigitalId.init()
-    #endif
+#if DEBUG
+    self.cieSdk = CieDigitalId.init(.console)
+#else
+    self.cieSdk = CieDigitalId.init()
+#endif
     super.init()
   }
-
+  
   @objc override func supportedEvents() -> [String]! {
     return EventType.allCases.map { $0.rawValue }
   }
-
+  
   @objc func hasNfcFeature(
     _ resolve: RCTPromiseResolveBlock,
     withRejecter reject: RCTPromiseRejectBlock
   ) {
     resolve(true)  // iOS devices always have NFC functionality
   }
-
+  
   @objc func isNfcEnabled(
     _ resolve: RCTPromiseResolveBlock,
     withRejecter reject: RCTPromiseRejectBlock
   ) {
     resolve(CieDigitalId.isNFCEnabled())
   }
-
+  
   @objc func isCieAuthenticationSupported(
     _ resolve: RCTPromiseResolveBlock,
     withRejecter reject: RCTPromiseRejectBlock
   ) {
     resolve(CieDigitalId.isNFCEnabled())
   }
-
+  
   @objc func openNfcSettings(
     _ resolve: RCTPromiseResolveBlock,
     withRejecter reject: RCTPromiseRejectBlock
   ) {
     resolve(false)  // iOS does not have NFC settings
   }
-
+  
   @objc func setAlertMessage(
     _ key: String,
     withValue value: String
   ) {
     cieSdk.setAlertMessage(key: key, value: value)
   }
-
+  
   @objc func setCurrentAlertMessage(
     _ value: String
   ) {
     cieSdk.alertMessage = value
   }
-
+  
   @objc func setCustomIdpUrl(
     _ url: String
   ) {
     cieSdk.idpUrl = url
   }
-
+  
   @objc func startReadingAttributes(
     _ timeout: Int,
     withResolver resolve: @escaping RCTPromiseResolveBlock,
@@ -77,7 +77,7 @@ class IoReactNativeCie: RCTEventEmitter {
         ME.threadingError.reject(reject: reject)
         return
       }
-
+      
       do {
         let atr = try await self.cieSdk.performReadAtr(handleReadEvent)
         let cieType = CIEType.fromATR(atr)
@@ -98,7 +98,7 @@ class IoReactNativeCie: RCTEventEmitter {
       }
     }
   }
-
+  
   @objc func startReading(
     _ pin: String,
     withAuthUrl authUrl: String,
@@ -111,22 +111,22 @@ class IoReactNativeCie: RCTEventEmitter {
         ME.threadingError.reject(reject: reject)
         return
       }
-
+      
       guard pin.count == 8, pin.allSatisfy(\.isNumber) else {
         ME.invalidPin.reject(reject: reject)
         return
       }
-
+      
       guard let url = URL(string: authUrl) else {
         ME.invalidAuthUrl.reject(reject: reject)
         return
       }
-
+      
       do {
         let authenticatedUrl = try await self.cieSdk.performAuthentication(
           forUrl: url.absoluteString, withPin: pin, handleReadEvent)
         self.sendEvent(
-          withName: EventType.onReadSuccess.rawValue, body: authenticatedUrl)
+          withName: EventType.onSuccess.rawValue, body: authenticatedUrl)
       } catch {
         guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
           ME.unexpected.reject(
@@ -138,53 +138,49 @@ class IoReactNativeCie: RCTEventEmitter {
       }
     }
   }
-
+  
   func handleReadEvent(event: CieSDK.CieDigitalIdEvent, progress: Float) {
     let payload: NSDictionary = ["name": "\(event)", "progress": progress]
     self.sendEvent(withName: EventType.onEvent.rawValue, body: payload)
   }
-
+  
   func handleReadError(_ error: NfcDigitalIdError) {
-    let payload: NSDictionary = [
-      "name": mapError(error).rawValue, "message": error.description,
-    ]
-    self.sendEvent(withName: EventType.onError.rawValue, body: payload)
-  }
-
-  private func mapError(_ error: NfcDigitalIdError) -> ErrorType {
+    var payload: [String: Any] = [:]
+    
     switch error {
     case .invalidTag:
-      return ErrorType.NOT_A_CIE
+      payload = [ "name": ErrorType.NOT_A_CIE.rawValue, "message": error.description ]
     case .nfcError(let nfcError):
       switch nfcError.code {
-      case .readerTransceiveErrorTagConnectionLost,
-        .readerTransceiveErrorTagResponseError:
-        return ErrorType.TAG_LOST
+      case .readerTransceiveErrorTagConnectionLost, .readerTransceiveErrorTagResponseError:
+        payload = [ "name": ErrorType.TAG_LOST.rawValue, "message": error.description ]
       case .readerSessionInvalidationErrorUserCanceled:
-        return ErrorType.CANCELLED_BY_USER
+        payload = [ "name": ErrorType.CANCELLED_BY_USER.rawValue, "message": error.description ]
       default:
-        return ErrorType.GENERIC_ERROR
+        payload = [ "name": ErrorType.GENERIC_ERROR.rawValue, "message": error.description ]
       }
     case .errorBuildingApdu, .responseError:
-      return ErrorType.APDU_ERROR
-    case .wrongPin:
-      return ErrorType.WRONG_PIN
+      payload = [ "name": ErrorType.APDU_ERROR.rawValue, "message": error.description ]
+    case .wrongPin(let attempts):
+      payload = [ "name":ErrorType.WRONG_PIN.rawValue, "message": error.description, "attempts": attempts ]
     case .cardBlocked:
-      return ErrorType.CARD_BLOCKED
+      payload = [ "name": ErrorType.CARD_BLOCKED.rawValue, "message": error.description ]
     case .sslError:
-      return ErrorType.CERTIFICATE_EXPIRED
+      payload = [ "name": ErrorType.CERTIFICATE_EXPIRED.rawValue, "message": error.description ]
     default:
-      return ErrorType.GENERIC_ERROR
+      payload = [ "name": ErrorType.GENERIC_ERROR.rawValue, "message": error.description ]
     }
+    
+    self.sendEvent(withName: EventType.onError.rawValue, body: payload)
   }
-
+  
   private enum EventType: String, CaseIterable {
     case onEvent
     case onError
     case onAttributesSuccess
-    case onReadSuccess
+    case onSuccess
   }
-
+  
   private enum ErrorType: String, CaseIterable {
     case NOT_A_CIE
     case TAG_LOST
@@ -198,13 +194,13 @@ class IoReactNativeCie: RCTEventEmitter {
     case AUTHENTICATION_ERROR
     case GENERIC_ERROR
   }
-
+  
   private enum ModuleException: String, CaseIterable {
     case invalidPin = "PIN_REGEX_NOT_VALID"
     case invalidAuthUrl = "INVALID_AUTH_URL"
     case threadingError = "THREADING_ERROR"
     case unexpected = "UNEXPECTED_ERROR"
-
+    
     func error(userInfo: [String: Any]? = nil) -> NSError {
       switch self {
       case .invalidPin:
@@ -217,7 +213,7 @@ class IoReactNativeCie: RCTEventEmitter {
         return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
       }
     }
-
+    
     func reject(reject: RCTPromiseRejectBlock, _ moreUserInfo: (String, Any)...)
     {
       var userInfo = [String: Any]()
@@ -226,35 +222,6 @@ class IoReactNativeCie: RCTEventEmitter {
       reject("\(error.code)", error.domain, error)
     }
   }
-
+  
 }
 
-extension NfcDigitalIdError {
-  var name: String {
-    switch self {
-    case .missingAuthenticationUrl: return "missingAuthenticationUrl"
-    case .emptyPin: return "emptyPin"
-    case .missingDeepLinkParameters: return "missingDeepLinkParameters"
-    case .errorBuildingApdu: return "errorBuildingApdu"
-    case .errorDecodingAsn1: return "errorDecodingAsn1"
-    case .secureMessagingHashMismatch: return "secureMessagingHashMismatch"
-    case .secureMessagingRequired: return "secureMessagingRequired"
-    case .chipAuthenticationFailed: return "chipAuthenticationFailed"
-    case .commonCryptoError: return "commonCryptoError"
-    case .sslError: return "sslError"
-    case .tlsUnsupportedAlgorithm: return "tlsUnsupportedAlgorithm"
-    case .tlsHashingFailed: return "tlsHashingFailed"
-    case .idpEmptyBody: return "idpEmptyBody"
-    case .idpCodeNotFound: return "idpCodeNotFound"
-    case .scanNotSupported: return "scanNotSupported"
-    case .invalidTag: return "invalidTag"
-    case .sendCommandForResponse: return "sendCommandForResponse"
-    case .responseError: return "responseError"
-    case .genericError: return "genericError"
-    case .wrongPin: return "wrongPin"
-    case .cardBlocked: return "cardBlocked"
-    @unknown default:
-      return "unknownValue"
-    }
-  }
-}

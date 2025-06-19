@@ -7,10 +7,8 @@ export type {
   NfcEvent,
   NfcError,
   CieAttributes,
-  NfcEventHandler,
-  NfcErrorHandler,
-  AttributesSuccessHandler,
-  SuccessHandler,
+  CieEventHandlers,
+  CieEvent,
 } from './manager/types';
 
 export type { CieError, CieErrorCodes } from './errors';

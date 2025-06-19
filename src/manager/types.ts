@@ -54,10 +54,17 @@ export type NfcErrorName = z.infer<typeof NfcErrorName>;
  * Represent an NFC error emitted during the CIE reading process
  * It contains the name of the error, the message and the number of attempts
  */
-export const NfcError = z.object({
-  name: NfcErrorName,
-  message: z.string().optional(),
-});
+export const NfcError = z.union([
+  z.object({
+    name: NfcErrorName,
+    message: z.string().optional(),
+  }),
+  z.object({
+    name: z.literal(NfcErrorName.enum.WRONG_PIN),
+    message: z.string().optional(),
+    attempts: z.number(),
+  }),
+]);
 
 export type NfcError = z.infer<typeof NfcError>;
 
@@ -72,22 +79,16 @@ export const CieAttributes = z.object({
 export type CieAttributes = z.infer<typeof CieAttributes>;
 
 /**
- * Events handler that can be used to handle the NFC events and errors during the
- * CIE reading process
+ * Event handler that can be used to handle the CIE events during the reading process
  */
-export type NfcEventHandler = (event: NfcEvent) => void;
+export type CieEventHandlers = {
+  onEvent: (event: NfcEvent) => void;
+  onError: (error: NfcError) => void;
+  onAttributesSuccess: (attributes: CieAttributes) => void;
+  onSuccess: (uri: string) => void;
+};
 
 /**
- * Events handler that can be used to handle the NFC errors during the CIE reading process
+ * Possible events that can be listened to
  */
-export type NfcErrorHandler = (error: NfcError) => void;
-
-/**
- * Events handler that can be used to handle the CIE attributes during the reading process
- */
-export type AttributesSuccessHandler = (attributes: CieAttributes) => void;
-
-/**
- * Events handler that can be used to handle the success of the CIE reading process
- */
-export type SuccessHandler = (uri: string) => void;
+export type CieEvent = keyof CieEventHandlers;
