@@ -1,0 +1,620 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		020D24E680854FAFA0246170 /* TitilliumSansPro-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C0B21074C7354981802582E6 /* TitilliumSansPro-Semibold.otf */; };
+		0559ADAD99554F8EAFC6862B /* TitilliumSansPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 861B2C2BC4C24CACB8D78CE9 /* TitilliumSansPro-Bold.otf */; };
+		09C2647ED4CD4897961C927C /* Titillio-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9856B0A00BFC4264857C5A62 /* Titillio-Thin.otf */; };
+		0A39BAB20B1A47BB8F1A4887 /* TitilliumSansPro-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0C5E84C08FE7461FAA2D27E4 /* TitilliumSansPro-Thin.otf */; };
+		0E8EC04378E943AEAFC1B7E3 /* TitilliumSansPro-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA2F75EB6C0540A19B3DEC84 /* TitilliumSansPro-Light.otf */; };
+		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		1A35B52D922F4636AF955A53 /* DMMono-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CFD2B06AD4847FDAF21B044 /* DMMono-Medium.ttf */; };
+		1B38F6F167C34BEC926D6D63 /* TitilliumSansPro-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E6B965C226384154A85569FB /* TitilliumSansPro-LightItalic.otf */; };
+		21239E2025234CF4A5EC4962 /* Titillio-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = B596F3B0C51B49BFB12D6782 /* Titillio-Light.otf */; };
+		2CF48890B04844F68FEA1F8F /* Titillio-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BFCB7384B38D4F00BAAA9CD0 /* Titillio-LightItalic.otf */; };
+		2D27F05241AA404E96599B6D /* Titillio-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BAD2F30D208348929465BF88 /* Titillio-RegularItalic.otf */; };
+		2FD2D0B36D5D46FD92B008D0 /* Titillio-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 233B1BF8998441339359FB87 /* Titillio-Black.otf */; };
+		47BD777B84A249928D3FE9D7 /* TitilliumSansPro-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 049B39963BF749A085793A26 /* TitilliumSansPro-BoldItalic.otf */; };
+		57CE9AE455CF48BB87943186 /* Titillio-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 86656964E4F74E228BAFFF95 /* Titillio-SemiboldItalic.otf */; };
+		5A8F1F62E71A47E69F5A43A1 /* TitilliumSansPro-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 60CA9BB2039B42CB963BD5AF /* TitilliumSansPro-SemiboldItalic.otf */; };
+		5D42E65A5E5E4EECA3623796 /* Titillio-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 91D66069A6A34446A4F04BB3 /* Titillio-BlackItalic.otf */; };
+		61C5DD82BFA39F18609B1428 /* libPods-IoReactNativeCieExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7F9BE38CA8E5DA0D77191495 /* libPods-IoReactNativeCieExample.a */; };
+		633C470644E6CA7AFE46FF8B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		6668A7F62E6844AA83FE7671 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = FD2DAC8D554D436198BE5D0B /* LICENSE.txt */; };
+		6D62326031EF42AD8BCC0361 /* TitilliumSansPro-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9A266230F39E44D09AEC58F2 /* TitilliumSansPro-ThinItalic.otf */; };
+		70A4A664D89549128DEE16D5 /* Titillio-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6535BBF4E56B4EC0A2972A04 /* Titillio-ThinItalic.otf */; };
+		70D5DE9F96914B7097592505 /* Titillio-ExtraboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = CF410ABD2F5E4F519CC5779B /* Titillio-ExtraboldItalic.otf */; };
+		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8737AA33B7F5403297E32C7F /* Titillio-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 053D742F7EED4EAAB9371B0C /* Titillio-Semibold.otf */; };
+		9DB61EB545494ACEB29B3295 /* TitilliumSansPro-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BEA058D948E74482B4527794 /* TitilliumSansPro-Italic.otf */; };
+		A65F9250CB38410C9B9FD400 /* Titillio-Extrablack.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9BB5B7538D7A4CCFB12650FE /* Titillio-Extrablack.otf */; };
+		A6A88531FC0F41A983A6059F /* Titillio-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 11C435CCD747492CBC3B3649 /* Titillio-BoldItalic.otf */; };
+		A8F2BB57A44B492496E6D452 /* TitilliumSansPro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 54938A8944B848A3BA1FC39C /* TitilliumSansPro-Regular.otf */; };
+		AE52CBC7CB2640E68F0020C7 /* Titillio-Extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22E500509C4C4D47B6D9EAC8 /* Titillio-Extrabold.otf */; };
+		C86F2C16C63744318EB8B81B /* Titillio-ExtrablackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 84BED6471A7041C7BE908426 /* Titillio-ExtrablackItalic.otf */; };
+		D59CF1F462274A238196B496 /* TitilliumSansPro-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 442BE93A4FAF4A3B9FE6E64D /* TitilliumSansPro-Black.otf */; };
+		F0897F0AECAC4387A6088012 /* TitilliumSansPro-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 48848389624745AAB307C300 /* TitilliumSansPro-BlackItalic.otf */; };
+		F754C3564A3940BD982203BE /* Titillio-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6733CA8ACFF34854A6A04885 /* Titillio-Regular.otf */; };
+		FA523838CDEE402A83F8AC95 /* Titillio-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = C5785CB0405F44518CA5A158 /* Titillio-Bold.otf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		049B39963BF749A085793A26 /* TitilliumSansPro-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-BoldItalic.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-BoldItalic.otf"; sourceTree = "<group>"; };
+		053D742F7EED4EAAB9371B0C /* Titillio-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Semibold.otf"; path = "../assets/fonts/Titillio/Titillio-Semibold.otf"; sourceTree = "<group>"; };
+		0C5E84C08FE7461FAA2D27E4 /* TitilliumSansPro-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Thin.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Thin.otf"; sourceTree = "<group>"; };
+		11C435CCD747492CBC3B3649 /* Titillio-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-BoldItalic.otf"; path = "../assets/fonts/Titillio/Titillio-BoldItalic.otf"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* IoReactNativeCieExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IoReactNativeCieExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = IoReactNativeCieExample/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = IoReactNativeCieExample/Info.plist; sourceTree = "<group>"; };
+		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = IoReactNativeCieExample/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		22E500509C4C4D47B6D9EAC8 /* Titillio-Extrabold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Extrabold.otf"; path = "../assets/fonts/Titillio/Titillio-Extrabold.otf"; sourceTree = "<group>"; };
+		233B1BF8998441339359FB87 /* Titillio-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Black.otf"; path = "../assets/fonts/Titillio/Titillio-Black.otf"; sourceTree = "<group>"; };
+		3CFD2B06AD4847FDAF21B044 /* DMMono-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DMMono-Medium.ttf"; path = "../assets/fonts/DMMono/DMMono-Medium.ttf"; sourceTree = "<group>"; };
+		442BE93A4FAF4A3B9FE6E64D /* TitilliumSansPro-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Black.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Black.otf"; sourceTree = "<group>"; };
+		48848389624745AAB307C300 /* TitilliumSansPro-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-BlackItalic.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-BlackItalic.otf"; sourceTree = "<group>"; };
+		54938A8944B848A3BA1FC39C /* TitilliumSansPro-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Regular.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Regular.otf"; sourceTree = "<group>"; };
+		60CA9BB2039B42CB963BD5AF /* TitilliumSansPro-SemiboldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-SemiboldItalic.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-SemiboldItalic.otf"; sourceTree = "<group>"; };
+		6535BBF4E56B4EC0A2972A04 /* Titillio-ThinItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-ThinItalic.otf"; path = "../assets/fonts/Titillio/Titillio-ThinItalic.otf"; sourceTree = "<group>"; };
+		6733CA8ACFF34854A6A04885 /* Titillio-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Regular.otf"; path = "../assets/fonts/Titillio/Titillio-Regular.otf"; sourceTree = "<group>"; };
+		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = IoReactNativeCieExample/AppDelegate.swift; sourceTree = "<group>"; };
+		7F9BE38CA8E5DA0D77191495 /* libPods-IoReactNativeCieExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-IoReactNativeCieExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = IoReactNativeCieExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		84BED6471A7041C7BE908426 /* Titillio-ExtrablackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-ExtrablackItalic.otf"; path = "../assets/fonts/Titillio/Titillio-ExtrablackItalic.otf"; sourceTree = "<group>"; };
+		861B2C2BC4C24CACB8D78CE9 /* TitilliumSansPro-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Bold.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Bold.otf"; sourceTree = "<group>"; };
+		86656964E4F74E228BAFFF95 /* Titillio-SemiboldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-SemiboldItalic.otf"; path = "../assets/fonts/Titillio/Titillio-SemiboldItalic.otf"; sourceTree = "<group>"; };
+		91D66069A6A34446A4F04BB3 /* Titillio-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-BlackItalic.otf"; path = "../assets/fonts/Titillio/Titillio-BlackItalic.otf"; sourceTree = "<group>"; };
+		93A3D4AFDA7557C75B466E44 /* Pods-IoReactNativeCieExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoReactNativeCieExample.release.xcconfig"; path = "Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample.release.xcconfig"; sourceTree = "<group>"; };
+		9856B0A00BFC4264857C5A62 /* Titillio-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Thin.otf"; path = "../assets/fonts/Titillio/Titillio-Thin.otf"; sourceTree = "<group>"; };
+		9A266230F39E44D09AEC58F2 /* TitilliumSansPro-ThinItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-ThinItalic.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-ThinItalic.otf"; sourceTree = "<group>"; };
+		9BB5B7538D7A4CCFB12650FE /* Titillio-Extrablack.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Extrablack.otf"; path = "../assets/fonts/Titillio/Titillio-Extrablack.otf"; sourceTree = "<group>"; };
+		AA2F75EB6C0540A19B3DEC84 /* TitilliumSansPro-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Light.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Light.otf"; sourceTree = "<group>"; };
+		B596F3B0C51B49BFB12D6782 /* Titillio-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Light.otf"; path = "../assets/fonts/Titillio/Titillio-Light.otf"; sourceTree = "<group>"; };
+		B5DD6BD42DCE3F0100FB884F /* IoReactNativeCieExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = IoReactNativeCieExample.entitlements; path = IoReactNativeCieExample/IoReactNativeCieExample.entitlements; sourceTree = "<group>"; };
+		BAD2F30D208348929465BF88 /* Titillio-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-RegularItalic.otf"; path = "../assets/fonts/Titillio/Titillio-RegularItalic.otf"; sourceTree = "<group>"; };
+		BEA058D948E74482B4527794 /* TitilliumSansPro-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Italic.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Italic.otf"; sourceTree = "<group>"; };
+		BFCB7384B38D4F00BAAA9CD0 /* Titillio-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-LightItalic.otf"; path = "../assets/fonts/Titillio/Titillio-LightItalic.otf"; sourceTree = "<group>"; };
+		C0B21074C7354981802582E6 /* TitilliumSansPro-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-Semibold.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-Semibold.otf"; sourceTree = "<group>"; };
+		C5785CB0405F44518CA5A158 /* Titillio-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-Bold.otf"; path = "../assets/fonts/Titillio/Titillio-Bold.otf"; sourceTree = "<group>"; };
+		CF410ABD2F5E4F519CC5779B /* Titillio-ExtraboldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Titillio-ExtraboldItalic.otf"; path = "../assets/fonts/Titillio/Titillio-ExtraboldItalic.otf"; sourceTree = "<group>"; };
+		E6B965C226384154A85569FB /* TitilliumSansPro-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "TitilliumSansPro-LightItalic.otf"; path = "../assets/fonts/TitilliumSansPro/TitilliumSansPro-LightItalic.otf"; sourceTree = "<group>"; };
+		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F6D46D68C3F4150DD7F0CD88 /* Pods-IoReactNativeCieExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoReactNativeCieExample.debug.xcconfig"; path = "Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample.debug.xcconfig"; sourceTree = "<group>"; };
+		FD2DAC8D554D436198BE5D0B /* LICENSE.txt */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = LICENSE.txt; path = ../assets/fonts/TitilliumSansPro/LICENSE.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61C5DD82BFA39F18609B1428 /* libPods-IoReactNativeCieExample.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		13B07FAE1A68108700A75B9A /* IoReactNativeCieExample */ = {
+			isa = PBXGroup;
+			children = (
+				B5DD6BD42DCE3F0100FB884F /* IoReactNativeCieExample.entitlements */,
+				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				761780EC2CA45674006654EE /* AppDelegate.swift */,
+				13B07FB61A68108700A75B9A /* Info.plist */,
+				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+			);
+			name = IoReactNativeCieExample;
+			sourceTree = "<group>";
+		};
+		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				7F9BE38CA8E5DA0D77191495 /* libPods-IoReactNativeCieExample.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		83CBB9F61A601CBA00E9B192 = {
+			isa = PBXGroup;
+			children = (
+				13B07FAE1A68108700A75B9A /* IoReactNativeCieExample */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				83CBBA001A601CBA00E9B192 /* Products */,
+				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				9C446F8A5CB347E6993003FA /* Resources */,
+			);
+			indentWidth = 2;
+			sourceTree = "<group>";
+			tabWidth = 2;
+			usesTabs = 0;
+		};
+		83CBBA001A601CBA00E9B192 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				13B07F961A680F5B00A75B9A /* IoReactNativeCieExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9C446F8A5CB347E6993003FA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				233B1BF8998441339359FB87 /* Titillio-Black.otf */,
+				91D66069A6A34446A4F04BB3 /* Titillio-BlackItalic.otf */,
+				C5785CB0405F44518CA5A158 /* Titillio-Bold.otf */,
+				11C435CCD747492CBC3B3649 /* Titillio-BoldItalic.otf */,
+				9BB5B7538D7A4CCFB12650FE /* Titillio-Extrablack.otf */,
+				84BED6471A7041C7BE908426 /* Titillio-ExtrablackItalic.otf */,
+				22E500509C4C4D47B6D9EAC8 /* Titillio-Extrabold.otf */,
+				CF410ABD2F5E4F519CC5779B /* Titillio-ExtraboldItalic.otf */,
+				B596F3B0C51B49BFB12D6782 /* Titillio-Light.otf */,
+				BFCB7384B38D4F00BAAA9CD0 /* Titillio-LightItalic.otf */,
+				6733CA8ACFF34854A6A04885 /* Titillio-Regular.otf */,
+				BAD2F30D208348929465BF88 /* Titillio-RegularItalic.otf */,
+				053D742F7EED4EAAB9371B0C /* Titillio-Semibold.otf */,
+				86656964E4F74E228BAFFF95 /* Titillio-SemiboldItalic.otf */,
+				9856B0A00BFC4264857C5A62 /* Titillio-Thin.otf */,
+				6535BBF4E56B4EC0A2972A04 /* Titillio-ThinItalic.otf */,
+				442BE93A4FAF4A3B9FE6E64D /* TitilliumSansPro-Black.otf */,
+				48848389624745AAB307C300 /* TitilliumSansPro-BlackItalic.otf */,
+				861B2C2BC4C24CACB8D78CE9 /* TitilliumSansPro-Bold.otf */,
+				049B39963BF749A085793A26 /* TitilliumSansPro-BoldItalic.otf */,
+				BEA058D948E74482B4527794 /* TitilliumSansPro-Italic.otf */,
+				AA2F75EB6C0540A19B3DEC84 /* TitilliumSansPro-Light.otf */,
+				E6B965C226384154A85569FB /* TitilliumSansPro-LightItalic.otf */,
+				54938A8944B848A3BA1FC39C /* TitilliumSansPro-Regular.otf */,
+				C0B21074C7354981802582E6 /* TitilliumSansPro-Semibold.otf */,
+				60CA9BB2039B42CB963BD5AF /* TitilliumSansPro-SemiboldItalic.otf */,
+				0C5E84C08FE7461FAA2D27E4 /* TitilliumSansPro-Thin.otf */,
+				9A266230F39E44D09AEC58F2 /* TitilliumSansPro-ThinItalic.otf */,
+				3CFD2B06AD4847FDAF21B044 /* DMMono-Medium.ttf */,
+				FD2DAC8D554D436198BE5D0B /* LICENSE.txt */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F6D46D68C3F4150DD7F0CD88 /* Pods-IoReactNativeCieExample.debug.xcconfig */,
+				93A3D4AFDA7557C75B466E44 /* Pods-IoReactNativeCieExample.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		13B07F861A680F5B00A75B9A /* IoReactNativeCieExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "IoReactNativeCieExample" */;
+			buildPhases = (
+				93379D4294644C66BFFB54DE /* [CP] Check Pods Manifest.lock */,
+				13B07F871A680F5B00A75B9A /* Sources */,
+				13B07F8C1A680F5B00A75B9A /* Frameworks */,
+				13B07F8E1A680F5B00A75B9A /* Resources */,
+				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				CA3D0F360A145DD723E9A14F /* [CP] Embed Pods Frameworks */,
+				5089BFD7AE27793539CB447E /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IoReactNativeCieExample;
+			productName = IoReactNativeCieExample;
+			productReference = 13B07F961A680F5B00A75B9A /* IoReactNativeCieExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		83CBB9F71A601CBA00E9B192 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1210;
+				TargetAttributes = {
+					13B07F861A680F5B00A75B9A = {
+						LastSwiftMigration = 1120;
+					};
+				};
+			};
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "IoReactNativeCieExample" */;
+			compatibilityVersion = "Xcode 12.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 83CBB9F61A601CBA00E9B192;
+			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				13B07F861A680F5B00A75B9A /* IoReactNativeCieExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		13B07F8E1A680F5B00A75B9A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				633C470644E6CA7AFE46FF8B /* PrivacyInfo.xcprivacy in Resources */,
+				2FD2D0B36D5D46FD92B008D0 /* Titillio-Black.otf in Resources */,
+				5D42E65A5E5E4EECA3623796 /* Titillio-BlackItalic.otf in Resources */,
+				FA523838CDEE402A83F8AC95 /* Titillio-Bold.otf in Resources */,
+				A6A88531FC0F41A983A6059F /* Titillio-BoldItalic.otf in Resources */,
+				A65F9250CB38410C9B9FD400 /* Titillio-Extrablack.otf in Resources */,
+				C86F2C16C63744318EB8B81B /* Titillio-ExtrablackItalic.otf in Resources */,
+				AE52CBC7CB2640E68F0020C7 /* Titillio-Extrabold.otf in Resources */,
+				70D5DE9F96914B7097592505 /* Titillio-ExtraboldItalic.otf in Resources */,
+				21239E2025234CF4A5EC4962 /* Titillio-Light.otf in Resources */,
+				2CF48890B04844F68FEA1F8F /* Titillio-LightItalic.otf in Resources */,
+				F754C3564A3940BD982203BE /* Titillio-Regular.otf in Resources */,
+				2D27F05241AA404E96599B6D /* Titillio-RegularItalic.otf in Resources */,
+				8737AA33B7F5403297E32C7F /* Titillio-Semibold.otf in Resources */,
+				57CE9AE455CF48BB87943186 /* Titillio-SemiboldItalic.otf in Resources */,
+				09C2647ED4CD4897961C927C /* Titillio-Thin.otf in Resources */,
+				70A4A664D89549128DEE16D5 /* Titillio-ThinItalic.otf in Resources */,
+				D59CF1F462274A238196B496 /* TitilliumSansPro-Black.otf in Resources */,
+				F0897F0AECAC4387A6088012 /* TitilliumSansPro-BlackItalic.otf in Resources */,
+				0559ADAD99554F8EAFC6862B /* TitilliumSansPro-Bold.otf in Resources */,
+				47BD777B84A249928D3FE9D7 /* TitilliumSansPro-BoldItalic.otf in Resources */,
+				9DB61EB545494ACEB29B3295 /* TitilliumSansPro-Italic.otf in Resources */,
+				0E8EC04378E943AEAFC1B7E3 /* TitilliumSansPro-Light.otf in Resources */,
+				1B38F6F167C34BEC926D6D63 /* TitilliumSansPro-LightItalic.otf in Resources */,
+				A8F2BB57A44B492496E6D452 /* TitilliumSansPro-Regular.otf in Resources */,
+				020D24E680854FAFA0246170 /* TitilliumSansPro-Semibold.otf in Resources */,
+				5A8F1F62E71A47E69F5A43A1 /* TitilliumSansPro-SemiboldItalic.otf in Resources */,
+				0A39BAB20B1A47BB8F1A4887 /* TitilliumSansPro-Thin.otf in Resources */,
+				6D62326031EF42AD8BCC0361 /* TitilliumSansPro-ThinItalic.otf in Resources */,
+				1A35B52D922F4636AF955A53 /* DMMono-Medium.ttf in Resources */,
+				6668A7F62E6844AA83FE7671 /* LICENSE.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		5089BFD7AE27793539CB447E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		93379D4294644C66BFFB54DE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-IoReactNativeCieExample-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CA3D0F360A145DD723E9A14F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-IoReactNativeCieExample/Pods-IoReactNativeCieExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13B07F871A680F5B00A75B9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		13B07F941A680F5B00A75B9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F6D46D68C3F4150DD7F0CD88 /* Pods-IoReactNativeCieExample.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = IoReactNativeCieExample/IoReactNativeCieExample.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M2X5YQ4BJ7;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = IoReactNativeCieExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = pagopa.ioreactnativecie.example;
+				PRODUCT_NAME = IoReactNativeCieExample;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		13B07F951A680F5B00A75B9A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93A3D4AFDA7557C75B466E44 /* Pods-IoReactNativeCieExample.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = IoReactNativeCieExample/IoReactNativeCieExample.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M2X5YQ4BJ7;
+				INFOPLIST_FILE = IoReactNativeCieExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = pagopa.ioreactnativecie.example;
+				PRODUCT_NAME = IoReactNativeCieExample;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		83CBBA201A601CBA00E9B192 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_CFG_NO_COROUTINES=1",
+					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				USE_HERMES = true;
+			};
+			name = Debug;
+		};
+		83CBBA211A601CBA00E9B192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
+					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
+					"\"$(inherited)\"",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_CFG_NO_COROUTINES=1",
+					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
+				SDKROOT = iphoneos;
+				USE_HERMES = true;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "IoReactNativeCieExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B07F941A680F5B00A75B9A /* Debug */,
+				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "IoReactNativeCieExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83CBBA201A601CBA00E9B192 /* Debug */,
+				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
+}

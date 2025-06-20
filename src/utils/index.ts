@@ -1,0 +1,42 @@
+import { IoReactNativeCie } from '../native';
+
+/**
+ * Checks if the device has NFC hardware capabilities.
+ *
+ * On iOS the NFC features is always available.
+ *
+ * @returns A promise that resolves to true if the device supports NFC, false otherwise.
+ * @throws {CieError} If cannot check if NFC is available.
+ */
+export const hasNfcFeature = async () => {
+  return IoReactNativeCie.hasNfcFeature();
+};
+
+/**
+ * Checks if NFC is currently enabled on the device.
+ *
+ * On iOS the NFC features is always enabled.
+ *
+ * @returns A promise that resolves to true if NFC is enabled, false otherwise.
+ * @throws {CieError} If cannot check if NFC is enabled.
+ */
+export const isNfcEnabled = async () => {
+  return IoReactNativeCie.isNfcEnabled();
+};
+
+/**
+ * Verifies if the device supports CIE (Electronic Identity Card) authentication.
+ * @returns A promise that resolves to true if CIE authentication is supported, false otherwise.
+ */
+export const isCieAuthenticationSupported = async () => {
+  return IoReactNativeCie.isCieAuthenticationSupported();
+};
+
+/**
+ * Opens the device's NFC settings page, allowing users to enable or disable NFC.
+ * @returns A promise that resolves when the settings page is opened.
+ * @throws {CieError} If cannot open the settings page.
+ */
+export const openNfcSettings = async () => {
+  return IoReactNativeCie.openNfcSettings();
+};
