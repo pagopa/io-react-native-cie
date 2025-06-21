@@ -1,10 +1,10 @@
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter } from 'react-native';
 import { IoReactNativeCie } from '../native';
 import { AlertMessageKey, type CieEvent, type CieEventHandlers } from './types';
 
 const DEFAULT_TIMEOUT = 10000;
 
-const eventEmitter = new NativeEventEmitter(NativeModules.IoReactNativeCie);
+const eventEmitter = new NativeEventEmitter(IoReactNativeCie);
 
 /**
  * Adds a listener for a specific CIE event.
