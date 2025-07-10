@@ -52,17 +52,17 @@ export type NfcErrorName = z.infer<typeof NfcErrorName>;
 
 /**
  * Represent an NFC error emitted during the CIE reading process
- * It contains the name of the error, the message and the number of attempts
  */
 export const NfcError = z.union([
   z.object({
-    name: NfcErrorName,
+    name: NfcErrorName.exclude(['WRONG_PIN']),
     message: z.string().optional(),
   }),
+  // WRONG_PIN error contains the number of attempts left, that can be 1 or 2 (0 means CARD_BLOCKED)
   z.object({
-    name: z.literal(NfcErrorName.enum.WRONG_PIN),
+    name: NfcErrorName.extract(['WRONG_PIN']),
     message: z.string().optional(),
-    attempts: z.number(),
+    attemptsLeft: z.union([z.literal(1), z.literal(2)]),
   }),
 ]);
 
