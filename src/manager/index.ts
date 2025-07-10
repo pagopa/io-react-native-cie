@@ -1,6 +1,7 @@
 import { NativeEventEmitter } from 'react-native';
 import { IoReactNativeCie } from '../native';
 import { AlertMessageKey, type CieEvent, type CieEventHandlers } from './types';
+import { getDefaultIdpUrl } from './utils';
 
 const DEFAULT_TIMEOUT = 10000;
 
@@ -54,17 +55,18 @@ const removeAllListeners = () => {
 
 /**
  * Sets a custom Identity Provider (IDP) URL for authentication.
- * If not set, will be used the default IDP URL:
- * https://idserver.servizicie.interno.gov.it/idp/
+ * If not set or set to undefined, will be used the default IDP URL:
+ * - iOS: https://idserver.servizicie.interno.gov.it/idp/Authn/SSL/Login2?
+ * - Android: https://idserver.servizicie.interno.gov.it/idp/
  *
- * @param url - The custom IDP URL to use
+ * @param url - The custom IDP URL to use or undefined to use the default IDP URL
  * @example
  * ```typescript
  * CieManager.setCustomIdpUrl('https://custom.idp.com/auth');
  * ```
  */
-const setCustomIdpUrl = (url: string) => {
-  return IoReactNativeCie.setCustomIdpUrl(url);
+const setCustomIdpUrl = (url: string | undefined) => {
+  return IoReactNativeCie.setCustomIdpUrl(url ?? getDefaultIdpUrl());
 };
 
 /**
