@@ -97,7 +97,7 @@ To run the example app, follow the instructions in [example/README.md](./example
 
 List of available functions
 
-| Function                                                                | Return             | Descrizione                                                                    |
+| Function                                                                | Return             | Description                                                                    |
 | :---------------------------------------------------------------------- | :----------------- | :----------------------------------------------------------------------------- |
 | `hasNFCFeature()`                                                       | `Promise<boolean>` | (Android) Checks if the device supports NFC feature                            |
 | `isNfcEnabled()`                                                        | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled                               |
