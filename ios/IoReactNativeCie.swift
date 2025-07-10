@@ -161,8 +161,8 @@ class IoReactNativeCie: RCTEventEmitter {
       }
     case .errorBuildingApdu, .responseError:
       payload = [ "name": ErrorType.APDU_ERROR.rawValue, "message": error.description ]
-    case .wrongPin(let attempts):
-      payload = [ "name":ErrorType.WRONG_PIN.rawValue, "message": error.description, "attempts": attempts ]
+    case .wrongPin(let attemptsLeft):
+      payload = [ "name":ErrorType.WRONG_PIN.rawValue, "message": error.description, "attemptsLeft": attemptsLeft ]
     case .cardBlocked:
       payload = [ "name": ErrorType.CARD_BLOCKED.rawValue, "message": error.description ]
     case .sslError:
