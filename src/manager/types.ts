@@ -58,11 +58,11 @@ export const NfcError = z.union([
     name: NfcErrorName.exclude(['WRONG_PIN']),
     message: z.string().optional(),
   }),
-  // WRONG_PIN error contains the number of attempts left, that can be 1 or 2 (0 means CARD_BLOCKED)
+  // WRONG_PIN error also contains the number of attempts left
   z.object({
     name: NfcErrorName.extract(['WRONG_PIN']),
     message: z.string().optional(),
-    attemptsLeft: z.union([z.literal(1), z.literal(2)]),
+    attemptsLeft: z.number(),
   }),
 ]);
 
