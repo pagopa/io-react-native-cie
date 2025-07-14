@@ -1,6 +1,6 @@
 {
   "name": "@pagopa/io-react-native-cie",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Native support for CIE",
   "source": "./src/index.ts",
   "main": "./lib/module/index.js",
