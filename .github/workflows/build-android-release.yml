@@ -1,15 +1,13 @@
-name: Build Android Example APK and AAB and Attach to Release
+name: Build Android Example App
 
 on:
-  pull_request:
-    branches: [main]
-  # release:
-  #  types: [created]
+  release:
+    types: [created]
 
 jobs:
   build-android-example:
     runs-on: ubuntu-latest
-    # if: contains(github.event.release.name, 'Example') || contains(github.event.release.name, 'example')
+    if: contains(github.event.release.name, 'Example') || contains(github.event.release.name, 'example')
     permissions:
       contents: write
     env:
