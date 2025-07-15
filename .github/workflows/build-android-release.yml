@@ -1,0 +1,85 @@
+name: Build Android Example APK and AAB and Attach to Release
+
+on: workflow_dispatch
+
+jobs:
+  build-android-example:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TURBO_CACHE_DIR: .turbo/android
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Cache turborepo for Android
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turborepo-android-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-turborepo-android-
+
+      - name: Install JDK
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Finalize Android SDK
+        run: |
+          /bin/bash -c "yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null"
+
+      - name: Cache Gradle
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+        with:
+          path: |
+            ~/.gradle/wrapper
+            ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('example/android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build Android APK and AAB
+        env:
+          JAVA_OPTS: "-XX:MaxHeapSize=6g"
+        run: |
+          cd example/android
+          ./gradlew assembleRelease bundleRelease
+
+      - name: Find APK and AAB paths
+        id: find-artifacts
+        run: |
+          APK_PATH=$(find example/android/app/build/outputs/apk/release -name "*.apk" | head -1)
+          AAB_PATH=$(find example/android/app/build/outputs/bundle -name "*.aab" | head -1)
+          echo "apk_path=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "apk_name=$(basename $APK_PATH)" >> $GITHUB_OUTPUT
+          echo "aab_path=$AAB_PATH" >> $GITHUB_OUTPUT
+          echo "aab_name=$(basename $AAB_PATH)" >> $GITHUB_OUTPUT
+          echo "Debug: APK found at $APK_PATH"
+          echo "Debug: AAB found at $AAB_PATH"
+          ls -la example/android/app/build/outputs/bundle/ || echo "Bundle directory not found"
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.find-artifacts.outputs.apk_path }}
+          asset_name: io-react-native-cie-example-${{ github.event.release.tag_name }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload AAB to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ${{ steps.find-artifacts.outputs.aab_path }}
+          asset_name: io-react-native-cie-example-${{ github.event.release.tag_name }}.aab
+          asset_content_type: application/x-authorware-bin
