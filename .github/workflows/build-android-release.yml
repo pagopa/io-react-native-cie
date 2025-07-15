@@ -3,10 +3,13 @@ name: Build Android Example APK and AAB and Attach to Release
 on:
   pull_request:
     branches: [main]
+  # release:
+  #  types: [created]
 
 jobs:
   build-android-example:
     runs-on: ubuntu-latest
+    # if: contains(github.event.release.name, 'Example') || contains(github.event.release.name, 'example')
     permissions:
       contents: write
     env:
@@ -67,21 +70,19 @@ jobs:
           ls -la example/android/app/build/outputs/bundle/ || echo "Bundle directory not found"
 
       - name: Upload APK to Release
-        uses: actions/upload-release-asset@v1
+        continue-on-error: true
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.find-artifacts.outputs.apk_path }}
-          asset_name: io-react-native-cie-example-${{ github.event.release.tag_name }}.apk
-          asset_content_type: application/vnd.android.package-archive
+          name: io-react-native-cie-example-${{ github.event.release.tag_name }}.apk
+          path: ${{ steps.find-artifacts.outputs.apk_path }}
 
       - name: Upload AAB to Release
-        uses: actions/upload-release-asset@v1
+        continue-on-error: true
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ steps.find-artifacts.outputs.aab_path }}
-          asset_name: io-react-native-cie-example-${{ github.event.release.tag_name }}.aab
-          asset_content_type: application/x-authorware-bin
+          name: io-react-native-cie-example-${{ github.event.release.tag_name }}.aab
+          path: ${{ steps.find-artifacts.outputs.aab_path }}
