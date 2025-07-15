@@ -1,6 +1,8 @@
 name: Build Android Example APK and AAB and Attach to Release
 
-on: workflow_dispatch
+on:
+  pull_request:
+    branches: [main]
 
 jobs:
   build-android-example:
