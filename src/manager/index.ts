@@ -66,7 +66,7 @@ const removeAllListeners = () => {
  * ```
  */
 const setCustomIdpUrl = (url: string | undefined) => {
-  return IoReactNativeCie.setCustomIdpUrl(url ?? getDefaultIdpUrl());
+  IoReactNativeCie.setCustomIdpUrl(url ?? getDefaultIdpUrl());
 };
 
 /**
@@ -82,7 +82,7 @@ const setCustomIdpUrl = (url: string | undefined) => {
  * ```
  */
 export const setAlertMessage = (key: AlertMessageKey, value: string) => {
-  return IoReactNativeCie.setAlertMessage(key, value);
+  IoReactNativeCie.setAlertMessage(key, value);
 };
 
 /**
@@ -97,7 +97,7 @@ export const setAlertMessage = (key: AlertMessageKey, value: string) => {
  * ```
  */
 export const setCurrentAlertMessage = (value: string) => {
-  return IoReactNativeCie.setCurrentAlertMessage(value);
+  IoReactNativeCie.setCurrentAlertMessage(value);
 };
 
 /**
