@@ -19,8 +19,6 @@ import it.pagopa.io.app.cie.network.NetworkError
 import it.pagopa.io.app.cie.nfc.NfcEvents
 import java.net.URL
 
-typealias ME = IoReactNativeCieModule.Companion.ModuleException
-
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
 
@@ -54,9 +52,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
         promise.resolve(it)
       }
     } catch (e: Exception) {
-      ME.UNKNOWN_EXCEPTION.reject(
-        promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
     }
   }
 
@@ -67,9 +63,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
         promise.resolve(it)
       }
     } catch (e: Exception) {
-      ME.UNKNOWN_EXCEPTION.reject(
-        promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
     }
   }
 
@@ -86,9 +80,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       cieSdk.openNfcSettings()
       promise.resolve(null)
     } catch (e: Exception) {
-      ME.UNKNOWN_EXCEPTION.reject(
-        promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
     }
   }
 
@@ -154,9 +146,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       })
       promise.resolve(null)
     } catch (e: Exception) {
-      ME.UNKNOWN_EXCEPTION.reject(
-        promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
     }
   }
 
@@ -170,16 +160,14 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     try {
       cieSdk.setPin(pin)
     } catch (e: Exception) {
-      ME.PIN_REGEX_NOT_VALID.reject(
-        promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+      promise.reject(ModuleException.PIN_REGEX_NOT_VALID, e.message, e)
       return;
     }
 
     try {
       cieSdk.withUrl(URL(authenticationUrl).toString())
     } catch (e: Exception) {
-      ME.INVALID_AUTH_URL.reject(promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty()))
+      promise.reject(ModuleException.INVALID_AUTH_URL, e.message, e)
       return
     }
 
@@ -220,9 +208,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       })
       promise.resolve(null)
     } catch (e: Exception) {
-      ME.UNKNOWN_EXCEPTION.reject(
-        promise, Pair(ERROR_USER_INFO_KEY, e.message.orEmpty())
-      )
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
     }
   }
 
@@ -277,26 +263,10 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       GENERIC_ERROR,
     }
 
-    enum class ModuleException(
-      val ex: Exception
-    ) {
-      PIN_REGEX_NOT_VALID(Exception("PIN_REGEX_NOT_VALID")),
-      INVALID_AUTH_URL(Exception("INVALID_AUTH_URL")),
-      UNKNOWN_EXCEPTION(Exception("UNKNOWN_EXCEPTION"));
-
-      fun reject(
-        promise: Promise, vararg args: Pair<String, String>
-      ) {
-        exMap(*args).let {
-          promise.reject(it.first, ex.message, it.second)
-        }
-      }
-
-      private fun exMap(vararg args: Pair<String, String>): Pair<String, WritableMap> {
-        val writableMap = WritableNativeMap()
-        args.forEach { writableMap.putString(it.first, it.second) }
-        return Pair(this.ex.message ?: "UNKNOWN", writableMap)
-      }
+    private object ModuleException {
+      const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID";
+      const val INVALID_AUTH_URL = "INVALID_AUTH_URL";
+      const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION";
     }
   }
 }
