@@ -3,8 +3,6 @@ import React
 
 @objc(IoReactNativeCie)
 class IoReactNativeCie: RCTEventEmitter {
-  private typealias ME = ModuleException
-  
   private let cieSdk: CieDigitalId
   
   override init() {
@@ -74,7 +72,7 @@ class IoReactNativeCie: RCTEventEmitter {
   ) {
     Task { [weak self] in
       guard let self = self else {
-        ME.threadingError.reject(reject: reject)
+        reject(ModuleException.threadingError.rawValue, "Failed to perform background operation, self was deallocated", nil)
         return
       }
       
@@ -89,8 +87,7 @@ class IoReactNativeCie: RCTEventEmitter {
           withName: EventType.onAttributesSuccess.rawValue, body: payload)
       } catch {
         guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
-          ME.unexpected.reject(
-            reject: reject, ("error", error.localizedDescription))
+          reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
           return
         }
         handleReadError(nfcDigitalIdError)
@@ -108,17 +105,17 @@ class IoReactNativeCie: RCTEventEmitter {
   ) {
     Task { [weak self] in
       guard let self = self else {
-        ME.threadingError.reject(reject: reject)
+        reject(ModuleException.threadingError.rawValue, "Failed to perform background operation, self was deallocated", nil)
         return
       }
       
       guard pin.count == 8, pin.allSatisfy(\.isNumber) else {
-        ME.invalidPin.reject(reject: reject)
+        reject(ModuleException.invalidPin.rawValue, "Pin must be exactly 8 digits", nil)
         return
       }
       
       guard let url = URL(string: authUrl) else {
-        ME.invalidAuthUrl.reject(reject: reject)
+        reject(ModuleException.invalidAuthUrl.rawValue, "Auth URL is invalid", nil)
         return
       }
       
@@ -129,8 +126,7 @@ class IoReactNativeCie: RCTEventEmitter {
           withName: EventType.onSuccess.rawValue, body: authenticatedUrl)
       } catch {
         guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
-          ME.unexpected.reject(
-            reject: reject, ("error", error.localizedDescription))
+          reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
           return
         }
         handleReadError(nfcDigitalIdError)
@@ -200,27 +196,6 @@ class IoReactNativeCie: RCTEventEmitter {
     case invalidAuthUrl = "INVALID_AUTH_URL"
     case threadingError = "THREADING_ERROR"
     case unexpected = "UNEXPECTED_ERROR"
-    
-    func error(userInfo: [String: Any]? = nil) -> NSError {
-      switch self {
-      case .invalidPin:
-        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
-      case .invalidAuthUrl:
-        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
-      case .threadingError:
-        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
-      case .unexpected:
-        return NSError(domain: self.rawValue, code: -1, userInfo: userInfo)
-      }
-    }
-    
-    func reject(reject: RCTPromiseRejectBlock, _ moreUserInfo: (String, Any)...)
-    {
-      var userInfo = [String: Any]()
-      moreUserInfo.forEach { userInfo[$0.0] = $0.1 }
-      let error = error(userInfo: userInfo)
-      reject("\(error.code)", error.domain, error)
-    }
   }
   
 }

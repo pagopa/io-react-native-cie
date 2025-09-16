@@ -11,4 +11,4 @@ export type {
   CieEvent,
 } from './manager/types';
 
-export type { CieError, CieErrorCodes } from './errors';
+export type { CieErrorSchema, CieError, CieErrorCodes } from './errors';
