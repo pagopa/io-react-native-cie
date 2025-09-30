@@ -85,15 +85,13 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-  fun setAlertMessage(key: String, value: String, promise: Promise) {
+  fun setAlertMessage(key: String, value: String) {
     // Android does not support alert messages for NFC reading
-    promise.resolve(null)
   }
 
   @ReactMethod
-  fun setCurrentAlertMessage(value: String, promise: Promise) {
+  fun setCurrentAlertMessage(value: String) {
     // Android does not support alert messages for NFC reading
-    promise.resolve(null)
   }
 
   @ReactMethod
