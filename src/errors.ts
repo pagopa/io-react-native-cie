@@ -1,32 +1,64 @@
-/**
- * Error codes returned by the iOS module.
- */
-type CieErrorCodesIOS =
-  | 'PIN_REGEX_NOT_VALID'
-  | 'INVALID_AUTH_URL'
-  | 'THREADING_ERROR'
-  | 'UNKNOWN_EXCEPTION';
+import { z } from 'zod';
 
 /**
- * Error codes returned by the Android side.
+ * Schema for parsing a nativeStackAndroid object of a rejected promise error in an Android native module.
  */
-type CieErrorCodesAndroid =
-  | 'PIN_REGEX_NOT_VALID'
-  | 'INVALID_AUTH_URL'
-  | 'UNKNOWN_EXCEPTION';
+const StackTraceElementSchema = z.object({
+  lineNumber: z.number(),
+  file: z.string(),
+  methodName: z.string(),
+  class: z.string(),
+});
 
 /**
- * All error codes that the module could return.
+ * Schema for parsing specific parameters of a rejected promise error in an Android native module.
+ * It's defined as partial to allow merging with the common schema and it must be checked at runtime.
  */
-export type CieErrorCodes = CieErrorCodesAndroid | CieErrorCodesIOS;
+const ModuleErrorAndroidSchema = z
+  .object({
+    nativeStackAndroid: z.array(StackTraceElementSchema),
+  })
+  .partial();
 
 /**
- * Error type returned by a rejected promise.
- *
- * If additional error information are available,
- * they are stored in the {@link CieError["userInfo"]} field.
+ * Schema for parsing specific parameters of a rejected promise error in an iOS native module.
+ * It's defined as partial to allow merging with the common schema and it must be checked at runtime.
  */
-export type CieError = {
-  message: CieErrorCodes;
-  userInfo: Record<string, string>;
-};
+const ModuleErrorIosSchema = z
+  .object({
+    domain: z.string(),
+    nativeStackIOS: z.array(z.string()),
+  })
+  .partial();
+
+/**
+ * Error codes which the module uses to reject a promise.
+ */
+const ModuleErrorCodesSchema = z.enum([
+  'PIN_REGEX_NOT_VALID',
+  'INVALID_AUTH_URL',
+  'THREADING_ERROR', // iOS only
+  'UNKNOWN_EXCEPTION',
+]);
+
+export type CieErrorCodes = z.infer<typeof ModuleErrorCodesSchema>;
+
+/**
+ * Schema which can be used to parse a rejected promise error the module.
+ * This schema contains the common parameters that are shared across both Android and iOS native modules.
+ * Parameters which are platform specific are defined as optional and must be checked at runtime.
+ * It accepts a generic code schema to allow for different error codes which can be defined in each module.
+ * @returns A schema for the common parameters of a rejected promise error in a native module.
+ */
+
+export const CieErrorSchema = z
+  .object({
+    code: ModuleErrorCodesSchema,
+    message: z.string(),
+    name: z.string(),
+    userInfo: z.record(z.string(), z.any()).optional().or(z.null()),
+  })
+  .and(ModuleErrorAndroidSchema)
+  .and(ModuleErrorIosSchema);
+
+export type CieError = z.infer<typeof CieErrorSchema>;
