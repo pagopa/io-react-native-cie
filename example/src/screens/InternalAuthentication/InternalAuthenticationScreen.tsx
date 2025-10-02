@@ -1,18 +1,26 @@
-import { ButtonSolid } from '@pagopa/io-app-design-system';
+import { ButtonSolid, TextInput } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
-import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
+import { DebugPrettyPrint } from '../../components/DebugPrettyPrint';
 import {
   ReadStatusComponent,
   type ReadStatus,
-} from '../components/ReadStatusComponent';
+} from '../../components/ReadStatusComponent';
 
 export function InternalAuthenticationScreen() {
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
   const [result, setResult] = useState<any>(null);
+  const [challenge, setChallenge] = useState<string>('');
 
   useEffect(() => {
     const cleanup = [
@@ -70,25 +78,39 @@ export function InternalAuthenticationScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.progressContainer}>
-        <ReadStatusComponent
-          progress={event?.progress}
-          status={status}
-          step={event?.name}
-        />
-      </View>
-      <Animated.View
-        style={styles.attributesContainer}
-        layout={LinearTransition}
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
       >
-        {result && <DebugPrettyPrint data={result} />}
-      </Animated.View>
-      <ButtonSolid
-        label={status === 'reading' ? 'Stop reading' : 'Start reading'}
-        onPress={() =>
-          status === 'reading' ? handleStopReading() : handleStartReading()
-        }
-      />
+        <View style={styles.progressContainer}>
+          <ReadStatusComponent
+            progress={event?.progress}
+            status={status}
+            step={event?.name}
+          />
+        </View>
+        <Animated.View
+          style={styles.attributesContainer}
+          layout={LinearTransition}
+        >
+          {result && <DebugPrettyPrint data={{ challenge, ...result }} />}
+        </Animated.View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={challenge}
+            placeholder={'Challenge'}
+            onChangeText={setChallenge}
+          />
+        </View>
+        <ButtonSolid
+          label={status === 'reading' ? 'Stop' : 'Sign challenge'}
+          disabled={challenge.length === 0}
+          onPress={() =>
+            status === 'reading' ? handleStopReading() : handleStartReading()
+          }
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -107,6 +129,13 @@ const styles = StyleSheet.create({
   eventContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  inputContainer: {
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  keyboardAvoidingView: {
+    flex: 1,
   },
   attributesContainer: {
     justifyContent: 'flex-end',

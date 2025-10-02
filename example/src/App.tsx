@@ -16,7 +16,7 @@ import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
-import { InternalAuthenticationScreen } from './screens/InternalAuthenticationScreen';
+import { InternalAuthenticationScreen } from './screens/InternalAuthentication/InternalAuthenticationScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {

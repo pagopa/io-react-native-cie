@@ -105,7 +105,7 @@ export const setCurrentAlertMessage = (value: string) => {
  *
  * @param challenge - The challenge string to be used for authentication.
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
- * @returns A promise that resolves when the authentication process has started.
+ * @returns A promise that resolves when the authentication process has ended.
  */
 const startInternalAuthentication = async (
   challenge: string,

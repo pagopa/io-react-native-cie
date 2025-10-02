@@ -92,6 +92,7 @@ class IoReactNativeCie: RCTEventEmitter {
         ]
         self.sendEvent(
           withName: EventType.onInternalAuthenticationSuccess.rawValue, body: payload)
+        resolve(nil)
       } catch {
         guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
           reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
