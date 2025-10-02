@@ -1,25 +1,26 @@
-import { ButtonSolid, TextInput } from '@pagopa/io-app-design-system';
+import { IOButton, TextInput } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
 import {
   Alert,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
-import { DebugPrettyPrint } from '../../components/DebugPrettyPrint';
 import {
   ReadStatusComponent,
   type ReadStatus,
 } from '../../components/ReadStatusComponent';
 
+import { useNavigation } from '@react-navigation/native';
+
 export function InternalAuthenticationScreen() {
+  const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
-  const [result, setResult] = useState<any>(null);
   const [challenge, setChallenge] = useState<string>('');
 
   useEffect(() => {
@@ -28,7 +29,6 @@ export function InternalAuthenticationScreen() {
       CieManager.addListener('onEvent', setEvent),
       // Start listening for errors
       CieManager.addListener('onError', (error) => {
-        setResult(error);
         setStatus('error');
         Alert.alert(
           'Error while reading attributes',
@@ -38,9 +38,12 @@ export function InternalAuthenticationScreen() {
       // Start listening for attributes success
       CieManager.addListener(
         'onInternalAuthenticationSuccess',
-        (attributes) => {
-          setResult(attributes);
+        (internalAutheticationResult) => {
           setStatus('success');
+          navigation.navigate('InternalAuthenticationResult', {
+            result: internalAutheticationResult,
+            challenge,
+          });
         }
       ),
     ];
@@ -51,11 +54,11 @@ export function InternalAuthenticationScreen() {
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
-  }, []);
+  }, [challenge, navigation]);
 
   const handleStartReading = async () => {
+    Keyboard.dismiss();
     setEvent(undefined);
-    setResult(null);
     setStatus('reading');
 
     try {
@@ -71,7 +74,6 @@ export function InternalAuthenticationScreen() {
 
   const handleStopReading = () => {
     setEvent(undefined);
-    setResult(null);
     setStatus('idle');
     CieManager.stopReading();
   };
@@ -90,12 +92,7 @@ export function InternalAuthenticationScreen() {
             step={event?.name}
           />
         </View>
-        <Animated.View
-          style={styles.attributesContainer}
-          layout={LinearTransition}
-        >
-          {result && <DebugPrettyPrint data={{ challenge, ...result }} />}
-        </Animated.View>
+        {/* The result is now shown in the result screen */}
         <View style={styles.inputContainer}>
           <TextInput
             value={challenge}
@@ -103,7 +100,8 @@ export function InternalAuthenticationScreen() {
             onChangeText={setChallenge}
           />
         </View>
-        <ButtonSolid
+        <IOButton
+          variant="solid"
           label={status === 'reading' ? 'Stop' : 'Sign challenge'}
           disabled={challenge.length === 0}
           onPress={() =>
