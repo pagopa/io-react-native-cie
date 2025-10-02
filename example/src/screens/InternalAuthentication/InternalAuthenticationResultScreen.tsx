@@ -16,14 +16,20 @@ interface Props {
     params: {
       result: any;
       challenge: string;
+      encodedChallenge: string;
+      encoding: 'base64' | 'hex';
     };
   };
   navigation: any;
 }
 
 export function InternalAuthenticationResultScreen({ route }: Props) {
-  const { result, challenge } = route.params;
-  const resultString = JSON.stringify({ challenge, ...result }, null, 2);
+  const { result, challenge, encodedChallenge, encoding } = route.params;
+  const resultString = JSON.stringify(
+    { challenge, encoding, encodedChallenge, ...result },
+    null,
+    2
+  );
 
   const handleCopy = async () => {
     Clipboard.setString(resultString);

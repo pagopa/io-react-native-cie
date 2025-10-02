@@ -104,18 +104,18 @@ export const setCurrentAlertMessage = (value: string) => {
  * Initiates the internal authentication process using the provided challenge and timeout.
  *
  * @param challenge - The challenge string to be used for authentication.
- * @param encoding - The encoding of the result byte arrays, either 'base64' or 'hex' (default: 'base64')
+ * @param resultEncoding - The encoding of the result byte arrays, either 'base64' or 'hex' (default: 'base64')
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
  * @returns A promise that resolves when the authentication process has ended.
  */
 const startInternalAuthentication = async (
   challenge: string,
-  encoding: 'base64' | 'hex' = 'base64',
+  resultEncoding: 'base64' | 'hex' = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startInternalAuthentication(
     challenge,
-    encoding,
+    resultEncoding,
     timeout
   );
 };

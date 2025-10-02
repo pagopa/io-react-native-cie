@@ -1,4 +1,8 @@
-import { IOButton, TextInput } from '@pagopa/io-app-design-system';
+import {
+  IOButton,
+  ListItemSwitch,
+  TextInput,
+} from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
 import {
@@ -16,12 +20,17 @@ import {
 } from '../../components/ReadStatusComponent';
 
 import { useNavigation } from '@react-navigation/native';
+import { encodeChallenge } from '../../utils/encoding';
 
 export function InternalAuthenticationScreen() {
   const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
   const [challenge, setChallenge] = useState<string>('');
+
+  const [isBase64Encoding, setIsBase64Encoding] = useState(false);
+  const toggleEncodingSwitch = () =>
+    setIsBase64Encoding((previousState) => !previousState);
 
   useEffect(() => {
     const cleanup = [
@@ -46,7 +55,15 @@ export function InternalAuthenticationScreen() {
               { name: 'Home' },
               {
                 name: 'InternalAuthenticationResult',
-                params: { result: internalAutheticationResult, challenge },
+                params: {
+                  result: internalAutheticationResult,
+                  challenge,
+                  encodedChallenge: encodeChallenge(
+                    challenge,
+                    isBase64Encoding ? 'base64' : 'hex'
+                  ),
+                  encoding: isBase64Encoding ? 'base64' : 'hex',
+                },
               },
             ],
           });
@@ -60,7 +77,7 @@ export function InternalAuthenticationScreen() {
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
-  }, [challenge, navigation]);
+  }, [challenge, isBase64Encoding, navigation]);
 
   const handleStartReading = async () => {
     if (Platform.OS === 'android') {
@@ -76,7 +93,10 @@ export function InternalAuthenticationScreen() {
 
     try {
       // TODO: add UI to choose the encoding
-      await CieManager.startInternalAuthentication(challenge, 'hex');
+      await CieManager.startInternalAuthentication(
+        challenge,
+        isBase64Encoding ? 'base64' : 'hex'
+      );
     } catch (e) {
       setStatus('error');
       Alert.alert(
@@ -106,8 +126,12 @@ export function InternalAuthenticationScreen() {
             step={event?.name}
           />
         </View>
-        {/* The result is now shown in the result screen */}
         <View style={styles.inputContainer}>
+          <ListItemSwitch
+            label="Use base64 encoding"
+            onSwitchValueChange={toggleEncodingSwitch}
+            value={isBase64Encoding}
+          />
           <TextInput
             value={challenge}
             placeholder={'Challenge'}

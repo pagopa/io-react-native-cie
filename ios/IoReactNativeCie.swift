@@ -67,7 +67,7 @@ class IoReactNativeCie: RCTEventEmitter {
   
   @objc func startInternalAuthentication(
     _ challenge: String,
-    withEncoding encodingString: String,
+    withResultEncoding encodingString: String,
     withTimeout timeout: Int,
     withResolver resolve: @escaping RCTPromiseResolveBlock,
     withRejecter reject: @escaping RCTPromiseRejectBlock
