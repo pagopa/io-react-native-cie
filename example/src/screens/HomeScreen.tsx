@@ -82,6 +82,12 @@ export function HomeScreen() {
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('AuthenticationRequest')}
         />
+        <ButtonSolid
+          label="Start Internal CIE authentication"
+          icon="login"
+          disabled={!isCieAuthenticationSupported}
+          onPress={() => navigation.navigate('InternalAuthentication')}
+        />
         <View style={styles.buttonContainer}>
           <ButtonLink
             label="Open NFC Settings"

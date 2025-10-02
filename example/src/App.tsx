@@ -16,6 +16,7 @@ import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
+import { InternalAuthenticationScreen } from './screens/InternalAuthenticationScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
@@ -30,6 +31,12 @@ const RootStack = createNativeStackNavigator({
         header: () => (
           <HeaderSecondLevel title="@pagopa/io-react-native-cie" type="base" />
         ),
+      },
+    },
+    InternalAuthentication: {
+      screen: InternalAuthenticationScreen,
+      options: {
+        title: 'Internal CIE authentication',
       },
     },
     Attributes: {
