@@ -25,6 +25,11 @@ RCT_EXTERN_METHOD(setCurrentAlertMessage:  (NSString)value)
 
 RCT_EXTERN_METHOD(setCustomIdpUrl:  (NSString)url)
 
+RCT_EXTERN_METHOD(startInternalAuthentication:  (NSString)challenge
+                  withTimeout:              (NSNumber)timeout
+                  withResolver:             (RCTPromiseResolveBlock)resolve
+                  withRejecter:             (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(startReadingAttributes:   (NSNumber)timeout
                   withResolver:             (RCTPromiseResolveBlock)resolve
                   withRejecter:             (RCTPromiseRejectBlock)reject)

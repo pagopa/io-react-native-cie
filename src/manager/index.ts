@@ -101,6 +101,20 @@ export const setCurrentAlertMessage = (value: string) => {
 };
 
 /**
+ * Initiates the internal authentication process using the provided challenge and timeout.
+ *
+ * @param challenge - The challenge string to be used for authentication.
+ * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
+ * @returns A promise that resolves when the authentication process has ended.
+ */
+const startInternalAuthentication = async (
+  challenge: string,
+  timeout: number = DEFAULT_TIMEOUT
+): Promise<void> => {
+  return IoReactNativeCie.startInternalAuthentication(challenge, timeout);
+};
+
+/**
  * Starts the process of reading attributes from the CIE card.
  *
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
@@ -164,6 +178,7 @@ export {
   removeAllListeners,
   setCustomIdpUrl,
   startReadingAttributes,
+  startInternalAuthentication,
   startReading,
   stopReading,
 };

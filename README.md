@@ -109,9 +109,10 @@ List of available functions
 | `setCustomIdpUrl(url?: string)`                                         | `void`             | Updates IDP url, if `undefined` will use the default IDP url                   |
 | `setAlertMessage(key: AlertMessageKey, value: string)`                  | `void`             | (iOS) Updates iOS NFC modal alert message                                      |
 | `setCurrentAlertMessage(value: string)`                                 | `void`             | (iOS) Updates currently displayed iOS NFC modal alert message                  |
-| `startReadingAttributes(timeout: number)`                               | `Promise<void`     | Start the CIE attributes reading process                                       |
-| `startReading(pin: string, authenticationUrl: string, timeout: number)` | `Promise<void`     | Start the CIE reading process fro authentication                               |
-| `stopReading()`                                                         | `Promise<void`     | (Android) Stops all reading process                                            |
+| `startInternalAuthentication(challenge: string)`                        | `Promise<void>`    | Start the CIE IAS/NIS Internal Authentication                                  |
+| `startReadingAttributes(timeout: number)`                               | `Promise<void>`    | Start the CIE attributes reading process                                       |
+| `startReading(pin: string, authenticationUrl: string, timeout: number)` | `Promise<void>`    | Start the CIE reading process fro authentication                               |
+| `stopReading()`                                                         | `Promise<void>`    | (Android) Stops all reading process                                            |
 
 ## Usage
 
@@ -136,6 +137,18 @@ await CieUtils.isCieAuthenticationSupported();
 ```
 
 ### Reading CIE Data
+
+#### Internal Authentication
+
+Start the CIE Internal Authentication
+
+```typescript
+import { CieManager } from '@pagopa/io-react-native-cie';
+
+CieManager.startInternalAuthentication('challenge')
+  .then(() => console.log('Reading started'))
+  .catch((error) => console.error('Error:', error));
+```
 
 #### Reading Attributes
 

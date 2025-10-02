@@ -65,6 +65,45 @@ class IoReactNativeCie: RCTEventEmitter {
     cieSdk.idpUrl = url
   }
   
+  @objc func startInternalAuthentication(
+    _ challenge: String,
+    withTimeout timeout: Int,
+    withResolver resolve: @escaping RCTPromiseResolveBlock,
+    withRejecter reject: @escaping RCTPromiseRejectBlock
+  ) {
+    Task { [weak self] in
+      guard let self = self else {
+        reject(ModuleException.threadingError.rawValue, "Failed to perform background operation, self was deallocated", nil)
+        return
+      }
+      
+      do {
+        let internalAuthResponse = try await self.cieSdk.performInternalAuthentication(
+          challenge: Array(challenge.utf8),
+          handleReadEvent
+        )
+        let payload: NSDictionary = [
+          "response": [
+            "nis": internalAuthResponse.nis.toHexString(),
+            "publicKey": internalAuthResponse.publicKey.toHexString(),
+            "sod": internalAuthResponse.sod.toHexString(),
+            "signedChallenge": internalAuthResponse.signedChallenge.toHexString()
+          ]
+        ]
+        self.sendEvent(
+          withName: EventType.onInternalAuthenticationSuccess.rawValue, body: payload)
+        resolve(nil)
+      } catch {
+        guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
+          reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
+          return
+        }
+        handleReadError(nfcDigitalIdError)
+        resolve(nil)
+      }
+    }
+  }
+  
   @objc func startReadingAttributes(
     _ timeout: Int,
     withResolver resolve: @escaping RCTPromiseResolveBlock,
@@ -174,6 +213,7 @@ class IoReactNativeCie: RCTEventEmitter {
     case onEvent
     case onError
     case onAttributesSuccess
+    case onInternalAuthenticationSuccess
     case onSuccess
   }
   
@@ -197,6 +237,5 @@ class IoReactNativeCie: RCTEventEmitter {
     case threadingError = "THREADING_ERROR"
     case unexpected = "UNEXPECTED_ERROR"
   }
-  
 }
 
