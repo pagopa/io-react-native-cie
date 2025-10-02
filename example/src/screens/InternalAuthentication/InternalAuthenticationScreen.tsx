@@ -75,7 +75,8 @@ export function InternalAuthenticationScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startInternalAuthentication('foo');
+      // TODO: add UI to choose the encoding
+      await CieManager.startInternalAuthentication(challenge, 'hex');
     } catch (e) {
       setStatus('error');
       Alert.alert(

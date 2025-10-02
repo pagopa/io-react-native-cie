@@ -67,6 +67,7 @@ class IoReactNativeCie: RCTEventEmitter {
   
   @objc func startInternalAuthentication(
     _ challenge: String,
+    withEncoding encodingString: String,
     withTimeout timeout: Int,
     withResolver resolve: @escaping RCTPromiseResolveBlock,
     withRejecter reject: @escaping RCTPromiseRejectBlock
@@ -82,12 +83,13 @@ class IoReactNativeCie: RCTEventEmitter {
           challenge: Array(challenge.utf8),
           handleReadEvent
         )
+        let encoding = DataEncoding.from(string: encodingString)
         let payload: NSDictionary = [
           "response": [
-            "nis": internalAuthResponse.nis.toHexString(),
-            "publicKey": internalAuthResponse.publicKey.toHexString(),
-            "sod": internalAuthResponse.sod.toHexString(),
-            "signedChallenge": internalAuthResponse.signedChallenge.toHexString()
+            "nis": internalAuthResponse.nis.encodedDataString(encoding: encoding),
+            "publicKey": internalAuthResponse.publicKey.encodedDataString(encoding: encoding),
+            "sod": internalAuthResponse.sod.encodedDataString(encoding: encoding),
+            "signedChallenge": internalAuthResponse.signedChallenge.encodedDataString(encoding: encoding)
           ]
         ]
         self.sendEvent(
