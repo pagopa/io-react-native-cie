@@ -40,9 +40,15 @@ export function InternalAuthenticationScreen() {
         'onInternalAuthenticationSuccess',
         (internalAutheticationResult) => {
           setStatus('success');
-          navigation.navigate('InternalAuthenticationResult', {
-            result: internalAutheticationResult,
-            challenge,
+          navigation.reset({
+            index: 0,
+            routes: [
+              { name: 'Home' },
+              {
+                name: 'InternalAuthenticationResult',
+                params: { result: internalAutheticationResult, challenge },
+              },
+            ],
           });
         }
       ),
@@ -57,6 +63,13 @@ export function InternalAuthenticationScreen() {
   }, [challenge, navigation]);
 
   const handleStartReading = async () => {
+    if (Platform.OS === 'android') {
+      return Alert.alert(
+        'Not supported',
+        'Internal authentication is not supported on Android'
+      );
+    }
+
     Keyboard.dismiss();
     setEvent(undefined);
     setStatus('reading');
