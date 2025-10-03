@@ -10,6 +10,6 @@ enum DataEncoding: String, Sendable {
   case BASE64 = "BASE64"
   
   static func from(string: String?) -> DataEncoding {         
-         return DataEncoding(rawValue: string?.uppercased() ?? "") ?? .BASE64
-     }
+    return DataEncoding(rawValue: string?.uppercased() ?? "") ?? .BASE64
+  }
 }
