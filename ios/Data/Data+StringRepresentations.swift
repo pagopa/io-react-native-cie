@@ -37,7 +37,7 @@ extension Array where Element == UInt8 {
     return Data(self).base64UrlEncodedString()
   }
   
-  func encodedDataString(encoding: DataEncoding) -> String? {
+  func encodedDataString(encoding: DataEncoding) -> String {
     switch encoding {
     case .HEX:
       return Data(self).toHexString()
