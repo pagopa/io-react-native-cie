@@ -42,7 +42,7 @@ export function InternalAuthenticationResultScreen({ route }: Props) {
         {
           message: resultString,
           title: 'Internal Auth Result',
-          // Workdaround for iOS to set the subject sharing email in some apps
+          // Workaround for iOS to set the subject sharing email in some apps
           ...(Platform.OS === 'ios' ? { url: 'Internal Auth Result' } : {}),
         },
         {
