@@ -1,3 +1,4 @@
+import { InternalAuthenticationResultScreen } from './screens/InternalAuthentication/InternalAuthenticationResultScreen';
 import {
   HeaderSecondLevel,
   IOColors,
@@ -16,6 +17,7 @@ import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
+import { InternalAuthenticationScreen } from './screens/InternalAuthentication/InternalAuthenticationScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
@@ -30,6 +32,18 @@ const RootStack = createNativeStackNavigator({
         header: () => (
           <HeaderSecondLevel title="@pagopa/io-react-native-cie" type="base" />
         ),
+      },
+    },
+    InternalAuthentication: {
+      screen: InternalAuthenticationScreen,
+      options: {
+        title: 'Internal CIE authentication',
+      },
+    },
+    InternalAuthenticationResult: {
+      screen: InternalAuthenticationResultScreen,
+      options: {
+        title: 'Internal Auth Result',
       },
     },
     Attributes: {
@@ -73,6 +87,8 @@ type RootStackParamList = StaticParamList<typeof RootStack>;
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList {
+      InternalAuthenticationResult: { result: any; challenge: string };
+    }
   }
 }

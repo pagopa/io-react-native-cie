@@ -70,6 +70,19 @@ export type NfcError = z.infer<typeof NfcError>;
 
 /**
  * Represent the CIE attributes containing the CIE type
+ * All string value are Hex encoded
+ */
+export const InternalAuthResponseObject = z.object({
+  nis: z.string(),
+  publicKey: z.string(),
+  sod: z.string(),
+  signedChallenge: z.string(),
+});
+
+export type InternalAuthResponse = z.infer<typeof InternalAuthResponseObject>;
+
+/**
+ * Represent the CIE attributes containing the CIE type
  */
 export const CieAttributes = z.object({
   type: z.string(),
@@ -84,6 +97,7 @@ export type CieAttributes = z.infer<typeof CieAttributes>;
 export type CieEventHandlers = {
   onEvent: (event: NfcEvent) => void;
   onError: (error: NfcError) => void;
+  onInternalAuthenticationSuccess: (attributes: InternalAuthResponse) => void;
   onAttributesSuccess: (attributes: CieAttributes) => void;
   onSuccess: (uri: string) => void;
 };

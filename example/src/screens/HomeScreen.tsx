@@ -1,6 +1,5 @@
 import {
-  ButtonLink,
-  ButtonSolid,
+  IOButton,
   Divider,
   IOColors,
   ListItemInfo,
@@ -70,20 +69,30 @@ export function HomeScreen() {
         />
       </View>
       <VStack space={8}>
-        <ButtonSolid
+        <IOButton
+          variant="solid"
           label="Read CIE attributes"
           icon="creditCard"
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('Attributes')}
         />
-        <ButtonSolid
+        <IOButton
+          variant="solid"
           label="Start CIE authentication"
           icon="cieLetter"
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('AuthenticationRequest')}
         />
+        <IOButton
+          variant="solid"
+          label="Start Internal CIE authentication"
+          icon="selfCert"
+          disabled={!isCieAuthenticationSupported}
+          onPress={() => navigation.navigate('InternalAuthentication')}
+        />
         <View style={styles.buttonContainer}>
-          <ButtonLink
+          <IOButton
+            variant="link"
             label="Open NFC Settings"
             icon="coggle"
             onPress={() => CieUtils.openNfcSettings()}
