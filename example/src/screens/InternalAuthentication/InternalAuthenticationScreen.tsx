@@ -92,7 +92,6 @@ export function InternalAuthenticationScreen() {
     setStatus('reading');
 
     try {
-      // TODO: add UI to choose the encoding
       await CieManager.startInternalAuthentication(
         challenge,
         isBase64Encoding ? 'base64' : 'hex'
