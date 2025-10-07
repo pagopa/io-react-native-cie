@@ -2,7 +2,7 @@ PODS:
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
-  - CieSDK (0.1.11)
+  - CieSDK (0.1.12)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
   - FBLazyVector (0.78.2)
@@ -11,8 +11,8 @@ PODS:
   - hermes-engine (0.78.2):
     - hermes-engine/Pre-built (= 0.78.2)
   - hermes-engine/Pre-built (0.78.2)
-  - IoReactNativeCie (1.1.2):
-    - CieSDK (~> 0.1.11)
+  - IoReactNativeCie (1.1.3):
+    - CieSDK (~> 0.1.12)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1637,7 +1637,7 @@ PODS:
     - React-logger (= 0.78.2)
     - React-perflogger (= 0.78.2)
     - React-utils (= 0.78.2)
-  - RNCClipboard (1.16.2):
+  - RNCClipboard (1.16.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2153,14 +2153,14 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
-  CieSDK: ad23ec4b2f86c1e505030e68105ea509443d6706
+  CieSDK: c79fdf33a7ee0b4e5924dcf1f5cfca0e0a7d7be0
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: e32d34492c519a2194ec9d7f5e7a79d11b73f91c
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
   hermes-engine: 2771b98fb813fdc6f92edd7c9c0035ecabf9fee7
-  IoReactNativeCie: b85750a23a1945421e1c36053158e397387ea083
+  IoReactNativeCie: cf1f4e70d780cfc16ffb759a35bb537e8ff660c7
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: be794de7dc6ed8f9f7fbf525f86e7651b8b68746
   RCTRequired: a83787b092ec554c2eb6019ff3f5b8d125472b3b
@@ -2221,7 +2221,7 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: 4893bde33952f997a323eb1a1ee87a72764018ff
   ReactCodegen: 99ea3536c05be3c18d0c517acb56b5a6d726fc7b
   ReactCommon: 865ebe76504a95e115b6229dd00a31e56d2d4bfe
-  RNCClipboard: f13dd3ceae005858e137ae9e70f3c414e174ff81
+  RNCClipboard: ba9fda8e2c9f003a29f7f66793069c4d0dada955
   RNGestureHandler: dcb1b1db024f3744b03af56d132f4f72c4c27195
   RNReactNativeHapticFeedback: 66c6b0cf19f5d9dae8be36b2336e1fe2a2e42566
   RNReanimated: 505a98a0122d5e3bbeb0fb91e93dfb67d8112b84
@@ -2230,6 +2230,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: e14bad835e12b6c7e2260fc320bd00e0f4b45add
 
-PODFILE CHECKSUM: c684f8a4a3e397b9caef391c36bbe2f00a5f0426
+PODFILE CHECKSUM: 6149a617dd9075cf3651237d2172fe53bc526686
 
 COCOAPODS: 1.15.2
