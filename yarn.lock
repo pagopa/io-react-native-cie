@@ -2896,14 +2896,14 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.6"
     react-native-circular-progress: "npm:^1.4.1"
     react-native-easing-gradient: "npm:^1.1.1"
-    react-native-gesture-handler: "npm:^2.25.0"
+    react-native-gesture-handler: "npm:^2.29.0"
     react-native-haptic-feedback: "npm:^2.3.3"
     react-native-linear-gradient: "npm:^2.8.3"
     react-native-reanimated: "npm:^3.19.3"
     react-native-safe-area-context: "npm:^5.6.0"
     react-native-screens: "npm:^4.11.1"
-    react-native-svg: "npm:^15.11.2"
-    react-native-webview: "npm:^13.14.1"
+    react-native-svg: "npm:^15.14.0"
+    react-native-webview: "npm:^13.16.0"
     zod: "npm:^3.24.4"
   languageName: unknown
   linkType: soft
@@ -11377,6 +11377,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-gesture-handler@npm:^2.29.0":
+  version: 2.29.0
+  resolution: "react-native-gesture-handler@npm:2.29.0"
+  dependencies:
+    "@egjs/hammerjs": "npm:^2.0.17"
+    hoist-non-react-statics: "npm:^3.3.0"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/53d299f93a3b41ad00f1d2bd0e5e71682a9e2cd29bb310b86517602fb327506a5cf13142c9f4a9452ae78944f7a1c53559c6647a2ff326b45c21abbb19054cde
+  languageName: node
+  linkType: hard
+
 "react-native-haptic-feedback@npm:^2.3.3":
   version: 2.3.3
   resolution: "react-native-haptic-feedback@npm:2.3.3"
@@ -11477,20 +11491,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-svg@npm:^15.11.2":
-  version: 15.11.2
-  resolution: "react-native-svg@npm:15.11.2"
-  dependencies:
-    css-select: "npm:^5.1.0"
-    css-tree: "npm:^1.1.3"
-    warn-once: "npm:0.1.1"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/040f3a298db80f4a282f9616c9550d7978beebc518de523eb417106afd7f5cb1d021424ea287cedba705f0c48aa15631056c42a79c4b46edcafa34cba71aed63
-  languageName: node
-  linkType: hard
-
 "react-native-svg@npm:^15.12.0":
   version: 15.13.0
   resolution: "react-native-svg@npm:15.13.0"
@@ -11505,7 +11505,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-webview@npm:^13.14.1":
+"react-native-svg@npm:^15.14.0":
+  version: 15.14.0
+  resolution: "react-native-svg@npm:15.14.0"
+  dependencies:
+    css-select: "npm:^5.1.0"
+    css-tree: "npm:^1.1.3"
+    warn-once: "npm:0.1.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/5855bee2a76313f580ac3f8c476d07bb63d1a8e5e0883154275be5a1f4224e35f2416b0ba3b03f5d4c637c3b2f9320df34ede918da27188adb6881b3b8ac96c8
+  languageName: node
+  linkType: hard
+
+"react-native-webview@npm:^13.16.0":
   version: 13.16.0
   resolution: "react-native-webview@npm:13.16.0"
   dependencies:
