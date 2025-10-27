@@ -80,13 +80,6 @@ export function InternalAuthenticationScreen() {
   }, [challenge, isBase64Encoding, navigation]);
 
   const handleStartReading = async () => {
-    if (Platform.OS === 'android') {
-      return Alert.alert(
-        'Not supported',
-        'Internal authentication is not supported on Android'
-      );
-    }
-
     Keyboard.dismiss();
     setEvent(undefined);
     setStatus('reading');
@@ -115,7 +108,7 @@ export function InternalAuthenticationScreen() {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
       >
         <View style={styles.progressContainer}>

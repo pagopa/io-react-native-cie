@@ -9,6 +9,7 @@ export type {
   CieAttributes,
   CieEventHandlers,
   CieEvent,
+  InternalAuthResponse,
 } from './manager/types';
 
 export type { CieErrorSchema, CieError, CieErrorCodes } from './errors';

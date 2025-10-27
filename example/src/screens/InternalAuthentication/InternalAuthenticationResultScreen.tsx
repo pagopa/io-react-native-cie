@@ -10,11 +10,12 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { IOButton } from '@pagopa/io-app-design-system';
+import type { InternalAuthResponse } from '@pagopa/io-react-native-cie';
 
 interface Props {
   route: {
     params: {
-      result: any;
+      result: InternalAuthResponse;
       challenge: string;
       encodedChallenge: string;
       encoding: 'base64' | 'hex';

@@ -17,6 +17,8 @@ import it.pagopa.io.app.cie.cie.NfcEvent
 import it.pagopa.io.app.cie.network.NetworkCallback
 import it.pagopa.io.app.cie.network.NetworkError
 import it.pagopa.io.app.cie.nfc.NfcEvents
+import it.pagopa.io.app.cie.nis.InternalAuthenticationResponse
+import it.pagopa.io.app.cie.nis.NisCallback
 import java.net.URL
 
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
@@ -97,6 +99,61 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun setCustomIdpUrl(url: String) {
     cieSdk.withCustomIdpUrl(url)
+  }
+
+  @ReactMethod
+  fun startInternalAuthentication(
+    challenge: String,
+    resultEncoding: String,
+    timeout: Int = 10000,
+    promise: Promise,
+  ) {
+    val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
+    println("🚀 ${encoding}")
+    try {
+      cieSdk.startReadingNis(challenge, timeout, object : NfcEvents {
+        override fun event(event: NfcEvent) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
+              putString("name", event.name)
+              putDouble(
+                "progress",
+                (event.numeratorForNis.toDouble() / NfcEvent.totalNisOfNumeratorEvent.toDouble())
+              )
+            })
+        }
+
+        override fun error(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+
+        }
+      }, object : NisCallback {
+        override fun onSuccess(nisAuth: InternalAuthenticationResponse) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.INTERNAL_AUTHENTICATION_SUCCESS.value, WritableNativeMap().apply {
+              putString("nis", nisAuth.nis)
+              putString("publicKey", nisAuth.kpubIntServ)
+              putString("sod", nisAuth.sod)
+              putString("signedChallenge", nisAuth.challengeSigned)
+            })
+        }
+
+        override fun onError(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+        }
+      })
+      promise.resolve(null)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
+    }
   }
 
   @ReactMethod
@@ -241,10 +298,28 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     const val NAME = "IoReactNativeCie"
     const val ERROR_USER_INFO_KEY = "error"
 
+    enum class ResultEncoding(val value: String) {
+      BASE64("base64"),
+      HEX("hex");
+
+      companion object {
+        // Funzione helper per convertire la stringa da JS
+        // Imposta BASE64 come default se JS invia null o un valore non valido
+        fun fromString(value: String?): ResultEncoding {
+          return when (value) {
+            "hex" -> HEX
+            "base64" -> BASE64
+            else -> BASE64 // Default
+          }
+        }
+      }
+    }
+
     enum class EventType(val value: String) {
       EVENT("onEvent"),
       ERROR("onError"),
       ATTRIBUTES_SUCCESS("onAttributesSuccess"),
+      INTERNAL_AUTHENTICATION_SUCCESS("onInternalAuthenticationSuccess"),
       SUCCESS("onSuccess")
     }
 
