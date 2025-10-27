@@ -105,6 +105,13 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    // This avoid:
+    // 4 files found with path 'META-INF/versions/9/OSGI-INF/MANIFEST.MF' ... error
+    packagingOptions {
+      resources {
+        pickFirst 'META-INF/versions/9/OSGI-INF/MANIFEST.MF'
+      }
+    }
 }
 
 dependencies {
