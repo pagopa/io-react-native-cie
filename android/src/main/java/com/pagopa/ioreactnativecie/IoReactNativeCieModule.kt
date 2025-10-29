@@ -18,6 +18,8 @@ import it.pagopa.io.app.cie.network.NetworkError
 import it.pagopa.io.app.cie.nfc.NfcEvents
 import it.pagopa.io.app.cie.nis.InternalAuthenticationResponse
 import it.pagopa.io.app.cie.nis.NisCallback
+import it.pagopa.io.app.cie.pace.MRTDResponse
+import it.pagopa.io.app.cie.pace.PaceCallback
 import it.pagopa.io.app.cie.toHex
 import java.net.URL
 
@@ -148,6 +150,60 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
               putString("publicKey", encoding.encode(nisAuth.kpubIntServ))
               putString("sod", encoding.encode(nisAuth.sod))
               putString("signedChallenge", encoding.encode(nisAuth.challengeSigned))
+            })
+        }
+
+        override fun onError(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+        }
+      })
+      promise.resolve(null)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
+    }
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun startPaceReading(
+    can: String,
+    resultEncoding: String,
+    timeout: Int = 10000,
+    promise: Promise,
+  ) {
+    val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
+    try {
+      cieSdk.startDoPace(can, timeout, object : NfcEvents {
+        override fun event(event: NfcEvent) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
+              putString("name", event.name)
+              putDouble(
+                "progress",
+                (event.numeratorForPace.toDouble() / NfcEvent.totalPaceOfNumeratorEvent.toDouble())
+              )
+            })
+        }
+
+        override fun error(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+
+        }
+      }, object : PaceCallback {
+        override fun onSuccess(eMRTDResponse: MRTDResponse) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.PACE_SUCCESS.value, WritableNativeMap().apply {
+              putString("dg1", encoding.encode(eMRTDResponse.dg1))
+              putString("dg11", encoding.encode(eMRTDResponse.dg11))
+              putString("sod", encoding.encode(eMRTDResponse.sod))
             })
         }
 
@@ -334,6 +390,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       ERROR("onError"),
       ATTRIBUTES_SUCCESS("onAttributesSuccess"),
       INTERNAL_AUTHENTICATION_SUCCESS("onInternalAuthenticationSuccess"),
+      PACE_SUCCESS("onPaceSuccess"),
       SUCCESS("onSuccess")
     }
 

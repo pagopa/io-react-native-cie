@@ -69,8 +69,8 @@ export const NfcError = z.union([
 export type NfcError = z.infer<typeof NfcError>;
 
 /**
- * Represent the CIE attributes containing the CIE type
- * All string value are Hex encoded
+ * Represent the CIE response coming from NIS Internal Auth
+ * All string value are Hex or Base64 encoded
  */
 export const InternalAuthResponseObject = z.object({
   nis: z.string(),
@@ -80,6 +80,18 @@ export const InternalAuthResponseObject = z.object({
 });
 
 export type InternalAuthResponse = z.infer<typeof InternalAuthResponseObject>;
+
+/**
+ * Represent the CIE response coming from PACE/MRTD reading
+ * All string value are Hex or Base64 encoded
+ */
+export const MrtdResponseObject = z.object({
+  dg1: z.string(),
+  dg11: z.string(),
+  sod: z.string(),
+});
+
+export type MrtdResponse = z.infer<typeof MrtdResponseObject>;
 
 /**
  * Represent the CIE attributes containing the CIE type
@@ -97,7 +109,10 @@ export type CieAttributes = z.infer<typeof CieAttributes>;
 export type CieEventHandlers = {
   onEvent: (event: NfcEvent) => void;
   onError: (error: NfcError) => void;
-  onInternalAuthenticationSuccess: (attributes: InternalAuthResponse) => void;
+  onInternalAuthenticationSuccess: (
+    internalAuthResponse: InternalAuthResponse
+  ) => void;
+  onPaceSuccess: (mrtdResponse: MrtdResponse) => void;
   onAttributesSuccess: (attributes: CieAttributes) => void;
   onSuccess: (uri: string) => void;
 };

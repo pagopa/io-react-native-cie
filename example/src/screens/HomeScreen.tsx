@@ -90,6 +90,13 @@ export function HomeScreen() {
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('InternalAuthentication')}
         />
+        <IOButton
+          variant="solid"
+          label="Start PACE/MRTD reading"
+          icon="fiscalCodeIndividual"
+          disabled={!isCieAuthenticationSupported}
+          onPress={() => navigation.navigate('Pace')}
+        />
         <View style={styles.buttonContainer}>
           <IOButton
             variant="link"

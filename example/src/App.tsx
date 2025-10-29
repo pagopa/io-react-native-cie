@@ -18,6 +18,8 @@ import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScre
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { InternalAuthenticationScreen } from './screens/InternalAuthentication/InternalAuthenticationScreen';
+import { PaceScreen } from './screens/pace/PaceScreen';
+import { PaceResultScreen } from './screens/pace/PaceResultScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
@@ -44,6 +46,18 @@ const RootStack = createNativeStackNavigator({
       screen: InternalAuthenticationResultScreen,
       options: {
         title: 'Internal Auth Result',
+      },
+    },
+    Pace: {
+      screen: PaceScreen,
+      options: {
+        title: 'PACE/MRTD',
+      },
+    },
+    PaceResult: {
+      screen: PaceResultScreen,
+      options: {
+        title: 'PACE/MRTD Result',
       },
     },
     Attributes: {

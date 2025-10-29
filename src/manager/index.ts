@@ -121,6 +121,60 @@ const startInternalAuthentication = async (
 };
 
 /**
+ * Initiates a PACE (Password Authenticated Connection Establishment) reading
+ * session on a CIE (Carta d'Identità Elettronica) using the provided CAN (Card
+ * Access Number). This sets up a secure channel with the card and triggers the
+ * native reading flow exposed by `IoReactNativeCie.startPaceReading`.
+ *
+ * The operation is asynchronous; completion (or failure) is signaled by the
+ * resolved/rejected state of the returned Promise. Since the Promise resolves
+ * with `void`, any resulting data or errors are expected to be surfaced through
+ * native events.
+ *
+ * @param can The 6‑digit Card Access Number printed on the CIE, used to
+ *            bootstrap the PACE secure messaging protocol. Must be a numeric
+ *            string; validation (if any) occurs in the native layer.
+ * @param resultEncoding The encoding format expected for any binary payloads
+ *                       produced during the reading process. Defaults to
+ *                       `'base64'`. Use `'hex'` if downstream consumers require
+ *                       hexadecimal representation.
+ * @param timeout Maximum time (in milliseconds) allowed for the PACE reading
+ *                session before it is aborted. Defaults to `DEFAULT_TIMEOUT`.
+ *                A larger value may be required on older devices or in
+ *                environments with slower NFC interactions.
+ *
+ * @returns A Promise that resolves once the PACE reading flow has been
+ *          initiated (or completes), or rejects if the native bridge reports
+ *          an error (e.g., invalid CAN, NFC not available, timeout).
+ *
+ * @throws May reject with:
+ * - Invalid input (e.g., malformed CAN).
+ * - NFC subsystem unavailable or disabled.
+ * - Operation timeout exceeded.
+ * - Native module internal errors.
+ *
+ * @example
+ * await startPaceReading("123456"); // Uses base64 encoding and default timeout.
+ *
+ * @example
+ * await startPaceReading("654321", "hex", 15000);
+ *
+ * @remarks
+ * Ensure NFC is enabled and the user has positioned the CIE correctly before
+ * calling this function to minimize timeouts and improve reliability.
+ *
+ * Resulting data or errors are expected to be surfaced through
+ * native events.
+ */
+const startPaceReading = async (
+  can: string,
+  resultEncoding: 'base64' | 'hex' = 'base64',
+  timeout: number = DEFAULT_TIMEOUT
+): Promise<void> => {
+  return IoReactNativeCie.startPaceReading(can, resultEncoding, timeout);
+};
+
+/**
  * Starts the process of reading attributes from the CIE card.
  *
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
@@ -185,6 +239,7 @@ export {
   setCustomIdpUrl,
   startReadingAttributes,
   startInternalAuthentication,
+  startPaceReading,
   startReading,
   stopReading,
 };
