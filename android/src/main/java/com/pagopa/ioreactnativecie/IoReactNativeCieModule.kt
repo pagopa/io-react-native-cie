@@ -5,7 +5,6 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.pagopa.ioreactnativecie.cie.Atr
@@ -19,6 +18,7 @@ import it.pagopa.io.app.cie.network.NetworkError
 import it.pagopa.io.app.cie.nfc.NfcEvents
 import it.pagopa.io.app.cie.nis.InternalAuthenticationResponse
 import it.pagopa.io.app.cie.nis.NisCallback
+import it.pagopa.io.app.cie.toHex
 import java.net.URL
 
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
@@ -37,16 +37,19 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
    */
   val cieSdk: CieSDK by lazy {
     CieSDK.withContext(currentActivity)
-  };
+  }
 
+  @Suppress("unused")
   @ReactMethod
   fun addListener(eventName: String) {
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun removeListeners(count: Int) {
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun hasNfcFeature(promise: Promise) {
     try {
@@ -58,6 +61,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun isNfcEnabled(promise: Promise) {
     try {
@@ -69,6 +73,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun isCieAuthenticationSupported(promise: Promise) {
     cieSdk.isCieAuthenticationSupported().apply {
@@ -76,6 +81,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun openNfcSettings(promise: Promise) {
     try {
@@ -86,21 +92,25 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun setAlertMessage(key: String, value: String) {
     // Android does not support alert messages for NFC reading
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun setCurrentAlertMessage(value: String) {
     // Android does not support alert messages for NFC reading
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun setCustomIdpUrl(url: String) {
     cieSdk.withCustomIdpUrl(url)
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun startInternalAuthentication(
     challenge: String,
@@ -109,7 +119,6 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     promise: Promise,
   ) {
     val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
-    println("🚀 ${encoding}")
     try {
       cieSdk.startReadingNis(challenge, timeout, object : NfcEvents {
         override fun event(event: NfcEvent) {
@@ -135,10 +144,10 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
         override fun onSuccess(nisAuth: InternalAuthenticationResponse) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.INTERNAL_AUTHENTICATION_SUCCESS.value, WritableNativeMap().apply {
-              putString("nis", nisAuth.nis)
-              putString("publicKey", nisAuth.kpubIntServ)
-              putString("sod", nisAuth.sod)
-              putString("signedChallenge", nisAuth.challengeSigned)
+              putString("nis", encoding.encode(nisAuth.nis))
+              putString("publicKey", encoding.encode(nisAuth.kpubIntServ))
+              putString("sod", encoding.encode(nisAuth.sod))
+              putString("signedChallenge", encoding.encode(nisAuth.challengeSigned))
             })
         }
 
@@ -156,6 +165,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun startReadingAttributes(
     timeout: Int = 10000,
@@ -205,6 +215,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun startReading(
     pin: String,
@@ -216,7 +227,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       cieSdk.setPin(pin)
     } catch (e: Exception) {
       promise.reject(ModuleException.PIN_REGEX_NOT_VALID, e.message, e)
-      return;
+      return
     }
 
     try {
@@ -267,6 +278,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun stopReading() {
     cieSdk.stopNFCListening()
@@ -296,15 +308,17 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
   companion object {
     const val NAME = "IoReactNativeCie"
-    const val ERROR_USER_INFO_KEY = "error"
 
     enum class ResultEncoding(val value: String) {
       BASE64("base64"),
       HEX("hex");
 
+      fun encode(data: ByteArray): String = when (this) {
+        BASE64 -> Base64.encodeToString(data, Base64.URL_SAFE or Base64.NO_WRAP)
+        HEX -> data.toHex().uppercase()
+      }
+
       companion object {
-        // Funzione helper per convertire la stringa da JS
-        // Imposta BASE64 come default se JS invia null o un valore non valido
         fun fromString(value: String?): ResultEncoding {
           return when (value) {
             "hex" -> HEX
@@ -337,9 +351,9 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
 
     private object ModuleException {
-      const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID";
-      const val INVALID_AUTH_URL = "INVALID_AUTH_URL";
-      const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION";
+      const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID"
+      const val INVALID_AUTH_URL = "INVALID_AUTH_URL"
+      const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION"
     }
   }
 }
