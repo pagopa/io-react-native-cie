@@ -97,22 +97,24 @@ To run the example app, follow the instructions in [example/README.md](./example
 
 List of available functions
 
-| Function                                                                | Return             | Description                                                                    |
-| :---------------------------------------------------------------------- | :----------------- | :----------------------------------------------------------------------------- |
-| `hasNFCFeature()`                                                       | `Promise<boolean>` | (Android) Checks if the device supports NFC feature                            |
-| `isNfcEnabled()`                                                        | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled                               |
-| `isCieAuthenticationSupported()`                                        | `Promise<boolean>` | (Android) Checks if the device supports CIE autentication                      |
-| `openNfcSettings()`                                                     | `Promise<void>`    | (Android) Opens NFC system settings page                                       |
-| `addListener(event: CieEvent, listener: CieEventHandlers)`              | `() => void`       | Adds a NFC event listener and returns a function to unsubscribe from the event |
-| `removeListener(event: CieEvent)`                                       | `void`             | Removes all listeners for the specified event                                  |
-| `removeAllListeners()`                                                  | `void`             | Removes all registered listeners                                               |
-| `setCustomIdpUrl(url?: string)`                                         | `void`             | Updates IDP url, if `undefined` will use the default IDP url                   |
-| `setAlertMessage(key: AlertMessageKey, value: string)`                  | `void`             | (iOS) Updates iOS NFC modal alert message                                      |
-| `setCurrentAlertMessage(value: string)`                                 | `void`             | (iOS) Updates currently displayed iOS NFC modal alert message                  |
-| `startInternalAuthentication(challenge: string)`                        | `Promise<void>`    | Start the CIE IAS/NIS Internal Authentication                                  |
-| `startReadingAttributes(timeout: number)`                               | `Promise<void>`    | Start the CIE attributes reading process                                       |
-| `startReading(pin: string, authenticationUrl: string, timeout: number)` | `Promise<void>`    | Start the CIE reading process fro authentication                               |
-| `stopReading()`                                                         | `Promise<void>`    | (Android) Stops all reading process                                            |
+| Function                                                                                     | Return             | Description                                                                    |
+| :------------------------------------------------------------------------------------------- | :----------------- | :----------------------------------------------------------------------------- |
+| `hasNFCFeature()`                                                                            | `Promise<boolean>` | (Android) Checks if the device supports NFC feature                            |
+| `isNfcEnabled()`                                                                             | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled                               |
+| `isCieAuthenticationSupported()`                                                             | `Promise<boolean>` | (Android) Checks if the device supports CIE autentication                      |
+| `openNfcSettings()`                                                                          | `Promise<void>`    | (Android) Opens NFC system settings page                                       |
+| `addListener(event: CieEvent, listener: CieEventHandlers)`                                   | `() => void`       | Adds a NFC event listener and returns a function to unsubscribe from the event |
+| `removeListener(event: CieEvent)`                                                            | `void`             | Removes all listeners for the specified event                                  |
+| `removeAllListeners()`                                                                       | `void`             | Removes all registered listeners                                               |
+| `setCustomIdpUrl(url?: string)`                                                              | `void`             | Updates IDP url, if `undefined` will use the default IDP url                   |
+| `setAlertMessage(key: AlertMessageKey, value: string)`                                       | `void`             | (iOS) Updates iOS NFC modal alert message                                      |
+| `setCurrentAlertMessage(value: string)`                                                      | `void`             | (iOS) Updates currently displayed iOS NFC modal alert message                  |
+| `startInternalAuthentication(challenge: string)`                                             | `Promise<void>`    | Start the CIE IAS/NIS Internal Authentication                                  |
+| `startMRTDReading(can: string, resultEncoding?, timeout?)`                                   | `Promise<void>`    | Start PACE MRTD reading (reads MRTD data using CAN)                            |
+| `startInternalAuthAndMRTDReading(can: string, challenge: string, resultEncoding?, timeout?)` | `Promise<void>`    | Start combined Internal Authentication + PACE MRTD reading                     |
+| `startReadingAttributes(timeout: number)`                                                    | `Promise<void>`    | Start the CIE attributes reading process                                       |
+| `startReading(pin: string, authenticationUrl: string, timeout: number)`                      | `Promise<void>`    | Start the CIE reading process fro authentication                               |
+| `stopReading()`                                                                              | `Promise<void>`    | (Android) Stops all reading process                                            |
 
 ## Usage
 
