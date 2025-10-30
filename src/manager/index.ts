@@ -123,11 +123,9 @@ const startInternalAuthentication = async (
 /**
  * Initiates a PACE (Password Authenticated Connection Establishment) reading
  * session on a CIE (Carta d'Identità Elettronica) using the provided CAN (Card
- * Access Number). This sets up a secure channel with the card and triggers the
- * native reading flow exposed by `IoReactNativeCie.startPaceReading`.
+ * Access Number) to read the MRTD information.
  *
- * The operation is asynchronous; completion (or failure) is signaled by the
- * resolved/rejected state of the returned Promise. Since the Promise resolves
+ * The operation is asynchronous; Since the Promise resolves
  * with `void`, any resulting data or errors are expected to be surfaced through
  * native events.
  *
@@ -143,9 +141,7 @@ const startInternalAuthentication = async (
  *                A larger value may be required on older devices or in
  *                environments with slower NFC interactions.
  *
- * @returns A Promise that resolves once the PACE reading flow has been
- *          initiated (or completes), or rejects if the native bridge reports
- *          an error (e.g., invalid CAN, NFC not available, timeout).
+ * @returns Promise that resolves when the reading process has started.
  *
  * @throws May reject with:
  * - Invalid input (e.g., malformed CAN).
@@ -163,15 +159,76 @@ const startInternalAuthentication = async (
  * Ensure NFC is enabled and the user has positioned the CIE correctly before
  * calling this function to minimize timeouts and improve reliability.
  *
- * Resulting data or errors are expected to be surfaced through
- * native events.
+ * Once the MRTD reading with PACE flow has been initiated, a Promise resolves,
+ * while when the reading process produces data, the `'onSuccess'` event has been called.
+ * The `'onError'` event is called if an error occurs during the reading process.
+ * The `'onEvent'` event is called to provide progress updates.
  */
-const startPaceReading = async (
+const startMRTDReading = async (
   can: string,
   resultEncoding: 'base64' | 'hex' = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
-  return IoReactNativeCie.startPaceReading(can, resultEncoding, timeout);
+  return IoReactNativeCie.startMRTDReading(can, resultEncoding, timeout);
+};
+
+/**
+ * Initiates a combined reading session on a CIE (Carta d'Identità Elettronica)
+ * that performs both Internal Authentication and MRTD reading using PACE.
+ *
+ * The operation is asynchronous; Since the Promise resolves
+ * with `void`, any resulting data or errors are expected to be surfaced through
+ * native events.
+ *
+ * @param can The 6‑digit Card Access Number printed on the CIE, used to
+ *            bootstrap the PACE secure messaging protocol. Must be a numeric
+ *            string; validation (if any) occurs in the native layer.
+ * @param challenge The challenge string to be used for Internal Authentication.
+ * @param resultEncoding The encoding format expected for any binary payloads
+ *                       produced during the reading process. Defaults to
+ *                       `'base64'`. Use `'hex'` if downstream consumers require
+ *                       hexadecimal representation.
+ * @param timeout Maximum time (in milliseconds) allowed for the combined reading
+ *                session before it is aborted. Defaults to `DEFAULT_TIMEOUT`.
+ *                A larger value may be required on older devices or in
+ *                environments with slower NFC interactions.
+ *
+ * @returns Promise that resolves when the reading process has started.
+ *
+ * @throws May reject with:
+ * - Invalid input (e.g., malformed CAN or challenge).
+ * - NFC subsystem unavailable or disabled.
+ * - Operation timeout exceeded.
+ * - Native module internal errors.
+ *
+ * @example
+ * await startInternalAuthAndMRTDReading("123456", "challengeString");
+ *
+ * @example
+ * await startInternalAuthAndMRTDReading("654321", "challengeString", "hex", 15000);
+ *
+ * @remarks
+ * Ensure NFC is enabled and the user has positioned the CIE correctly before
+ * calling this function to minimize timeouts and improve reliability.
+ *
+ * Once the Internal Authentication and MRTD reading with PACE flow has been initiated,
+ * a Promise resolves, while when the reading process produces data,
+ * the `'onSuccess'` event has been called.
+ * The `'onError'` event is called if an error occurs during the reading process.
+ * The `'onEvent'` event is called to provide progress updates.
+ */
+const startInternalAuthAndMRTDReading = async (
+  can: string,
+  challenge: string,
+  resultEncoding: 'base64' | 'hex' = 'base64',
+  timeout: number = DEFAULT_TIMEOUT
+): Promise<void> => {
+  return IoReactNativeCie.startInternalAuthAndMRTDReading(
+    can,
+    challenge,
+    resultEncoding,
+    timeout
+  );
 };
 
 /**
@@ -239,7 +296,8 @@ export {
   setCustomIdpUrl,
   startReadingAttributes,
   startInternalAuthentication,
-  startPaceReading,
+  startMRTDReading,
+  startInternalAuthAndMRTDReading,
   startReading,
   stopReading,
 };
