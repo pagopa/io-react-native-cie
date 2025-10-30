@@ -22,7 +22,7 @@ interface Props {
   navigation: any;
 }
 
-export function PaceResultScreen({ route }: Props) {
+export function MrtdResultScreen({ route }: Props) {
   const { result, encoding } = route.params;
   const resultString = JSON.stringify({ encoding, ...result }, null, 2);
 
@@ -36,13 +36,13 @@ export function PaceResultScreen({ route }: Props) {
       await Share.share(
         {
           message: resultString,
-          title: 'PACE/MRTD Result',
+          title: 'MRTD with PACE Result',
           // Workaround for iOS to set the subject sharing email in some apps
-          ...(Platform.OS === 'ios' ? { url: 'PACE/MRTD Result' } : {}),
+          ...(Platform.OS === 'ios' ? { url: 'MRTD with PACE Result' } : {}),
         },
         {
-          subject: 'PACE/MRTD Result',
-          dialogTitle: 'Share PACE/MRTD Result',
+          subject: 'MRTD with PACE Result',
+          dialogTitle: 'Share MRTD with PACE Result',
         }
       );
     } catch (error) {

@@ -1,4 +1,4 @@
-import { InternalAuthenticationResultScreen } from './screens/InternalAuthentication/InternalAuthenticationResultScreen';
+import { InternalAuthenticationResultScreen } from './screens/internalAuthentication/InternalAuthenticationResultScreen';
 import {
   HeaderSecondLevel,
   IOColors,
@@ -17,9 +17,11 @@ import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
-import { InternalAuthenticationScreen } from './screens/InternalAuthentication/InternalAuthenticationScreen';
-import { PaceScreen } from './screens/pace/PaceScreen';
-import { PaceResultScreen } from './screens/pace/PaceResultScreen';
+import { InternalAuthenticationScreen } from './screens/internalAuthentication/InternalAuthenticationScreen';
+import { MrtdScreen } from './screens/mrtd/MrtdScreen';
+import { MrtdResultScreen } from './screens/mrtd/MrtdResultScreen';
+import { InternalAuthAndMrtdScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdScreen';
+import { InternalAuthAndMrtdResultScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdResultScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
@@ -48,16 +50,28 @@ const RootStack = createNativeStackNavigator({
         title: 'Internal Auth Result',
       },
     },
-    Pace: {
-      screen: PaceScreen,
+    Mrtd: {
+      screen: MrtdScreen,
       options: {
-        title: 'PACE/MRTD',
+        title: 'MRTD with PACE',
       },
     },
-    PaceResult: {
-      screen: PaceResultScreen,
+    MrtdResult: {
+      screen: MrtdResultScreen,
       options: {
-        title: 'PACE/MRTD Result',
+        title: 'MRTD with PACE Result',
+      },
+    },
+    InterlanAuthAndMrtd: {
+      screen: InternalAuthAndMrtdScreen,
+      options: {
+        title: 'Internal Auth + MRTD',
+      },
+    },
+    InternalAuthAndMrtdResult: {
+      screen: InternalAuthAndMrtdResultScreen,
+      options: {
+        title: 'Internal Auth + MRTD Result',
       },
     },
     Attributes: {

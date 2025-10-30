@@ -2,6 +2,7 @@ import {
   IOButton,
   ListItemSwitch,
   TextInput,
+  VSpacer,
 } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
@@ -21,11 +22,12 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 
-export function PaceScreen() {
+export function InternalAuthAndMrtdScreen() {
   const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
   const [can, setCan] = useState<string>('');
+  const [challenge, setChallenge] = useState<string>('');
 
   const [isBase64Encoding, setIsBase64Encoding] = useState(false);
   const toggleEncodingSwitch = () =>
@@ -39,27 +41,30 @@ export function PaceScreen() {
       CieManager.addListener('onError', (error) => {
         setStatus('error');
         Alert.alert(
-          'Error while reading PACE/MRTD',
+          'Error while reading MRTD with PACE',
           JSON.stringify(error, undefined, 2)
         );
       }),
       // Start listening for reading MRTD data success
-      CieManager.addListener('onPaceSuccess', (mrtdResponse) => {
-        setStatus('success');
-        navigation.reset({
-          index: 0,
-          routes: [
-            { name: 'Home' },
-            {
-              name: 'PaceResult',
-              params: {
-                result: mrtdResponse,
-                encoding: isBase64Encoding ? 'base64' : 'hex',
+      CieManager.addListener(
+        'onInternalAuthAndMRTDWithPaceSuccess',
+        (internalAuthAndMrtdResponse) => {
+          setStatus('success');
+          navigation.reset({
+            index: 0,
+            routes: [
+              { name: 'Home' },
+              {
+                name: 'InternalAuthAndMrtdResult',
+                params: {
+                  result: internalAuthAndMrtdResponse,
+                  encoding: isBase64Encoding ? 'base64' : 'hex',
+                },
               },
-            },
-          ],
-        });
-      }),
+            ],
+          });
+        }
+      ),
     ];
 
     return () => {
@@ -76,14 +81,15 @@ export function PaceScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startPaceReading(
+      await CieManager.startInternalAuthAndMRTDReading(
         can,
+        challenge,
         isBase64Encoding ? 'base64' : 'hex'
       );
     } catch (e) {
       setStatus('error');
       Alert.alert(
-        'Error while reading PACE/MRTD',
+        'Error while reading MRTD with PACE',
         JSON.stringify(e, undefined, 2)
       );
     }
@@ -116,11 +122,17 @@ export function PaceScreen() {
             value={isBase64Encoding}
           />
           <TextInput value={can} placeholder={'CAN'} onChangeText={setCan} />
+          <VSpacer size={8} />
+          <TextInput
+            value={challenge}
+            placeholder={'Challenge'}
+            onChangeText={setChallenge}
+          />
         </View>
         <IOButton
           variant="solid"
-          label={status === 'reading' ? 'Stop' : 'Start rading'}
-          disabled={can.length < 6}
+          label={status === 'reading' ? 'Stop' : 'Start sigtn and reading'}
+          disabled={can.length < 6 && challenge.length === 0}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
