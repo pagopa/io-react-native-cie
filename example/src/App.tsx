@@ -1,4 +1,3 @@
-import { InternalAuthenticationResultScreen } from './screens/internalAuthentication/InternalAuthenticationResultScreen';
 import {
   HeaderSecondLevel,
   IOColors,
@@ -17,11 +16,12 @@ import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
-import { InternalAuthenticationScreen } from './screens/internalAuthentication/InternalAuthenticationScreen';
 import { MrtdScreen } from './screens/mrtd/MrtdScreen';
 import { MrtdResultScreen } from './screens/mrtd/MrtdResultScreen';
 import { InternalAuthAndMrtdScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdScreen';
 import { InternalAuthAndMrtdResultScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdResultScreen';
+import { InternalAuthenticationScreen } from './screens/internalAuthentication/InternalAuthenticationScreen';
+import { InternalAuthenticationResultScreen } from './screens/internalAuthentication/InternalAuthenticationResultScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
