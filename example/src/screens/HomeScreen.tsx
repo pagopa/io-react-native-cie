@@ -9,7 +9,7 @@ import {
 import { CieUtils } from '@pagopa/io-react-native-cie';
 import { useNavigation } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
 import { useAppStateActive } from '../hooks/useAppStateActive';
 
 export function HomeScreen() {
@@ -104,14 +104,16 @@ export function HomeScreen() {
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('InterlanAuthAndMrtd')}
         />
-        <View style={styles.buttonContainer}>
-          <IOButton
-            variant="link"
-            label="Open NFC Settings"
-            icon="coggle"
-            onPress={() => CieUtils.openNfcSettings()}
-          />
-        </View>
+        {Platform.OS === 'android' && (
+          <View style={styles.buttonContainer}>
+            <IOButton
+              variant="link"
+              label="Open NFC Settings"
+              icon="coggle"
+              onPress={() => CieUtils.openNfcSettings()}
+            />
+          </View>
+        )}
       </VStack>
     </SafeAreaView>
   );
