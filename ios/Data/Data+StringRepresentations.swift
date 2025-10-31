@@ -9,7 +9,7 @@ import Foundation
 
 extension Data {
   
-  /// Converts the data to a lowercase hexadecimal string.
+  /// Converts the data to an uppercase hexadecimal string.
   func toHexString() -> String {
     return self.map { String(format: "%02X", $0) }.joined()
   }

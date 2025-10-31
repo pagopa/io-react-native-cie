@@ -62,7 +62,7 @@ const RootStack = createNativeStackNavigator({
         title: 'MRTD with PACE Result',
       },
     },
-    InterlanAuthAndMrtd: {
+    InternalAuthAndMrtd: {
       screen: InternalAuthAndMrtdScreen,
       options: {
         title: 'Internal Auth + MRTD',

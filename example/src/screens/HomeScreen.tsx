@@ -102,7 +102,7 @@ export function HomeScreen() {
           label="Start Internal Auth + MRTD reading"
           icon="navWalletFocused"
           disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('InterlanAuthAndMrtd')}
+          onPress={() => navigation.navigate('InternalAuthAndMrtd')}
         />
         {Platform.OS === 'android' && (
           <View style={styles.buttonContainer}>
