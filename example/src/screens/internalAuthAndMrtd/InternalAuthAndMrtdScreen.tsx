@@ -137,7 +137,7 @@ export function InternalAuthAndMrtdScreen() {
         </View>
         <IOButton
           variant="solid"
-          label={status === 'reading' ? 'Stop' : 'Start sigtn and reading'}
+          label={status === 'reading' ? 'Stop' : 'Start sign and reading'}
           disabled={can.length !== 6 || challenge.length === 0}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
