@@ -2,6 +2,7 @@ import {
   IOButton,
   ListItemSwitch,
   TextInput,
+  VSpacer,
 } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
@@ -22,10 +23,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { encodeChallenge } from '../../utils/encoding';
 
-export function InternalAuthenticationScreen() {
+export function InternalAuthAndMrtdScreen() {
   const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
+  const [can, setCan] = useState<string>('');
   const [challenge, setChallenge] = useState<string>('');
 
   const [isBase64Encoding, setIsBase64Encoding] = useState(false);
@@ -40,23 +42,23 @@ export function InternalAuthenticationScreen() {
       CieManager.addListener('onError', (error) => {
         setStatus('error');
         Alert.alert(
-          'Error while reading attributes',
+          'Error while reading MRTD with PACE',
           JSON.stringify(error, undefined, 2)
         );
       }),
-      // Start listening for attributes success
+      // Start listening for reading MRTD data success
       CieManager.addListener(
-        'onInternalAuthenticationSuccess',
-        (internalAutheticationResult) => {
+        'onInternalAuthAndMRTDWithPaceSuccess',
+        (internalAuthAndMrtdResponse) => {
           setStatus('success');
           navigation.reset({
             index: 0,
             routes: [
               { name: 'Home' },
               {
-                name: 'InternalAuthenticationResult',
+                name: 'InternalAuthAndMrtdResult',
                 params: {
-                  result: internalAutheticationResult,
+                  result: internalAuthAndMrtdResponse,
                   challenge,
                   encodedChallenge: encodeChallenge(
                     challenge,
@@ -80,26 +82,20 @@ export function InternalAuthenticationScreen() {
   }, [challenge, isBase64Encoding, navigation]);
 
   const handleStartReading = async () => {
-    if (Platform.OS === 'android') {
-      return Alert.alert(
-        'Not supported',
-        'Internal authentication is not supported on Android'
-      );
-    }
-
     Keyboard.dismiss();
     setEvent(undefined);
     setStatus('reading');
 
     try {
-      await CieManager.startInternalAuthentication(
+      await CieManager.startInternalAuthAndMRTDReading(
+        can,
         challenge,
         isBase64Encoding ? 'base64' : 'hex'
       );
     } catch (e) {
       setStatus('error');
       Alert.alert(
-        'Error while reading attributes',
+        'Error while reading MRTD with PACE',
         JSON.stringify(e, undefined, 2)
       );
     }
@@ -115,7 +111,7 @@ export function InternalAuthenticationScreen() {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
       >
         <View style={styles.progressContainer}>
@@ -131,6 +127,8 @@ export function InternalAuthenticationScreen() {
             onSwitchValueChange={toggleEncodingSwitch}
             value={isBase64Encoding}
           />
+          <TextInput value={can} placeholder={'CAN'} onChangeText={setCan} />
+          <VSpacer size={8} />
           <TextInput
             value={challenge}
             placeholder={'Challenge'}
@@ -139,8 +137,8 @@ export function InternalAuthenticationScreen() {
         </View>
         <IOButton
           variant="solid"
-          label={status === 'reading' ? 'Stop' : 'Sign challenge'}
-          disabled={challenge.length === 0}
+          label={status === 'reading' ? 'Stop' : 'Start sign and reading'}
+          disabled={can.length !== 6 || challenge.length === 0}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
@@ -171,8 +169,5 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
-  },
-  attributesContainer: {
-    justifyContent: 'flex-end',
   },
 });

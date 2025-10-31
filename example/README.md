@@ -54,6 +54,15 @@ yarn android
    bundle exec pod install
    ```
 
+> [!TIP]
+> If for some reason you cannot update CieSDK to the newer version, you might need to run:
+>
+> ```sh
+> bundle exec pod cache clean --all
+> bundle exec pod repo update --verbose
+> bundle exec pod install --repo-update
+> ```
+
 For detailed CocoaPods setup, refer to the [CocoaPods Getting Started Guide](https://guides.cocoapods.org/using/getting-started.html).
 
 Now you can run the app:

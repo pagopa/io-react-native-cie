@@ -5,18 +5,24 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.pagopa.ioreactnativecie.cie.Atr
 import it.pagopa.io.app.cie.CieLogger
 import it.pagopa.io.app.cie.CieSDK
+import it.pagopa.io.app.cie.IntAuthMRTDResponse
+import it.pagopa.io.app.cie.NisAndPaceCallback
 import it.pagopa.io.app.cie.cie.CieAtrCallback
 import it.pagopa.io.app.cie.cie.NfcError
 import it.pagopa.io.app.cie.cie.NfcEvent
 import it.pagopa.io.app.cie.network.NetworkCallback
 import it.pagopa.io.app.cie.network.NetworkError
 import it.pagopa.io.app.cie.nfc.NfcEvents
+import it.pagopa.io.app.cie.nis.InternalAuthenticationResponse
+import it.pagopa.io.app.cie.nis.NisCallback
+import it.pagopa.io.app.cie.pace.MRTDResponse
+import it.pagopa.io.app.cie.pace.PaceCallback
+import it.pagopa.io.app.cie.toHex
 import java.net.URL
 
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
@@ -35,16 +41,19 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
    */
   val cieSdk: CieSDK by lazy {
     CieSDK.withContext(currentActivity)
-  };
+  }
 
+  @Suppress("unused")
   @ReactMethod
   fun addListener(eventName: String) {
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun removeListeners(count: Int) {
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun hasNfcFeature(promise: Promise) {
     try {
@@ -56,6 +65,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun isNfcEnabled(promise: Promise) {
     try {
@@ -67,6 +77,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun isCieAuthenticationSupported(promise: Promise) {
     cieSdk.isCieAuthenticationSupported().apply {
@@ -74,6 +85,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun openNfcSettings(promise: Promise) {
     try {
@@ -84,21 +96,205 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun setAlertMessage(key: String, value: String) {
     // Android does not support alert messages for NFC reading
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun setCurrentAlertMessage(value: String) {
     // Android does not support alert messages for NFC reading
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun setCustomIdpUrl(url: String) {
     cieSdk.withCustomIdpUrl(url)
   }
 
+  @Suppress("unused")
+  @ReactMethod
+  fun startInternalAuthentication(
+    challenge: String,
+    resultEncoding: String,
+    timeout: Int = 10000,
+    promise: Promise,
+  ) {
+    val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
+    try {
+      cieSdk.startReadingNis(challenge, timeout, object : NfcEvents {
+        override fun event(event: NfcEvent) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
+              putString("name", event.name)
+              putDouble(
+                "progress",
+                (event.numeratorForNis.toDouble() / NfcEvent.totalNisOfNumeratorEvent.toDouble())
+              )
+            })
+        }
+
+        override fun error(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+
+        }
+      }, object : NisCallback {
+        override fun onSuccess(nisAuth: InternalAuthenticationResponse) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.INTERNAL_AUTHENTICATION_SUCCESS.value, WritableNativeMap().apply {
+              putString("nis", encoding.encode(nisAuth.nis))
+              putString("publicKey", encoding.encode(nisAuth.kpubIntServ))
+              putString("sod", encoding.encode(nisAuth.sod))
+              putString("signedChallenge", encoding.encode(nisAuth.challengeSigned))
+            })
+        }
+
+        override fun onError(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+        }
+      })
+      promise.resolve(null)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
+    }
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun startMRTDReading(
+    can: String,
+    resultEncoding: String,
+    timeout: Int = 10000,
+    promise: Promise,
+  ) {
+    val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
+    try {
+      cieSdk.startDoPace(can, timeout, object : NfcEvents {
+        override fun event(event: NfcEvent) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
+              putString("name", event.name)
+              putDouble(
+                "progress",
+                (event.numeratorForPace.toDouble() / NfcEvent.totalPaceOfNumeratorEvent.toDouble())
+              )
+            })
+        }
+
+        override fun error(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+
+        }
+      }, object : PaceCallback {
+        override fun onSuccess(eMRTDResponse: MRTDResponse) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.MRTD_WITH_PACE_SUCCESS.value, WritableNativeMap().apply {
+              putString("dg1", encoding.encode(eMRTDResponse.dg1))
+              putString("dg11", encoding.encode(eMRTDResponse.dg11))
+              putString("sod", encoding.encode(eMRTDResponse.sod))
+            })
+        }
+
+        override fun onError(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+        }
+      })
+      promise.resolve(null)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
+    }
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun startInternalAuthAndMRTDReading(
+    can: String,
+    challenge: String,
+    resultEncoding: String,
+    timeout: Int = 10000,
+    promise: Promise,
+  ) {
+    val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
+    try {
+      cieSdk.startNisAndPace(challenge, can, timeout, object : NfcEvents {
+        override fun event(event: NfcEvent) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
+              putString("name", event.name)
+              putDouble(
+                "progress",
+                (event.numeratorForNisAndPace.toDouble() / NfcEvent.totalNisAndPaceOfNumeratorEvent.toDouble())
+              )
+            })
+        }
+
+        override fun error(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+
+        }
+      }, object : NisAndPaceCallback {
+        override fun onSuccess(intAuthMRTDResponse: IntAuthMRTDResponse) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(
+              EventType.INTERNAL_AUTH_AND_MRTD_WITH_PACE_SUCCESS.value,
+              WritableNativeMap().apply {
+                putMap("nis_data", WritableNativeMap().apply {
+                  putString("nis", encoding.encode(intAuthMRTDResponse.internalAuthentication.nis))
+                  putString(
+                    "publicKey",
+                    encoding.encode(intAuthMRTDResponse.internalAuthentication.kpubIntServ)
+                  )
+                  putString("sod", encoding.encode(intAuthMRTDResponse.internalAuthentication.sod))
+                  putString(
+                    "signedChallenge",
+                    encoding.encode(intAuthMRTDResponse.internalAuthentication.challengeSigned)
+                  )
+                })
+                putMap("mrtd_data", WritableNativeMap().apply {
+                  putString("dg1", encoding.encode(intAuthMRTDResponse.mrtd.dg1))
+                  putString("dg11", encoding.encode(intAuthMRTDResponse.mrtd.dg11))
+                  putString("sod", encoding.encode(intAuthMRTDResponse.mrtd.sod))
+                })
+              })
+        }
+
+        override fun onError(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+        }
+      })
+      promise.resolve(null)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
+    }
+  }
+
+  @Suppress("unused")
   @ReactMethod
   fun startReadingAttributes(
     timeout: Int = 10000,
@@ -148,6 +344,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun startReading(
     pin: String,
@@ -159,7 +356,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       cieSdk.setPin(pin)
     } catch (e: Exception) {
       promise.reject(ModuleException.PIN_REGEX_NOT_VALID, e.message, e)
-      return;
+      return
     }
 
     try {
@@ -210,6 +407,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  @Suppress("unused")
   @ReactMethod
   fun stopReading() {
     cieSdk.stopNFCListening()
@@ -239,12 +437,34 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
   companion object {
     const val NAME = "IoReactNativeCie"
-    const val ERROR_USER_INFO_KEY = "error"
+
+    enum class ResultEncoding(val value: String) {
+      BASE64("base64"),
+      HEX("hex");
+
+      fun encode(data: ByteArray): String = when (this) {
+        BASE64 -> Base64.encodeToString(data, Base64.URL_SAFE or Base64.NO_WRAP)
+        HEX -> data.toHex().uppercase()
+      }
+
+      companion object {
+        fun fromString(value: String?): ResultEncoding {
+          return when (value) {
+            "hex" -> HEX
+            "base64" -> BASE64
+            else -> BASE64 // Default
+          }
+        }
+      }
+    }
 
     enum class EventType(val value: String) {
       EVENT("onEvent"),
       ERROR("onError"),
       ATTRIBUTES_SUCCESS("onAttributesSuccess"),
+      INTERNAL_AUTHENTICATION_SUCCESS("onInternalAuthenticationSuccess"),
+      MRTD_WITH_PACE_SUCCESS("onMRTDWithPaceSuccess"),
+      INTERNAL_AUTH_AND_MRTD_WITH_PACE_SUCCESS("onInternalAuthAndMRTDWithPaceSuccess"),
       SUCCESS("onSuccess")
     }
 
@@ -262,9 +482,9 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
 
     private object ModuleException {
-      const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID";
-      const val INVALID_AUTH_URL = "INVALID_AUTH_URL";
-      const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION";
+      const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID"
+      const val INVALID_AUTH_URL = "INVALID_AUTH_URL"
+      const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION"
     }
   }
 }

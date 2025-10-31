@@ -2,7 +2,7 @@ PODS:
   - boost (1.84.0)
   - BVLinearGradient (2.8.3):
     - React-Core
-  - CieSDK (0.1.12)
+  - CieSDK (0.1.13)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
   - FBLazyVector (0.78.2)
@@ -11,8 +11,8 @@ PODS:
   - hermes-engine (0.78.2):
     - hermes-engine/Pre-built (= 0.78.2)
   - hermes-engine/Pre-built (0.78.2)
-  - IoReactNativeCie (1.1.3):
-    - CieSDK (~> 0.1.12)
+  - IoReactNativeCie (1.2.0):
+    - CieSDK (~> 0.1.13)
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2153,14 +2153,14 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
-  CieSDK: c79fdf33a7ee0b4e5924dcf1f5cfca0e0a7d7be0
+  CieSDK: 80884e397d0eef6e07fb8d5580fc4c7604b971e0
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: e32d34492c519a2194ec9d7f5e7a79d11b73f91c
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
   hermes-engine: 2771b98fb813fdc6f92edd7c9c0035ecabf9fee7
-  IoReactNativeCie: cf1f4e70d780cfc16ffb759a35bb537e8ff660c7
+  IoReactNativeCie: 09d48a88eaf08194e248e18c297462dfb21bfad3
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: be794de7dc6ed8f9f7fbf525f86e7651b8b68746
   RCTRequired: a83787b092ec554c2eb6019ff3f5b8d125472b3b

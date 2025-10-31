@@ -85,15 +85,99 @@ class IoReactNativeCie: RCTEventEmitter {
         )
         let encoding = DataEncoding.from(string: encodingString)
         let payload: NSDictionary = [
-          "response": [
+          "nis": internalAuthResponse.nis.encodedDataString(encoding: encoding),
+          "publicKey": internalAuthResponse.publicKey.encodedDataString(encoding: encoding),
+          "sod": internalAuthResponse.sod.encodedDataString(encoding: encoding),
+          "signedChallenge": internalAuthResponse.signedChallenge.encodedDataString(encoding: encoding)
+        ]
+        self.sendEvent(
+          withName: EventType.onInternalAuthenticationSuccess.rawValue, body: payload)
+        resolve(nil)
+      } catch {
+        guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
+          reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
+          return
+        }
+        handleReadError(nfcDigitalIdError)
+        resolve(nil)
+      }
+    }
+  }
+  
+  @objc func startMRTDReading(
+    _ can: String,
+    withResultEncoding encodingString: String,
+    withTimeout timeout: Int,
+    withResolver resolve: @escaping RCTPromiseResolveBlock,
+    withRejecter reject: @escaping RCTPromiseRejectBlock
+  ) {
+    Task { [weak self] in
+      guard let self = self else {
+        reject(ModuleException.threadingError.rawValue, "Failed to perform background operation, self was deallocated", nil)
+        return
+      }
+      
+      do {
+        let mrtdResponse = try await self.cieSdk.performMtrd(
+          can: can,
+          handleReadEvent
+        )
+        let encoding = DataEncoding.from(string: encodingString)
+        let payload: NSDictionary = [
+          "dg1": mrtdResponse.dg1.encodedDataString(encoding: encoding),
+          "dg11": mrtdResponse.dg11.encodedDataString(encoding: encoding),
+          "sod": mrtdResponse.sod.encodedDataString(encoding: encoding)
+        ]
+        self.sendEvent(
+          withName: EventType.onMRTDWithPaceSuccess.rawValue, body: payload)
+        resolve(nil)
+      } catch {
+        guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
+          reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
+          return
+        }
+        handleReadError(nfcDigitalIdError)
+        resolve(nil)
+      }
+    }
+  }
+  
+  @objc func startInternalAuthAndMRTDReading(
+    _ can: String,
+    withChallenge challenge: String,
+    withResultEncoding encodingString: String,
+    withTimeout timeout: Int,
+    withResolver resolve: @escaping RCTPromiseResolveBlock,
+    withRejecter reject: @escaping RCTPromiseRejectBlock
+  ) {
+    Task { [weak self] in
+      guard let self = self else {
+        reject(ModuleException.threadingError.rawValue, "Failed to perform background operation, self was deallocated", nil)
+        return
+      }
+      
+      do {
+        let (mrtdResponse, internalAuthResponse) = try await self.cieSdk.performMRTDAndInternalAuthentication(
+          challenge: Array(challenge.utf8),
+          can: can,
+          handleReadEvent
+        )
+        let encoding = DataEncoding.from(string: encodingString)
+        let payload: NSDictionary = [
+          "nis_data": [
             "nis": internalAuthResponse.nis.encodedDataString(encoding: encoding),
             "publicKey": internalAuthResponse.publicKey.encodedDataString(encoding: encoding),
             "sod": internalAuthResponse.sod.encodedDataString(encoding: encoding),
             "signedChallenge": internalAuthResponse.signedChallenge.encodedDataString(encoding: encoding)
+          ],
+          "mrtd_data": [
+            "dg1": mrtdResponse.dg1.encodedDataString(encoding: encoding),
+            "dg11": mrtdResponse.dg11.encodedDataString(encoding: encoding),
+            "sod": mrtdResponse.sod.encodedDataString(encoding: encoding)
           ]
         ]
         self.sendEvent(
-          withName: EventType.onInternalAuthenticationSuccess.rawValue, body: payload)
+          withName: EventType.onInternalAuthAndMRTDWithPaceSuccess.rawValue, body: payload)
         resolve(nil)
       } catch {
         guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
@@ -216,6 +300,8 @@ class IoReactNativeCie: RCTEventEmitter {
     case onError
     case onAttributesSuccess
     case onInternalAuthenticationSuccess
+    case onMRTDWithPaceSuccess
+    case onInternalAuthAndMRTDWithPaceSuccess
     case onSuccess
   }
   
