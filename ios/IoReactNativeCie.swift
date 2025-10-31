@@ -88,7 +88,7 @@ class IoReactNativeCie: RCTEventEmitter {
           "nis": internalAuthResponse.nis.encodedDataString(encoding: encoding),
           "publicKey": internalAuthResponse.publicKey.encodedDataString(encoding: encoding),
           "sod": internalAuthResponse.sod.encodedDataString(encoding: encoding),
-          "signedChallenge": internalAuthResponse.signedChallenge.encodedDataString(encoding: encoding)          
+          "signedChallenge": internalAuthResponse.signedChallenge.encodedDataString(encoding: encoding)
         ]
         self.sendEvent(
           withName: EventType.onInternalAuthenticationSuccess.rawValue, body: payload)
