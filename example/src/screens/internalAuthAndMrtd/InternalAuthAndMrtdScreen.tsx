@@ -21,6 +21,7 @@ import {
 } from '../../components/ReadStatusComponent';
 
 import { useNavigation } from '@react-navigation/native';
+import { encodeChallenge } from '../../utils/encoding';
 
 export function InternalAuthAndMrtdScreen() {
   const navigation = useNavigation();
@@ -58,6 +59,11 @@ export function InternalAuthAndMrtdScreen() {
                 name: 'InternalAuthAndMrtdResult',
                 params: {
                   result: internalAuthAndMrtdResponse,
+                  challenge,
+                  encodedChallenge: encodeChallenge(
+                    challenge,
+                    isBase64Encoding ? 'base64' : 'hex'
+                  ),
                   encoding: isBase64Encoding ? 'base64' : 'hex',
                 },
               },
@@ -73,7 +79,7 @@ export function InternalAuthAndMrtdScreen() {
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
-  }, [isBase64Encoding, navigation]);
+  }, [challenge, isBase64Encoding, navigation]);
 
   const handleStartReading = async () => {
     Keyboard.dismiss();
@@ -132,7 +138,7 @@ export function InternalAuthAndMrtdScreen() {
         <IOButton
           variant="solid"
           label={status === 'reading' ? 'Stop' : 'Start sigtn and reading'}
-          disabled={can.length < 6 && challenge.length === 0}
+          disabled={can.length !== 6 || challenge.length === 0}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }

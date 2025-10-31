@@ -120,7 +120,7 @@ export function MrtdScreen() {
         <IOButton
           variant="solid"
           label={status === 'reading' ? 'Stop' : 'Start reading'}
-          disabled={can.length < 6}
+          disabled={can.length !== 6}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }

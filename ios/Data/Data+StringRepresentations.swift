@@ -11,7 +11,7 @@ extension Data {
   
   /// Converts the data to a lowercase hexadecimal string.
   func toHexString() -> String {
-    return self.map { String(format: "%02x", $0) }.joined()
+    return self.map { String(format: "%02X", $0) }.joined()
   }
   
   /// Converts the data to a base64url encoded string (RFC 7515), without padding.
