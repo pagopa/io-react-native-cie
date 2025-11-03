@@ -1,4 +1,3 @@
-import { InternalAuthenticationResultScreen } from './screens/InternalAuthentication/InternalAuthenticationResultScreen';
 import {
   HeaderSecondLevel,
   IOColors,
@@ -17,7 +16,12 @@ import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
 import { HomeScreen } from './screens/HomeScreen';
-import { InternalAuthenticationScreen } from './screens/InternalAuthentication/InternalAuthenticationScreen';
+import { MrtdScreen } from './screens/mrtd/MrtdScreen';
+import { MrtdResultScreen } from './screens/mrtd/MrtdResultScreen';
+import { InternalAuthAndMrtdScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdScreen';
+import { InternalAuthAndMrtdResultScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdResultScreen';
+import { InternalAuthenticationScreen } from './screens/internalAuthentication/InternalAuthenticationScreen';
+import { InternalAuthenticationResultScreen } from './screens/internalAuthentication/InternalAuthenticationResultScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
@@ -44,6 +48,30 @@ const RootStack = createNativeStackNavigator({
       screen: InternalAuthenticationResultScreen,
       options: {
         title: 'Internal Auth Result',
+      },
+    },
+    Mrtd: {
+      screen: MrtdScreen,
+      options: {
+        title: 'MRTD with PACE',
+      },
+    },
+    MrtdResult: {
+      screen: MrtdResultScreen,
+      options: {
+        title: 'MRTD with PACE Result',
+      },
+    },
+    InternalAuthAndMrtd: {
+      screen: InternalAuthAndMrtdScreen,
+      options: {
+        title: 'Internal Auth + MRTD',
+      },
+    },
+    InternalAuthAndMrtdResult: {
+      screen: InternalAuthAndMrtdResultScreen,
+      options: {
+        title: 'Internal Auth + MRTD Result',
       },
     },
     Attributes: {

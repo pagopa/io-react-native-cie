@@ -10,26 +10,21 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { IOButton } from '@pagopa/io-app-design-system';
+import type { MrtdResponse } from '../../../../src/manager/types';
 
 interface Props {
   route: {
     params: {
-      result: any;
-      challenge: string;
-      encodedChallenge: string;
+      result: MrtdResponse;
       encoding: 'base64' | 'hex';
     };
   };
   navigation: any;
 }
 
-export function InternalAuthenticationResultScreen({ route }: Props) {
-  const { result, challenge, encodedChallenge, encoding } = route.params;
-  const resultString = JSON.stringify(
-    { challenge, encoding, encodedChallenge, ...result },
-    null,
-    2
-  );
+export function MrtdResultScreen({ route }: Props) {
+  const { result, encoding } = route.params;
+  const resultString = JSON.stringify({ encoding, ...result }, null, 2);
 
   const handleCopy = async () => {
     Clipboard.setString(resultString);
@@ -41,13 +36,13 @@ export function InternalAuthenticationResultScreen({ route }: Props) {
       await Share.share(
         {
           message: resultString,
-          title: 'Internal Auth Result',
+          title: 'MRTD with PACE Result',
           // Workaround for iOS to set the subject sharing email in some apps
-          ...(Platform.OS === 'ios' ? { url: 'Internal Auth Result' } : {}),
+          ...(Platform.OS === 'ios' ? { url: 'MRTD with PACE Result' } : {}),
         },
         {
-          subject: 'Internal Auth Result',
-          dialogTitle: 'Share Internal Auth Result',
+          subject: 'MRTD with PACE Result',
+          dialogTitle: 'Share MRTD with PACE Result',
         }
       );
     } catch (error) {
