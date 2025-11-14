@@ -443,7 +443,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       HEX("hex");
 
       fun encode(data: ByteArray): String = when (this) {
-        BASE64 -> Base64.encodeToString(data, Base64.URL_SAFE or Base64.NO_WRAP)
+        BASE64 -> Base64.encodeToString(data, Base64.DEFAULT or Base64.NO_WRAP)
         HEX -> data.toHex().uppercase()
       }
 

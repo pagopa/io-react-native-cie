@@ -42,7 +42,7 @@ extension Array where Element == UInt8 {
     case .HEX:
       return Data(self).toHexString()
     case .BASE64:
-      return Data(self).base64UrlEncodedString()
+      return Data(self).base64EncodedString()
     }
   }
 }
