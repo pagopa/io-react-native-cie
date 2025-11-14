@@ -439,7 +439,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     const val NAME = "IoReactNativeCie"
 
     enum class ResultEncoding(val value: String) {
-      HEX("hex")
+      HEX("hex"),
       BASE64("base64"),
       BASE64URL("base64url");
 
