@@ -32,6 +32,11 @@ extension Array where Element == UInt8 {
     return Data(self).toHexString()
   }
   
+  /// Converts the byte array to a base64 encoded string.
+  func base64EncodedString() -> String {
+    return Data(self).base64EncodedString()
+  }
+  
   /// Converts the byte array to a base64url encoded string.
   func base64UrlEncodedString() -> String {
     return Data(self).base64UrlEncodedString()
@@ -43,6 +48,8 @@ extension Array where Element == UInt8 {
       return Data(self).toHexString()
     case .BASE64:
       return Data(self).base64EncodedString()
+    case .BASE64URL:
+      return Data(self).base64UrlEncodedString()
     }
   }
 }

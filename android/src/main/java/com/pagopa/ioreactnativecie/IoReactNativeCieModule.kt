@@ -439,12 +439,14 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     const val NAME = "IoReactNativeCie"
 
     enum class ResultEncoding(val value: String) {
+      HEX("hex")
       BASE64("base64"),
-      HEX("hex");
+      BASE64URL("base64url");
 
       fun encode(data: ByteArray): String = when (this) {
-        BASE64 -> Base64.encodeToString(data, Base64.DEFAULT or Base64.NO_WRAP)
         HEX -> data.toHex().uppercase()
+        BASE64 -> Base64.encodeToString(data, Base64.DEFAULT or Base64.NO_WRAP)
+        BASE64URL -> Base64.encodeToString(data, Base64.URL_SAFE or Base64.NO_WRAP)
       }
 
       companion object {
@@ -452,6 +454,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
           return when (value) {
             "hex" -> HEX
             "base64" -> BASE64
+            "base64url" -> BASE64URL
             else -> BASE64 // Default
           }
         }
