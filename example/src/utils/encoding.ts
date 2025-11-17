@@ -25,7 +25,7 @@ const toBase64 = (decoded: string): string => {
  * Encodes a given challenge string into the specified encoding format.
  *
  * @param challenge - The input string to be encoded.
- * @param encoding - The encoding format to use: either 'base64' or 'hex'.
+ * @param encoding - The encoding format to use: either 'base64', 'base64url' or 'hex'.
  * @returns The encoded string in the specified format.
  */
 export function encodeChallenge(
