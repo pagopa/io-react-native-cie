@@ -73,14 +73,15 @@ More info in the [official Android documentation](https://developer.android.com/
    <string>We need to use NFC</string>
    ```
    [More info on Apple's doc](https://developer.apple.com/documentation/bundleresources/information-property-list/nfcreaderusagedescription?language=objc)
-3. Add the required ISO7816 identifiers into your `info.plist`
+3. Add the required ISO7816 identifiers into your `info.plist`. **IMPORTART**: the NFC tags order is important!
    ```xml
    <key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
    <array>
-     <string>A0000000308000000009816001</string>
-     <string>A00000000039</string>
-     <string>A0000002471001</string>
-     <string>00000000000000</string>
+   	<string>A0000002471001</string>
+   	<string>A0000000308000000009816001</string>
+   	<string>A00000000039</string>
+   	<string>A0000002472001</string>
+   	<string>00000000000000</string>
    </array>
    ```
    [More info on Apple's doc](https://developer.apple.com/documentation/corenfc/nfciso7816tag).
@@ -97,24 +98,24 @@ To run the example app, follow the instructions in [example/README.md](./example
 
 List of available functions
 
-| Function                                                                                                                | Return             | Description                                                                    |
-| :---------------------------------------------------------------------------------------------------------------------- | :----------------- | :----------------------------------------------------------------------------- |
-| `hasNFCFeature()`                                                                                                       | `Promise<boolean>` | (Android) Checks if the device supports NFC feature                            |
-| `isNfcEnabled()`                                                                                                        | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled                               |
-| `isCieAuthenticationSupported()`                                                                                        | `Promise<boolean>` | (Android) Checks if the device supports CIE autentication                      |
-| `openNfcSettings()`                                                                                                     | `Promise<void>`    | (Android) Opens NFC system settings page                                       |
-| `addListener(event: CieEvent, listener: CieEventHandlers)`                                                              | `() => void`       | Adds a NFC event listener and returns a function to unsubscribe from the event |
-| `removeListener(event: CieEvent)`                                                                                       | `void`             | Removes all listeners for the specified event                                  |
-| `removeAllListeners()`                                                                                                  | `void`             | Removes all registered listeners                                               |
-| `setCustomIdpUrl(url?: string)`                                                                                         | `void`             | Updates IDP url, if `undefined` will use the default IDP url                   |
-| `setAlertMessage(key: AlertMessageKey, value: string)`                                                                  | `void`             | (iOS) Updates iOS NFC modal alert message                                      |
-| `setCurrentAlertMessage(value: string)`                                                                                 | `void`             | (iOS) Updates currently displayed iOS NFC modal alert message                  |
-| `startInternalAuthentication(challenge: string, resultEncoding?: 'hex' \| 'base64', timeout?: number)`                  | `Promise<void>`    | Start the CIE IAS/NIS Internal Authentication                                  |
-| `startMRTDReading(can: string, resultEncoding?: 'hex' \| 'base64', timeout?: number)`                                   | `Promise<void>`    | Start PACE MRTD reading (reads MRTD data using CAN)                            |
-| `startInternalAuthAndMRTDReading(can: string, challenge: string, resultEncoding?: 'hex' \| 'base64', timeout?: number)` | `Promise<void>`    | Start combined Internal Authentication + PACE MRTD reading                     |
-| `startReadingAttributes(timeout: number)`                                                                               | `Promise<void>`    | Start the CIE attributes reading process                                       |
-| `startReading(pin: string, authenticationUrl: string, timeout: number)`                                                 | `Promise<void>`    | Start the CIE reading process fro authentication                               |
-| `stopReading()`                                                                                                         | `Promise<void>`    | (Android) Stops all reading process                                            |
+| Function                                                                                                             | Return             | Description                                                                    |
+| :------------------------------------------------------------------------------------------------------------------- | :----------------- | :----------------------------------------------------------------------------- |
+| `hasNFCFeature()`                                                                                                    | `Promise<boolean>` | (Android) Checks if the device supports NFC feature                            |
+| `isNfcEnabled()`                                                                                                     | `Promise<boolean>` | (Android) Checks if the NFC is currently enabled                               |
+| `isCieAuthenticationSupported()`                                                                                     | `Promise<boolean>` | (Android) Checks if the device supports CIE autentication                      |
+| `openNfcSettings()`                                                                                                  | `Promise<void>`    | (Android) Opens NFC system settings page                                       |
+| `addListener(event: CieEvent, listener: CieEventHandlers)`                                                           | `() => void`       | Adds a NFC event listener and returns a function to unsubscribe from the event |
+| `removeListener(event: CieEvent)`                                                                                    | `void`             | Removes all listeners for the specified event                                  |
+| `removeAllListeners()`                                                                                               | `void`             | Removes all registered listeners                                               |
+| `setCustomIdpUrl(url?: string)`                                                                                      | `void`             | Updates IDP url, if `undefined` will use the default IDP url                   |
+| `setAlertMessage(key: AlertMessageKey, value: string)`                                                               | `void`             | (iOS) Updates iOS NFC modal alert message                                      |
+| `setCurrentAlertMessage(value: string)`                                                                              | `void`             | (iOS) Updates currently displayed iOS NFC modal alert message                  |
+| `startInternalAuthentication(challenge: string, resultEncoding?: ResultEncoding, timeout?: number)`                  | `Promise<void>`    | Start the CIE IAS/NIS Internal Authentication                                  |
+| `startMRTDReading(can: string, resultEncoding?: ResultEncoding, timeout?: number)`                                   | `Promise<void>`    | Start PACE MRTD reading (reads MRTD data using CAN)                            |
+| `startInternalAuthAndMRTDReading(can: string, challenge: string, resultEncoding?: ResultEncoding, timeout?: number)` | `Promise<void>`    | Start combined Internal Authentication + PACE MRTD reading                     |
+| `startReadingAttributes(timeout: number)`                                                                            | `Promise<void>`    | Start the CIE attributes reading process                                       |
+| `startReading(pin: string, authenticationUrl: string, timeout: number)`                                              | `Promise<void>`    | Start the CIE reading process fro authentication                               |
+| `stopReading()`                                                                                                      | `Promise<void>`    | (Android) Stops all reading process                                            |
 
 ## Usage
 
@@ -395,6 +396,54 @@ type NfcError = {
 ```
 
 Error event that may be sent during the CIE reading process. Contains the name of the error and an optional message. Error names and order may vary based on the platform.
+
+```typescript
+type InternalAuthResponse = {
+  nis: string,
+  publicKey: string,
+  sod: string,
+  signedChallenge: string,
+});
+```
+
+Represent the CIE response coming from NIS Internal Auth.
+All string value are Hex, Base64 or Base64 url encoded
+
+```typescript
+type MrtdResponse = {
+  dg1: string,
+  dg11: string,
+  sod: string,
+});
+```
+
+Represent the CIE response coming from MRTD with PACE reading
+All string value are Hex, Base64 or Base64 url encoded.
+
+```typescript
+type InternalAuthAndMrtdResponse = {
+  nis_data: {
+    nis: string,
+    publicKey: string,
+    sod: string,
+    signedChallenge: string,
+  },
+  mrtd_data: {
+    dg1: string,
+    dg11: string,
+    sod: string,
+  },
+});
+```
+
+Represent the CIE response coming from NIS Internal Auth and MRTD with PACE reading during the same NFC session.
+All string value are Hex, Base64 or Base64 url encoded.
+
+```typescript
+type ResultEncoding = 'hex' | 'base64' | 'base64url';
+```
+
+Supported types of encoding for Internal Auth and Mrtd reponse payloads.
 
 ## Errors
 
