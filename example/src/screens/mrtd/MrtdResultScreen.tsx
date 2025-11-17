@@ -1,22 +1,25 @@
+import { IOButton } from '@pagopa/io-app-design-system';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
-  ScrollView,
-  View,
-  StyleSheet,
-  Text,
-  Share,
   Alert,
   Platform,
   SafeAreaView,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
-import { IOButton } from '@pagopa/io-app-design-system';
-import type { MrtdResponse } from '../../../../src/manager/types';
+import type {
+  MrtdResponse,
+  ResultEncoding,
+} from '../../../../src/manager/types';
 
 interface Props {
   route: {
     params: {
       result: MrtdResponse;
-      encoding: 'base64' | 'hex';
+      encoding: ResultEncoding;
     };
   };
   navigation: any;

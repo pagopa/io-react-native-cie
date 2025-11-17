@@ -34,7 +34,7 @@ export const ReadStatusComponent = ({ progress = 0, status, step }: Props) => {
   return (
     <Animated.View layout={LinearTransition} style={styles.container}>
       <AnimatedCircularProgress
-        size={300}
+        size={200}
         width={10}
         fill={progress * 100}
         tintColor={IOColors[statusColorMap[status]]}

@@ -127,6 +127,11 @@ export const CieAttributes = z.object({
 export type CieAttributes = z.infer<typeof CieAttributes>;
 
 /**
+ * Possible encodings for the CIE reading results
+ */
+export type ResultEncoding = 'hex' | 'base64' | 'base64url';
+
+/**
  * Event handler that can be used to handle the CIE events during the reading process
  */
 export type CieEventHandlers = {

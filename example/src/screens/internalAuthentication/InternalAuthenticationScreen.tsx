@@ -1,9 +1,15 @@
 import {
+  HStack,
   IOButton,
-  ListItemSwitch,
+  ListItemRadio,
   TextInput,
+  VStack,
 } from '@pagopa/io-app-design-system';
-import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
+import {
+  CieManager,
+  type NfcEvent,
+  type ResultEncoding,
+} from '@pagopa/io-react-native-cie';
 import { useEffect, useState } from 'react';
 import {
   Alert,
@@ -28,9 +34,7 @@ export function InternalAuthenticationScreen() {
   const [event, setEvent] = useState<NfcEvent>();
   const [challenge, setChallenge] = useState<string>('');
 
-  const [isBase64Encoding, setIsBase64Encoding] = useState(false);
-  const toggleEncodingSwitch = () =>
-    setIsBase64Encoding((previousState) => !previousState);
+  const [encoding, setEncoding] = useState<ResultEncoding>('hex');
 
   useEffect(() => {
     const cleanup = [
@@ -58,11 +62,8 @@ export function InternalAuthenticationScreen() {
                 params: {
                   result: internalAutheticationResult,
                   challenge,
-                  encodedChallenge: encodeChallenge(
-                    challenge,
-                    isBase64Encoding ? 'base64' : 'hex'
-                  ),
-                  encoding: isBase64Encoding ? 'base64' : 'hex',
+                  encodedChallenge: encodeChallenge(challenge, encoding),
+                  encoding: encoding,
                 },
               },
             ],
@@ -77,7 +78,7 @@ export function InternalAuthenticationScreen() {
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
-  }, [challenge, isBase64Encoding, navigation]);
+  }, [challenge, encoding, navigation]);
 
   const handleStartReading = async () => {
     Keyboard.dismiss();
@@ -85,10 +86,7 @@ export function InternalAuthenticationScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startInternalAuthentication(
-        challenge,
-        isBase64Encoding ? 'base64' : 'hex'
-      );
+      await CieManager.startInternalAuthentication(challenge, encoding);
     } catch (e) {
       setStatus('error');
       Alert.alert(
@@ -118,18 +116,30 @@ export function InternalAuthenticationScreen() {
             step={event?.name}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <ListItemSwitch
-            label="Use base64 encoding"
-            onSwitchValueChange={toggleEncodingSwitch}
-            value={isBase64Encoding}
-          />
+        <VStack space={8} style={styles.inputContainer}>
           <TextInput
             value={challenge}
             placeholder={'Challenge'}
             onChangeText={setChallenge}
           />
-        </View>
+          <HStack space={8}>
+            <ListItemRadio
+              selected={encoding === 'hex'}
+              value={'HEX'}
+              onValueChange={() => setEncoding('hex')}
+            />
+            <ListItemRadio
+              selected={encoding === 'base64'}
+              value={'Base64'}
+              onValueChange={() => setEncoding('base64')}
+            />
+            <ListItemRadio
+              selected={encoding === 'base64url'}
+              value={'Base64 URL-safe'}
+              onValueChange={() => setEncoding('base64url')}
+            />
+          </HStack>
+        </VStack>
         <IOButton
           variant="solid"
           label={status === 'reading' ? 'Stop' : 'Sign challenge'}
@@ -159,6 +169,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inputContainer: {
+    backgroundColor: 'white',
     justifyContent: 'center',
     marginBottom: 16,
   },
