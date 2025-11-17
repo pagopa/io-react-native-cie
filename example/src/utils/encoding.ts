@@ -34,7 +34,10 @@ export function encodeChallenge(
 ): string {
   switch (encoding) {
     case 'base64url':
-      return toBase64(challenge).replace(/\+/g, '-').replace(/\//g, '_');
+      return toBase64(challenge)
+        .replace(/=/g, '')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_');
     case 'base64': {
       return toBase64(challenge);
     }
