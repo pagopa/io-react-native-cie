@@ -12,6 +12,7 @@ export type {
   InternalAuthResponse,
   MrtdResponse,
   InternalAuthAndMrtdResponse,
+  ResultEncoding,
 } from './manager/types';
 
 export type { CieErrorSchema, CieError, CieErrorCodes } from './errors';

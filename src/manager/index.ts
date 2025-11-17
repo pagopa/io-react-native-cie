@@ -1,6 +1,11 @@
 import { NativeEventEmitter } from 'react-native';
 import { IoReactNativeCie } from '../native';
-import { AlertMessageKey, type CieEvent, type CieEventHandlers } from './types';
+import {
+  AlertMessageKey,
+  type CieEvent,
+  type CieEventHandlers,
+  type ResultEncoding,
+} from './types';
 import { getDefaultIdpUrl } from './utils';
 
 const DEFAULT_TIMEOUT = 10000;
@@ -110,7 +115,7 @@ export const setCurrentAlertMessage = (value: string) => {
  */
 const startInternalAuthentication = async (
   challenge: string,
-  resultEncoding: 'base64' | 'base64url' | 'hex' = 'base64',
+  resultEncoding: ResultEncoding = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startInternalAuthentication(
@@ -166,7 +171,7 @@ const startInternalAuthentication = async (
  */
 const startMRTDReading = async (
   can: string,
-  resultEncoding: 'base64' | 'base64url' | 'hex' = 'base64',
+  resultEncoding: ResultEncoding = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startMRTDReading(can, resultEncoding, timeout);
@@ -220,7 +225,7 @@ const startMRTDReading = async (
 const startInternalAuthAndMRTDReading = async (
   can: string,
   challenge: string,
-  resultEncoding: 'base64' | 'base64url' | 'hex' = 'base64',
+  resultEncoding: ResultEncoding = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startInternalAuthAndMRTDReading(

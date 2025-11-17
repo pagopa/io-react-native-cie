@@ -1,3 +1,5 @@
+import type { ResultEncoding } from '@pagopa/io-react-native-cie';
+
 /**
  * Encodes a given challenge string into the specified encoding format.
  *
@@ -7,7 +9,7 @@
  */
 export function encodeChallenge(
   challenge: string,
-  encoding: 'base64' | 'hex'
+  encoding: ResultEncoding
 ): string {
   if (encoding === 'base64') {
     // Convert string to UTF-8 bytes, then to base64
