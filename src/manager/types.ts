@@ -126,6 +126,15 @@ export const CieAttributes = z.object({
 
 export type CieAttributes = z.infer<typeof CieAttributes>;
 
+export const CertificateData = z.object({
+  name: z.string().optional(),
+  surname: z.string().optional(),
+  fiscalCode: z.string().optional(),
+  docSerialNumber: z.string().optional(),
+});
+
+export type CertificateData = z.infer<typeof CertificateData>;
+
 /**
  * Possible encodings for the CIE reading results
  */
@@ -146,6 +155,7 @@ export type CieEventHandlers = {
   ) => void;
   onAttributesSuccess: (attributes: CieAttributes) => void;
   onSuccess: (uri: string) => void;
+  onCertificateSuccess: (certificateData: CertificateData) => void;
 };
 
 /**

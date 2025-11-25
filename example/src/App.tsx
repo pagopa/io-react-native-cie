@@ -22,6 +22,8 @@ import { InternalAuthAndMrtdScreen } from './screens/internalAuthAndMrtd/Interna
 import { InternalAuthAndMrtdResultScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdResultScreen';
 import { InternalAuthenticationScreen } from './screens/internalAuthentication/InternalAuthenticationScreen';
 import { InternalAuthenticationResultScreen } from './screens/internalAuthentication/InternalAuthenticationResultScreen';
+import { CertificateReadingScreen } from './screens/certificateReading/CertificateReadingScreen';
+import { CertificateReadingResultScreen } from './screens/certificateReading/CertificateReadingResultScreen';
 
 const RootStack = createNativeStackNavigator({
   screenOptions: {
@@ -72,6 +74,18 @@ const RootStack = createNativeStackNavigator({
       screen: InternalAuthAndMrtdResultScreen,
       options: {
         title: 'Internal Auth + MRTD Result',
+      },
+    },
+    CertificateReading: {
+      screen: CertificateReadingScreen,
+      options: {
+        title: 'Certificate reading',
+      },
+    },
+    CertificateReadingResult: {
+      screen: CertificateReadingResultScreen,
+      options: {
+        title: 'Certificate reading Result',
       },
     },
     Attributes: {

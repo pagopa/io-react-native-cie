@@ -104,6 +104,13 @@ export function HomeScreen() {
           disabled={!isCieAuthenticationSupported}
           onPress={() => navigation.navigate('InternalAuthAndMrtd')}
         />
+        <IOButton
+          variant="solid"
+          label="Start Certificate reading"
+          icon="navWalletFocused"
+          disabled={!isCieAuthenticationSupported}
+          onPress={() => navigation.navigate('CertificateReading')}
+        />
         {Platform.OS === 'android' && (
           <View style={styles.buttonContainer}>
             <IOButton
