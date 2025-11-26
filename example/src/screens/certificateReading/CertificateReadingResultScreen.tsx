@@ -10,24 +10,22 @@ import {
   Text,
   View,
 } from 'react-native';
-import type {
-  MrtdResponse,
-  ResultEncoding,
-} from '../../../../src/manager/types';
+import type { CertificateData } from '../../../../src/manager/types';
 
 interface Props {
   route: {
-    params: {
-      result: MrtdResponse;
-      encoding: ResultEncoding;
-    };
+    params: CertificateData;
   };
   navigation: any;
 }
 
-export function MrtdResultScreen({ route }: Props) {
-  const { result, encoding } = route.params;
-  const resultString = JSON.stringify({ encoding, ...result }, null, 2);
+export function CertificateReadingResultScreen({ route }: Props) {
+  const { docSerialNumber, fiscalCode, name, surname } = route.params;
+  const resultString = JSON.stringify(
+    { docSerialNumber, fiscalCode, name, surname },
+    null,
+    2
+  );
 
   const handleCopy = async () => {
     Clipboard.setString(resultString);
@@ -39,13 +37,13 @@ export function MrtdResultScreen({ route }: Props) {
       await Share.share(
         {
           message: resultString,
-          title: 'MRTD with PACE Result',
+          title: 'Cie Data',
           // Workaround for iOS to set the subject sharing email in some apps
-          ...(Platform.OS === 'ios' ? { url: 'MRTD with PACE Result' } : {}),
+          ...(Platform.OS === 'ios' ? { url: 'Cie Data' } : {}),
         },
         {
-          subject: 'MRTD with PACE Result',
-          dialogTitle: 'Share MRTD with PACE Result',
+          subject: 'Cie Data Result',
+          dialogTitle: 'Share Cie Data Result',
         }
       );
     } catch (error) {

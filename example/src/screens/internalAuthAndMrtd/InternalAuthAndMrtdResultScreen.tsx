@@ -1,16 +1,19 @@
+import { IOButton } from '@pagopa/io-app-design-system';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {
-  ScrollView,
-  View,
-  StyleSheet,
-  Text,
-  Share,
   Alert,
   Platform,
   SafeAreaView,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
-import { IOButton } from '@pagopa/io-app-design-system';
-import type { InternalAuthAndMrtdResponse } from '../../../../src/manager/types';
+import type {
+  InternalAuthAndMrtdResponse,
+  ResultEncoding,
+} from '../../../../src/manager/types';
 
 interface Props {
   route: {
@@ -18,7 +21,7 @@ interface Props {
       result: InternalAuthAndMrtdResponse;
       challenge: string;
       encodedChallenge: string;
-      encoding: 'base64' | 'hex';
+      encoding: ResultEncoding;
     };
   };
   navigation: any;

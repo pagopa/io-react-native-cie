@@ -260,6 +260,38 @@ class IoReactNativeCie: RCTEventEmitter {
     }
   }
   
+  @objc func startReadingCertificate(
+    _ pin: String,
+    withTimeout timeout: Int,
+    withResolver resolve: @escaping RCTPromiseResolveBlock,
+    withRejecter reject: @escaping RCTPromiseRejectBlock
+  ) {
+    Task { [weak self] in
+      guard let self = self else {
+        reject(ModuleException.threadingError.rawValue, "Failed to perform background operation, self was deallocated", nil)
+        return
+      }
+      
+      guard pin.count == 8, pin.allSatisfy(\.isNumber) else {
+        reject(ModuleException.invalidPin.rawValue, "Pin must be exactly 8 digits", nil)
+        return
+      }
+      
+      do {
+        let data = try await self.cieSdk.performCertificate(withPin: pin, handleReadEvent)
+        self.sendEvent(
+          withName: EventType.onCertificateSuccess.rawValue, body: ["name": data.name, "surname": data.surname, "docSerialNumber": data.docSerialNumber, "fiscalCode": data.fiscalCode])
+      } catch {
+        guard let nfcDigitalIdError = error as? NfcDigitalIdError else {
+          reject(ModuleException.unexpected.rawValue, error.localizedDescription, error)
+          return
+        }
+        handleReadError(nfcDigitalIdError)
+        resolve(nil)
+      }
+    }
+  }
+  
   func handleReadEvent(event: CieSDK.CieDigitalIdEvent, progress: Float) {
     let payload: NSDictionary = ["name": "\(event)", "progress": progress]
     self.sendEvent(withName: EventType.onEvent.rawValue, body: payload)
@@ -303,6 +335,7 @@ class IoReactNativeCie: RCTEventEmitter {
     case onMRTDWithPaceSuccess
     case onInternalAuthAndMRTDWithPaceSuccess
     case onSuccess
+    case onCertificateSuccess
   }
   
   private enum ErrorType: String, CaseIterable {

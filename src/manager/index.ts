@@ -1,6 +1,11 @@
 import { NativeEventEmitter } from 'react-native';
 import { IoReactNativeCie } from '../native';
-import { AlertMessageKey, type CieEvent, type CieEventHandlers } from './types';
+import {
+  AlertMessageKey,
+  type CieEvent,
+  type CieEventHandlers,
+  type ResultEncoding,
+} from './types';
 import { getDefaultIdpUrl } from './utils';
 
 const DEFAULT_TIMEOUT = 10000;
@@ -104,13 +109,13 @@ export const setCurrentAlertMessage = (value: string) => {
  * Initiates the internal authentication process using the provided challenge and timeout.
  *
  * @param challenge - The challenge string to be used for authentication.
- * @param resultEncoding - The encoding of the result byte arrays, either 'base64' or 'hex' (default: 'base64')
+ * @param resultEncoding - The encoding of the result byte arrays, either 'base64', 'base64url' or 'hex' (default: 'base64')
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
  * @returns A promise that resolves when the authentication process has ended.
  */
 const startInternalAuthentication = async (
   challenge: string,
-  resultEncoding: 'base64' | 'hex' = 'base64',
+  resultEncoding: ResultEncoding = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startInternalAuthentication(
@@ -166,7 +171,7 @@ const startInternalAuthentication = async (
  */
 const startMRTDReading = async (
   can: string,
-  resultEncoding: 'base64' | 'hex' = 'base64',
+  resultEncoding: ResultEncoding = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startMRTDReading(can, resultEncoding, timeout);
@@ -220,7 +225,7 @@ const startMRTDReading = async (
 const startInternalAuthAndMRTDReading = async (
   can: string,
   challenge: string,
-  resultEncoding: 'base64' | 'hex' = 'base64',
+  resultEncoding: ResultEncoding = 'base64',
   timeout: number = DEFAULT_TIMEOUT
 ): Promise<void> => {
   return IoReactNativeCie.startInternalAuthAndMRTDReading(
@@ -274,6 +279,29 @@ const startReading = async (
 };
 
 /**
+ * Starts the CIE certificate reading process.
+ * This method extracts the data from the CIE card certificate.
+ * Upon success, the `onCertificateSuccess` event is emitted with the certificate data.
+ *
+ * @param pin - The CIE card PIN code
+ * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
+ * @returns Promise<void>
+ * @throws {CieError} If could not start reading for authentication
+ * @example
+ * ```typescript
+ * await CieManager.startReadingCertificate('12345678');
+ * // or with custom timeout
+ * await CieManager.startReadingCertificate('12345678', 20000);
+ * ```
+ */
+const startReadingCertificate = async (
+  pin: string,
+  timeout: number = DEFAULT_TIMEOUT
+): Promise<void> => {
+  return IoReactNativeCie.startReadingCertificate(pin, timeout);
+};
+
+/**
  * Stops any ongoing CIE reading process.
  *
  * **Note:** Android only. On iOS the reading process is stopped by closing
@@ -299,5 +327,6 @@ export {
   startMRTDReading,
   startInternalAuthAndMRTDReading,
   startReading,
+  startReadingCertificate,
   stopReading,
 };
