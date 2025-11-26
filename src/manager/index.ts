@@ -279,18 +279,19 @@ const startReading = async (
 };
 
 /**
- * Starts the CIE reading and authentication process.
+ * Starts the CIE certificate reading process.
+ * This method extracts the data from the CIE card certificate.
+ * Upon success, the `onCertificateSuccess` event is emitted with the certificate data.
  *
  * @param pin - The CIE card PIN code
- * @param authenticationUrl - The authentication service URL
  * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
  * @returns Promise<void>
  * @throws {CieError} If could not start reading for authentication
  * @example
  * ```typescript
- * await CieManager.startReading('12345678', 'https://idserver.example.com/auth');
+ * await CieManager.startReadingCertificate('12345678');
  * // or with custom timeout
- * await CieManager.startReading('12345678', 'https://idserver.example.com/auth', 20000);
+ * await CieManager.startReadingCertificate('12345678', 20000);
  * ```
  */
 const startReadingCertificate = async (
