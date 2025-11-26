@@ -12,6 +12,7 @@ import it.pagopa.io.app.cie.CieLogger
 import it.pagopa.io.app.cie.CieSDK
 import it.pagopa.io.app.cie.IntAuthMRTDResponse
 import it.pagopa.io.app.cie.NisAndPaceCallback
+import it.pagopa.io.app.cie.cie.CertificateData
 import it.pagopa.io.app.cie.cie.CieAtrCallback
 import it.pagopa.io.app.cie.cie.NfcError
 import it.pagopa.io.app.cie.cie.NfcEvent
@@ -23,6 +24,7 @@ import it.pagopa.io.app.cie.nis.NisCallback
 import it.pagopa.io.app.cie.pace.MRTDResponse
 import it.pagopa.io.app.cie.pace.PaceCallback
 import it.pagopa.io.app.cie.toHex
+import it.pagopa.io.app.cie.cie.CieCertificateDataCallback
 import java.net.URL
 
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
@@ -409,6 +411,66 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
   @Suppress("unused")
   @ReactMethod
+  fun startReadingCertificate(
+    pin: String,
+    timeout: Int = 10000,
+    promise: Promise,
+  ) {
+    try {
+      cieSdk.setPin(pin)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.PIN_REGEX_NOT_VALID, e.message, e)
+      return
+    }
+
+    try {
+      cieSdk.startReadingCertificate(timeout, object : NfcEvents {
+        override fun event(event: NfcEvent) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.EVENT.value, WritableNativeMap().apply {
+              putString("name", event.name)
+              putDouble(
+                "progress", (event.numerator.toDouble() / NfcEvent.totalNumeratorEvent.toDouble())
+              )
+            })
+        }
+
+        override fun error(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("msg", it) }
+              error.numberOfAttempts?.let { putInt("attemptsLeft", it) }
+            })
+
+        }
+      }, object : CieCertificateDataCallback {
+        override fun onSuccess(data: CertificateData) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.CERTIFICATE_SUCCESS.value, WritableNativeMap().apply {
+              putString("name", data.name)
+              putString("surname", data.surname)
+              putString("fiscalCode", data.fiscalCode)
+              putString("docSerialNumber", data.docSerialNumber)
+            })
+        }
+
+        override fun onError(error: NfcError) {
+          this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EventType.ERROR.value, WritableNativeMap().apply {
+              putString("name", mapNfcError(error).name)
+              error.msg?.let { putString("message", it) }
+            })
+        }
+      })
+      promise.resolve(null)
+    } catch (e: Exception) {
+      promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
+    }
+  }
+
+  @Suppress("unused")
+  @ReactMethod
   fun stopReading() {
     cieSdk.stopNFCListening()
   }
@@ -468,7 +530,8 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       INTERNAL_AUTHENTICATION_SUCCESS("onInternalAuthenticationSuccess"),
       MRTD_WITH_PACE_SUCCESS("onMRTDWithPaceSuccess"),
       INTERNAL_AUTH_AND_MRTD_WITH_PACE_SUCCESS("onInternalAuthAndMRTDWithPaceSuccess"),
-      SUCCESS("onSuccess")
+      SUCCESS("onSuccess"),
+      CERTIFICATE_SUCCESS("onCertificateSuccess")
     }
 
     enum class ErrorType {

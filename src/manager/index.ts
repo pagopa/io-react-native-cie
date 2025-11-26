@@ -279,6 +279,29 @@ const startReading = async (
 };
 
 /**
+ * Starts the CIE certificate reading process.
+ * This method extracts the data from the CIE card certificate.
+ * Upon success, the `onCertificateSuccess` event is emitted with the certificate data.
+ *
+ * @param pin - The CIE card PIN code
+ * @param timeout - Optional timeout in milliseconds (default: 10000) (**Note**: Android only)
+ * @returns Promise<void>
+ * @throws {CieError} If could not start reading for authentication
+ * @example
+ * ```typescript
+ * await CieManager.startReadingCertificate('12345678');
+ * // or with custom timeout
+ * await CieManager.startReadingCertificate('12345678', 20000);
+ * ```
+ */
+const startReadingCertificate = async (
+  pin: string,
+  timeout: number = DEFAULT_TIMEOUT
+): Promise<void> => {
+  return IoReactNativeCie.startReadingCertificate(pin, timeout);
+};
+
+/**
  * Stops any ongoing CIE reading process.
  *
  * **Note:** Android only. On iOS the reading process is stopped by closing
@@ -304,5 +327,6 @@ export {
   startMRTDReading,
   startInternalAuthAndMRTDReading,
   startReading,
+  startReadingCertificate,
   stopReading,
 };
