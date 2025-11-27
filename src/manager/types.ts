@@ -99,17 +99,8 @@ export type MrtdResponse = z.infer<typeof MrtdResponseObject>;
  * All string value are Hex or Base64 encoded
  */
 export const InternalAuthAndMrtdResponse = z.object({
-  nis_data: z.object({
-    nis: z.string(),
-    publicKey: z.string(),
-    sod: z.string(),
-    signedChallenge: z.string(),
-  }),
-  mrtd_data: z.object({
-    dg1: z.string(),
-    dg11: z.string(),
-    sod: z.string(),
-  }),
+  nis_data: InternalAuthResponseObject,
+  mrtd_data: MrtdResponseObject,
 });
 
 export type InternalAuthAndMrtdResponse = z.infer<
