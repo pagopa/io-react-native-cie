@@ -40,6 +40,7 @@ export const NfcErrorName = z.enum([
   'CANCELLED_BY_USER',
   'APDU_ERROR',
   'WRONG_PIN',
+  'WRONG_CAN',
   'CARD_BLOCKED',
   'NO_INTERNET_CONNECTION',
   'CERTIFICATE_EXPIRED',

@@ -482,6 +482,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       NfcError.APDU_ERROR -> ErrorType.APDU_ERROR
       NfcError.EXTENDED_APDU_NOT_SUPPORTED -> ErrorType.APDU_ERROR
       NfcError.WRONG_PIN -> ErrorType.WRONG_PIN
+      NfcError.WRONG_CAN -> ErrorType.WRONG_CAN
       NfcError.PIN_BLOCKED -> ErrorType.CARD_BLOCKED
       else -> ErrorType.GENERIC_ERROR
     }
@@ -539,6 +540,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       TAG_LOST,
       APDU_ERROR,
       WRONG_PIN,
+      WRONG_CAN,
       CARD_BLOCKED,
       NO_INTERNET_CONNECTION,
       CERTIFICATE_EXPIRED,
