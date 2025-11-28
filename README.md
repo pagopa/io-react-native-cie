@@ -323,6 +323,7 @@ List of error event that may be emitted during CIE reading process
 | APDU_ERROR             | Protocol error or not supported        |
 | CARD_BLOCKED           | Too many PIN attempts, card is blocked |
 | WRONG_PIN              | Wrong PIN                              |
+| WRONG_CAN              | Wrong CAN                              |
 | NO_INTERNET_CONNECTION | Missing internet connection            |
 | CERTIFICATE_EXPIRED    | CIE expired                            |
 | CERTIFICATE_REVOKED    | CIE revoked                            |
