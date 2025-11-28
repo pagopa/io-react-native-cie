@@ -42,8 +42,8 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
    * Lazy value ensures it is initialized with a valid activity when first used.
    */
   val cieSdk: CieSDK by lazy {
-    CieSDK.withContext(currentActivity)
-  }
+    CieSDK.withContext(reactApplicationContext.currentActivity)
+  };
 
   @Suppress("unused")
   @ReactMethod
