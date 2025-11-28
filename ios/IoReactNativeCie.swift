@@ -316,6 +316,8 @@ class IoReactNativeCie: RCTEventEmitter {
       payload = [ "name": ErrorType.APDU_ERROR.rawValue, "message": error.description ]
     case .wrongPin(let attemptsLeft):
       payload = [ "name":ErrorType.WRONG_PIN.rawValue, "message": error.description, "attemptsLeft": attemptsLeft ]
+    case .wrongCan:
+      payload = [ "name":ErrorType.WRONG_CAN.rawValue, "message": error.description ]
     case .cardBlocked:
       payload = [ "name": ErrorType.CARD_BLOCKED.rawValue, "message": error.description ]
     case .sslError:
@@ -344,6 +346,7 @@ class IoReactNativeCie: RCTEventEmitter {
     case CANCELLED_BY_USER
     case APDU_ERROR
     case WRONG_PIN
+    case WRONG_CAN
     case CARD_BLOCKED
     case NO_INTERNET_CONNECTION
     case CERTIFICATE_EXPIRED
