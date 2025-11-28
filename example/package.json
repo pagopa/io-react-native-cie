@@ -46,6 +46,6 @@
     "react-native-builder-bob": "^0.40.6"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
