@@ -43,7 +43,7 @@
     "@react-native/metro-config": "0.81.5",
     "@react-native/typescript-config": "0.81.5",
     "@types/react": "^19.1.0",
-    "react-native-builder-bob": "^0.40.6"
+    "react-native-builder-bob": "^0.40.13"
   },
   "engines": {
     "node": ">=20"
