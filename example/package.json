@@ -17,34 +17,35 @@
     "@react-navigation/native": "^7.1.8",
     "@react-navigation/native-stack": "^7.3.12",
     "dayjs": "^1.11.13",
-    "react": "19.0.0",
-    "react-native": "0.78.2",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
     "react-native-circular-progress": "^1.4.1",
     "react-native-easing-gradient": "^1.1.1",
-    "react-native-gesture-handler": "^2.25.0",
+    "react-native-gesture-handler": "^2.29.0",
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-reanimated": "^3.17.5",
-    "react-native-safe-area-context": "^5.4.0",
-    "react-native-screens": "^4.10.0",
-    "react-native-svg": "^15.11.2",
-    "react-native-webview": "^13.13.5",
+    "react-native-reanimated": "^3.19.3",
+    "react-native-safe-area-context": "^5.6.0",
+    "react-native-screens": "^4.11.1",
+    "react-native-svg": "^15.14.0",
+    "react-native-webview": "^13.16.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "15.0.1",
-    "@react-native-community/cli-platform-android": "15.0.1",
-    "@react-native-community/cli-platform-ios": "15.0.1",
-    "@react-native/babel-preset": "0.78.2",
-    "@react-native/metro-config": "0.78.2",
-    "@react-native/typescript-config": "0.78.2",
-    "@types/react": "^19.0.0",
-    "react-native-builder-bob": "^0.40.6"
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-android": "20.0.0",
+    "@react-native-community/cli-platform-ios": "20.0.0",
+    "@react-native/babel-preset": "0.81.5",
+    "@react-native/eslint-config": "0.81.5",
+    "@react-native/metro-config": "0.81.5",
+    "@react-native/typescript-config": "0.81.5",
+    "@types/react": "^19.1.0",
+    "react-native-builder-bob": "^0.40.13"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
