@@ -35,6 +35,14 @@ export function MrtdScreen() {
 
   const [encoding, setEncoding] = useState<ResultEncoding>('hex');
 
+  // To test wrong CAN alert message
+  useEffect(() => {
+    CieManager.setAlertMessage(
+      'wrongCan',
+      'Hai inserito un CAN errato. Riprova'
+    );
+  }, []);
+
   useEffect(() => {
     const cleanup = [
       // Start listening for NFC events

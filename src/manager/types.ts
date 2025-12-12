@@ -16,6 +16,7 @@ export const AlertMessageKey = z.enum([
   'wrongPin1AttemptLeft',
   'wrongPin2AttemptLeft',
   'genericError',
+  'wrongCan',
 ]);
 
 export type AlertMessageKey = z.infer<typeof AlertMessageKey>;

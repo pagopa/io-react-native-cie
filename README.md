@@ -367,6 +367,7 @@ CieManager.setCurrentAlertMessage('Reading in progress, 80% completed');
 | `wrongPin1AttemptLeft` | PIN warning (1 attempt)  | "PIN errato, hai ancora 1 tentativo"                                                              |
 | `wrongPin2AttemptLeft` | PIN warning (2 attempts) | "PIN errato, hai ancora 2 tentativi"                                                              |
 | `genericError`         | Generic error            | "Qualcosa è andato storto"                                                                        |
+| `wrongCan`             | CAN warning              | "CAN errato"                                                                                      |
 
 ## Types
 
