@@ -1,6 +1,7 @@
 package com.pagopa.ioreactnativecie
 
 import android.util.Base64
+import android.app.Activity
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -26,9 +27,14 @@ import it.pagopa.io.app.cie.pace.PaceCallback
 import it.pagopa.io.app.cie.toHex
 import it.pagopa.io.app.cie.cie.CieCertificateDataCallback
 import java.net.URL
+import java.lang.ref.WeakReference
 
 class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
+
+  private var _cieSdk: CieSDK? = null
+  private var _sdkActivityRef: WeakReference<Activity>? = null
+  private var _customIdpUrl: String? = null
 
   init {
     CieLogger.enabled = BuildConfig.DEBUG
@@ -39,11 +45,27 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   }
 
   /**
-   * Lazy value ensures it is initialized with a valid activity when first used.
+   * Getter for a valid Cie SDK instance. Because the SDK is initialized with an activity,
+   * the instance must be recreated if the original activity has changed.
    */
-  val cieSdk: CieSDK by lazy {
-    CieSDK.withContext(reactApplicationContext.currentActivity)
-  };
+  val cieSdk: CieSDK
+    get() {
+      val currentActivity = reactApplicationContext.currentActivity
+        ?: throw Exception("Can not initialize Cie SDK with a null activity")
+
+      val hasActivityChanged = _sdkActivityRef?.get() != currentActivity
+
+      if (_cieSdk == null || hasActivityChanged) {
+        val newSdk = CieSDK.withContext(currentActivity)
+        // Re-apply saved configurations
+        _customIdpUrl?.let { newSdk.withCustomIdpUrl(it) }
+        // Update references
+        _cieSdk = newSdk
+        _sdkActivityRef = WeakReference(currentActivity)
+      }
+
+      return _cieSdk!!
+    }
 
   @Suppress("unused")
   @ReactMethod
@@ -113,6 +135,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   @Suppress("unused")
   @ReactMethod
   fun setCustomIdpUrl(url: String) {
+    _customIdpUrl = url
     cieSdk.withCustomIdpUrl(url)
   }
 
