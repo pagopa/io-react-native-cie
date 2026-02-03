@@ -23,9 +23,9 @@ import {
 import {
   ReadStatusComponent,
   type ReadStatus,
-} from '../../components/ReadStatusComponent';
+} from '../components/ReadStatusComponent';
 
-import { useNavigation } from '@react-navigation/native';
+import { StackActions, useNavigation } from '@react-navigation/native';
 
 export function MrtdScreen() {
   const navigation = useNavigation();
@@ -58,19 +58,19 @@ export function MrtdScreen() {
       // Start listening for reading MRTD data success
       CieManager.addListener('onMRTDWithPaceSuccess', (mrtdResponse) => {
         setStatus('success');
-        navigation.reset({
-          index: 0,
-          routes: [
-            { name: 'Home' },
-            {
-              name: 'MrtdResult',
-              params: {
+        navigation.dispatch(
+          StackActions.replace('Result', {
+            title: 'MRTD with PACE',
+            data: JSON.stringify(
+              {
                 result: mrtdResponse,
                 encoding,
               },
-            },
-          ],
-        });
+              undefined,
+              2
+            ),
+          })
+        );
       }),
     ];
 

@@ -16,22 +16,23 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
 import {
   ReadStatusComponent,
   type ReadStatus,
-} from '../../components/ReadStatusComponent';
+} from '../components/ReadStatusComponent';
 
-import { useNavigation } from '@react-navigation/native';
-import { encodeChallenge } from '../../utils/encoding';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { encodeChallenge } from '../utils/encoding';
 
-export function InternalAuthenticationScreen() {
+export function InternalAuthAndMrtdScreen() {
   const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
+  const [can, setCan] = useState<string>('');
   const [challenge, setChallenge] = useState<string>('');
 
   const [encoding, setEncoding] = useState<ResultEncoding>('hex');
@@ -44,30 +45,30 @@ export function InternalAuthenticationScreen() {
       CieManager.addListener('onError', (error) => {
         setStatus('error');
         Alert.alert(
-          'Error while reading attributes',
+          'Error while reading MRTD with PACE',
           JSON.stringify(error, undefined, 2)
         );
       }),
-      // Start listening for attributes success
+      // Start listening for reading MRTD data success
       CieManager.addListener(
-        'onInternalAuthenticationSuccess',
-        (internalAutheticationResult) => {
+        'onInternalAuthAndMRTDWithPaceSuccess',
+        (internalAuthAndMrtdResponse) => {
           setStatus('success');
-          navigation.reset({
-            index: 0,
-            routes: [
-              { name: 'Home' },
-              {
-                name: 'InternalAuthenticationResult',
-                params: {
-                  result: internalAutheticationResult,
+          navigation.dispatch(
+            StackActions.replace('Result', {
+              title: 'Internal Auth + MRTD',
+              data: JSON.stringify(
+                {
+                  result: internalAuthAndMrtdResponse,
                   challenge,
                   encodedChallenge: encodeChallenge(challenge, encoding),
-                  encoding: encoding,
+                  encoding,
                 },
-              },
-            ],
-          });
+                undefined,
+                2
+              ),
+            })
+          );
         }
       ),
     ];
@@ -86,11 +87,15 @@ export function InternalAuthenticationScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startInternalAuthentication(challenge, encoding);
+      await CieManager.startInternalAuthAndMRTDReading(
+        can,
+        challenge,
+        encoding
+      );
     } catch (e) {
       setStatus('error');
       Alert.alert(
-        'Error while reading attributes',
+        'Error while reading MRTD with PACE',
         JSON.stringify(e, undefined, 2)
       );
     }
@@ -103,12 +108,12 @@ export function InternalAuthenticationScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
-      >
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
+    >
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -117,6 +122,15 @@ export function InternalAuthenticationScreen() {
           />
         </View>
         <VStack space={8} style={styles.inputContainer}>
+          <TextInput
+            value={can}
+            placeholder={'CAN'}
+            onChangeText={setCan}
+            textInputProps={{
+              keyboardType: 'number-pad',
+              inputMode: 'numeric',
+            }}
+          />
           <TextInput
             value={challenge}
             placeholder={'Challenge'}
@@ -142,14 +156,14 @@ export function InternalAuthenticationScreen() {
         </VStack>
         <IOButton
           variant="solid"
-          label={status === 'reading' ? 'Stop' : 'Sign challenge'}
-          disabled={challenge.length === 0}
+          label={status === 'reading' ? 'Stop' : 'Start sign and reading'}
+          disabled={can.length !== 6 || challenge.length === 0}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -175,8 +189,5 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
-  },
-  attributesContainer: {
-    justifyContent: 'flex-end',
   },
 });

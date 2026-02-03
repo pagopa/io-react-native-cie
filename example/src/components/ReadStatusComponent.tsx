@@ -39,21 +39,18 @@ export const ReadStatusComponent = ({ progress = 0, status, step }: Props) => {
         fill={progress * 100}
         tintColor={IOColors[statusColorMap[status]]}
         backgroundColor={IOColors['grey-100']}
-        padding={8}
       >
         {() => (
-          <>
-            <Animated.View layout={LinearTransition}>
-              <Pictogram size={180} name={pictogramMap[status]} />
-            </Animated.View>
-            {status === 'reading' && step && (
-              <IOText font="DMMono" color="black" weight="Bold" size={12}>
-                {step}
-              </IOText>
-            )}
-          </>
+          <Animated.View layout={LinearTransition}>
+            <Pictogram size={120} name={pictogramMap[status]} />
+          </Animated.View>
         )}
       </AnimatedCircularProgress>
+      {status === 'reading' && step && (
+        <IOText font="DMMono" color="black" weight="Bold" size={12}>
+          {step}
+        </IOText>
+      )}
     </Animated.View>
   );
 };

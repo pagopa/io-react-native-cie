@@ -1,43 +1,46 @@
 import {
-  HeaderSecondLevel,
   IOColors,
   IOThemeContextProvider,
   ToastProvider,
 } from '@pagopa/io-app-design-system';
-import {
-  createStaticNavigation,
-  type StaticParamList,
-} from '@react-navigation/native';
+import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 import { AttributesScreen } from './screens/AttributesScreen';
 import { AuthenticationRequestScreen } from './screens/AuthenticationRequestScreen';
 import { AuthenticationScreen } from './screens/AuthenticationScreen';
+import { CertificateReadingScreen } from './screens/CertificateReadingScreen';
 import { HomeScreen } from './screens/HomeScreen';
-import { MrtdScreen } from './screens/mrtd/MrtdScreen';
-import { MrtdResultScreen } from './screens/mrtd/MrtdResultScreen';
-import { InternalAuthAndMrtdScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdScreen';
-import { InternalAuthAndMrtdResultScreen } from './screens/internalAuthAndMrtd/InternalAuthAndMrtdResultScreen';
-import { InternalAuthenticationScreen } from './screens/internalAuthentication/InternalAuthenticationScreen';
-import { InternalAuthenticationResultScreen } from './screens/internalAuthentication/InternalAuthenticationResultScreen';
-import { CertificateReadingScreen } from './screens/certificateReading/CertificateReadingScreen';
-import { CertificateReadingResultScreen } from './screens/certificateReading/CertificateReadingResultScreen';
+import { InternalAuthAndMrtdScreen } from './screens/InternalAuthAndMrtdScreen';
+import { InternalAuthenticationScreen } from './screens/InternalAuthenticationScreen';
+import { MrtdScreen } from './screens/MrtdScreen';
+import { ResultScreen } from './screens/ResultScreen';
 
-const RootStack = createNativeStackNavigator({
+export type RootStackParamList = {
+  Home: undefined;
+  InternalAuthentication: undefined;
+  Mrtd: undefined;
+  InternalAuthAndMrtd: undefined;
+  CertificateReading: undefined;
+  Attributes: undefined;
+  AuthenticationRequest: undefined;
+  Authentication: { authUrl: string };
+  Result: { title: string; data: string };
+};
+
+const RootStack = createNativeStackNavigator<RootStackParamList>({
   screenOptions: {
     contentStyle: {
       backgroundColor: IOColors.white,
     },
+    headerBackButtonDisplayMode: 'minimal',
   },
   screens: {
     Home: {
       screen: HomeScreen,
       options: {
-        header: () => (
-          <HeaderSecondLevel title="@pagopa/io-react-native-cie" type="base" />
-        ),
+        title: '@pagopa/io-react-native-cie',
       },
     },
     InternalAuthentication: {
@@ -46,22 +49,10 @@ const RootStack = createNativeStackNavigator({
         title: 'Internal CIE authentication',
       },
     },
-    InternalAuthenticationResult: {
-      screen: InternalAuthenticationResultScreen,
-      options: {
-        title: 'Internal Auth Result',
-      },
-    },
     Mrtd: {
       screen: MrtdScreen,
       options: {
         title: 'MRTD with PACE',
-      },
-    },
-    MrtdResult: {
-      screen: MrtdResultScreen,
-      options: {
-        title: 'MRTD with PACE Result',
       },
     },
     InternalAuthAndMrtd: {
@@ -70,22 +61,10 @@ const RootStack = createNativeStackNavigator({
         title: 'Internal Auth + MRTD',
       },
     },
-    InternalAuthAndMrtdResult: {
-      screen: InternalAuthAndMrtdResultScreen,
-      options: {
-        title: 'Internal Auth + MRTD Result',
-      },
-    },
     CertificateReading: {
       screen: CertificateReadingScreen,
       options: {
         title: 'Certificate reading',
-      },
-    },
-    CertificateReadingResult: {
-      screen: CertificateReadingResultScreen,
-      options: {
-        title: 'Certificate reading Result',
       },
     },
     Attributes: {
@@ -106,6 +85,12 @@ const RootStack = createNativeStackNavigator({
         title: 'CIE authentication',
       },
     },
+    Result: {
+      screen: ResultScreen,
+      options: ({ route }) => ({
+        title: route.params.title || '',
+      }),
+    },
   },
 });
 
@@ -125,12 +110,8 @@ export default function App() {
   );
 }
 
-type RootStackParamList = StaticParamList<typeof RootStack>;
-
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {
-      InternalAuthenticationResult: { result: any; challenge: string };
-    }
+    interface RootParamList extends RootStackParamList {}
   }
 }
