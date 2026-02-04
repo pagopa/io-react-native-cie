@@ -6,10 +6,10 @@ import { type LogMode } from './types';
  *
  * **Note**: Logging is only supported on iOS. On Android, this method will throw an error.
  *
- * @param mode - The log mode to set ('disabled' or 'enabled')
+ * @param mode - The log mode to set ('console', 'localFile', or 'disabled').
  * @example
  * ```typescript
- * CieManager.setLogMode('enabled');
+ * CieManager.setLogMode('console');
  * ```
  */
 const setLogMode = (mode: LogMode) => {
