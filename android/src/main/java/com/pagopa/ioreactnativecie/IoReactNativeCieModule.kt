@@ -494,6 +494,18 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
   @Suppress("unused")
   @ReactMethod
+  fun getLogsFilePath(promise: Promise) {
+    promise.reject(ModuleException.UNSUPPORTED, "Android does not support file logging", null)
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun getLogs(promise: Promise) {
+    promise.reject(ModuleException.UNSUPPORTED, "Android does not support file logging", null)
+  }
+
+  @Suppress("unused")
+  @ReactMethod
   fun stopReading() {
     cieSdk.stopNFCListening()
   }
@@ -576,6 +588,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID"
       const val INVALID_AUTH_URL = "INVALID_AUTH_URL"
       const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION"
+      const val UNSUPPORTED = "UNSUPPORTED"
     }
   }
 }

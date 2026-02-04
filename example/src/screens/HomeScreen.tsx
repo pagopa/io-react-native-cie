@@ -6,10 +6,10 @@ import {
   VSpacer,
   VStack,
 } from '@pagopa/io-app-design-system';
-import { CieUtils } from '@pagopa/io-react-native-cie';
+import { CieManager, CieUtils } from '@pagopa/io-react-native-cie';
 import { useNavigation } from '@react-navigation/native';
 import { Fragment, useCallback, useState } from 'react';
-import { Platform, ScrollView, StyleSheet } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppStateActive } from '../hooks/useAppStateActive';
 
@@ -29,6 +29,23 @@ export function HomeScreen() {
       );
     }, [])
   );
+
+  const obtainLogs = async () => {
+    if (Platform.OS === 'ios') {
+      try {
+        const logs = await CieManager.getLogs();
+        navigation.navigate('Result', {
+          title: 'Logs',
+          data: logs,
+        });
+      } catch (e) {
+        Alert.alert(
+          'Error while obtaining logs',
+          JSON.stringify(e, undefined, 2)
+        );
+      }
+    }
+  };
 
   const infos = [
     { label: 'Has NFC', value: hasNFC },
@@ -118,7 +135,7 @@ export function HomeScreen() {
               <ListItemNav
                 value="View logs"
                 icon="docAttach"
-                onPress={() => null}
+                onPress={obtainLogs}
               />
             </>
           )}

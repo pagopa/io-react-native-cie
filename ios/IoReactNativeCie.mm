@@ -59,6 +59,12 @@ RCT_EXTERN_METHOD(startReadingCertificate:  (NSString)pin
                   withResolver:             (RCTPromiseResolveBlock)resolve
                   withRejecter:             (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getLogsFilePath:  (RCTPromiseResolveBlock)resolve
+                  withRejecter:     (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getLogs:      (RCTPromiseResolveBlock)resolve
+                  withRejecter: (RCTPromiseRejectBlock)reject)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;

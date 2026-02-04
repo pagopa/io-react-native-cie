@@ -38,6 +38,7 @@ const ModuleErrorCodesSchema = z.enum([
   'PIN_REGEX_NOT_VALID',
   'INVALID_AUTH_URL',
   'THREADING_ERROR', // iOS only
+  'UNSUPPORTED',
   'UNKNOWN_EXCEPTION',
 ]);
 

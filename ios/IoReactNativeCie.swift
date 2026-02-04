@@ -7,7 +7,7 @@ class IoReactNativeCie: RCTEventEmitter {
   
   override init() {
 #if DEBUG
-    self.cieSdk = CieDigitalId.init(.console)
+    self.cieSdk = CieDigitalId.init(.localFile)
 #else
     self.cieSdk = CieDigitalId.init()
 #endif
@@ -289,6 +289,28 @@ class IoReactNativeCie: RCTEventEmitter {
         handleReadError(nfcDigitalIdError)
         resolve(nil)
       }
+    }
+  }
+  
+  @objc func getLogsFilePath(
+    _ resolve: RCTPromiseResolveBlock,
+    withRejecter reject: RCTPromiseRejectBlock
+  ) {
+    if let fileUrl = CieDigitalId.retriveLastLogFilePath() {
+      resolve(fileUrl)
+    } else {
+      reject(ModuleException.unexpected.rawValue, "Failed to retrieve last log file path", nil)
+    }
+  }
+  
+  @objc func getLogs(
+    _ resolve: RCTPromiseResolveBlock,
+    withRejecter reject: RCTPromiseRejectBlock
+  ) {
+    if let logs = CieDigitalId.retriveLastLogFile() {
+      resolve(logs)
+    } else {
+      reject(ModuleException.unexpected.rawValue, "Failed to retrieve last log", nil)
     }
   }
   

@@ -6,10 +6,10 @@ import {
   ScrollView,
   Share,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
 
 interface Props {
   route: {
@@ -56,9 +56,7 @@ export function ResultScreen({ route }: Props) {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
       >
-        <Text selectable style={styles.resultText}>
-          {data}
-        </Text>
+        <DebugPrettyPrint data={data} />
       </ScrollView>
       <View style={styles.buttonRow}>
         <IOButton variant="outline" label="Copy" onPress={handleCopy} />
