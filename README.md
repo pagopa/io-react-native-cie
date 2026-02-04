@@ -15,6 +15,7 @@ Module to handle CIE (Electronic Identity Card) operations natively in React Nat
 - [API](#api)
 - [Usage](#usage)
   - [Check NFC Status](#check-nfc-status)
+  - [Logs](#logs)
   - [Reading CIE Data](#reading-cie-data)
     - [Reading Attributes](#reading-attributes)
     - [Authentication](#authentication)
@@ -116,15 +117,17 @@ List of available functions
 | `startReadingAttributes(timeout: number)`                                                                            | `Promise<void>`    | Start the CIE attributes reading process                                       |
 | `startReading(pin: string, authenticationUrl: string, timeout: number)`                                              | `Promise<void>`    | Start the CIE reading process fro authentication                               |
 | `stopReading()`                                                                                                      | `Promise<void>`    | (Android) Stops all reading process                                            |
+| `setLogMode(mode: LogMode)`                                                                                          | `void`             | (iOS) Sets the log mode for the CIE SDK                                        |
 | `getLogsFilePath()`                                                                                                  | `Promise<string>`  | (iOS) Returns file path of CIE SDK logs                                        |
 | `getLogs()`                                                                                                          | `Promise<string>`  | (iOS) Returns content of CIE SDK logs                                          |
 
 ## Usage
 
-The package is split into two modules:
+The package is split into three modules:
 
 - [CieUtils](/src/utils): Provides functions to check the NFC status of the device.
 - [CieManager](/src/manager): Provides CIE read and authentication capabilities.
+- [CieLogger](/src/logger): Provides logging utils
 
 ### Check NFC Status
 
@@ -139,6 +142,29 @@ await CieUtils.hasNfcFeature();
 await CieUtils.isNfcEnabled();
 // Convenient method to check if CIE authentication is supported
 await CieUtils.isCieAuthenticationSupported();
+```
+
+### Logs
+
+**Note:** Logging is only supported on iOS. On Android, these methods will throw an error.
+
+```typescript
+import { CieLogger } from '@pagopa/io-react-native-cie';
+
+// Enable logging to local file
+CieLogger.setLogMode('localFile');
+
+// Enable logging to console
+CieLogger.setLogMode('console');
+
+// Disable logging
+CieLogger.setLogMode('disabled');
+
+// Get logs file path
+const path = await CieLogger.getLogsFilePath();
+
+// Get logs content
+const logs = await CieLogger.getLogs();
 ```
 
 ### Reading CIE Data
@@ -450,6 +476,16 @@ type ResultEncoding = 'hex' | 'base64' | 'base64url';
 Supported types of encoding for Internal Auth and Mrtd reponse payloads.
 
 ```typescript
+type LogMode = 'localFile' | 'console' | 'disabled';
+```
+
+Log mode for the CIE SDK:
+
+- `localFile`: Logs saved to device for later retrieval
+- `console`: Logs output to console for real-time monitoring
+- `disabled`: Disables all logging
+
+```typescript
 type CertificateData = {
   name?: string;
   surname?: string;
@@ -465,13 +501,13 @@ Contains CIE certificate data read from the card.
 The CIE reading function may throw exceptions if the reading process cannot be initiated. These exceptions indicate issues with input validation or system compatibility.
 Below is a comprehensive list of possible exceptions that may be thrown during initialization:
 
-| Error Code            | Platform    | Description             |
-| --------------------- | ----------- | ----------------------- |
-| `PIN_REGEX_NOT_VALID` | iOS/Android | Invalid PIN format                 |
-| `INVALID_AUTH_URL`    | iOS/Android | Invalid auth url format            |
-| `THREADING_ERROR`     | iOS         | Unexpected error                   |
-| `UNSUPPORTED`         | Android     | Feature not supported on platform  |
-| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error                   |
+| Error Code            | Platform    | Description                       |
+| --------------------- | ----------- | --------------------------------- |
+| `PIN_REGEX_NOT_VALID` | iOS/Android | Invalid PIN format                |
+| `INVALID_AUTH_URL`    | iOS/Android | Invalid auth url format           |
+| `THREADING_ERROR`     | iOS         | Unexpected error                  |
+| `UNSUPPORTED`         | Android     | Feature not supported on platform |
+| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error                  |
 
 ## Contributing
 
