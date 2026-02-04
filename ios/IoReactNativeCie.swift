@@ -6,11 +6,7 @@ class IoReactNativeCie: RCTEventEmitter {
   private let cieSdk: CieDigitalId
   
   override init() {
-#if DEBUG
-    self.cieSdk = CieDigitalId.init(.localFile)
-#else
     self.cieSdk = CieDigitalId.init()
-#endif
     super.init()
   }
   
@@ -290,6 +286,11 @@ class IoReactNativeCie: RCTEventEmitter {
         resolve(nil)
       }
     }
+  }
+  
+  @objc func setLogMode(_ mode: NSString) {
+    let logMode = CieDigitalId.LogMode(rawValue: mode as String) ?? .disabled
+    cieSdk.setLogMode(logMode)
   }
   
   @objc func getLogsFilePath(

@@ -6,9 +6,9 @@ import {
   VSpacer,
   VStack,
 } from '@pagopa/io-app-design-system';
-import { CieManager, CieUtils } from '@pagopa/io-react-native-cie';
+import { CieLogger, CieUtils } from '@pagopa/io-react-native-cie';
 import { useNavigation } from '@react-navigation/native';
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Alert, Platform, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppStateActive } from '../hooks/useAppStateActive';
@@ -19,6 +19,10 @@ export function HomeScreen() {
   const [isNFCEnabled, setIsNFCEnabled] = useState<boolean | undefined>();
   const [isCieAuthenticationSupported, setIsCieAuthenticationSupported] =
     useState<boolean | undefined>();
+
+  useEffect(() => {
+    CieLogger.setLogMode('localFile');
+  }, []);
 
   useAppStateActive(
     useCallback(async () => {
@@ -33,7 +37,7 @@ export function HomeScreen() {
   const obtainLogs = async () => {
     if (Platform.OS === 'ios') {
       try {
-        const logs = await CieManager.getLogs();
+        const logs = await CieLogger.getLogs();
         navigation.navigate('Result', {
           title: 'Logs',
           data: logs,

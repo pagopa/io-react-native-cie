@@ -494,14 +494,20 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
 
   @Suppress("unused")
   @ReactMethod
+  fun setLogMode(mode: String, promise: Promise) {
+    promise.reject(ModuleException.UNSUPPORTED, "Logging is not supported on Android", null)
+  }
+
+  @Suppress("unused")
+  @ReactMethod
   fun getLogsFilePath(promise: Promise) {
-    promise.reject(ModuleException.UNSUPPORTED, "Android does not support file logging", null)
+    promise.reject(ModuleException.UNSUPPORTED, "Logging is not supported on Android", null)
   }
 
   @Suppress("unused")
   @ReactMethod
   fun getLogs(promise: Promise) {
-    promise.reject(ModuleException.UNSUPPORTED, "Android does not support file logging", null)
+    promise.reject(ModuleException.UNSUPPORTED, "Logging is not supported on Android", null)
   }
 
   @Suppress("unused")
