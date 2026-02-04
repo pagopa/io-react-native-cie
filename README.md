@@ -116,6 +116,8 @@ List of available functions
 | `startReadingAttributes(timeout: number)`                                                                            | `Promise<void>`    | Start the CIE attributes reading process                                       |
 | `startReading(pin: string, authenticationUrl: string, timeout: number)`                                              | `Promise<void>`    | Start the CIE reading process fro authentication                               |
 | `stopReading()`                                                                                                      | `Promise<void>`    | (Android) Stops all reading process                                            |
+| `getLogsFilePath()`                                                                                                  | `Promise<string>`  | (iOS) Returns file path of CIE SDK logs                                        |
+| `getLogs()`                                                                                                          | `Promise<string>`  | (iOS) Returns content of CIE SDK logs                                          |
 
 ## Usage
 
@@ -447,6 +449,17 @@ type ResultEncoding = 'hex' | 'base64' | 'base64url';
 
 Supported types of encoding for Internal Auth and Mrtd reponse payloads.
 
+```typescript
+type CertificateData = {
+  name?: string;
+  surname?: string;
+  fiscalCode?: string;
+  docSerialNumber?: string;
+};
+```
+
+Contains CIE certificate data read from the card.
+
 ## Errors
 
 The CIE reading function may throw exceptions if the reading process cannot be initiated. These exceptions indicate issues with input validation or system compatibility.
@@ -454,10 +467,11 @@ Below is a comprehensive list of possible exceptions that may be thrown during i
 
 | Error Code            | Platform    | Description             |
 | --------------------- | ----------- | ----------------------- |
-| `PIN_REGEX_NOT_VALID` | ios/Android | Invalid PIN format      |
-| `INVALID_AUTH_URL`    | ios/Android | Invalid auth url format |
-| `THREADING_ERROR`     | iOS         | Unexpected error        |
-| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error        |
+| `PIN_REGEX_NOT_VALID` | iOS/Android | Invalid PIN format                 |
+| `INVALID_AUTH_URL`    | iOS/Android | Invalid auth url format            |
+| `THREADING_ERROR`     | iOS         | Unexpected error                   |
+| `UNSUPPORTED`         | Android     | Feature not supported on platform  |
+| `UNKNOWN_EXCEPTION`   | iOS/Android | Unexpected error                   |
 
 ## Contributing
 
