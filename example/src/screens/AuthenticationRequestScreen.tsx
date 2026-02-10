@@ -1,5 +1,5 @@
 import {
-  ButtonSolid,
+  IOButton,
   ListItemHeader,
   OTPInput,
 } from '@pagopa/io-app-design-system';
@@ -112,7 +112,7 @@ export function AuthenticationRequestScreen() {
           <ListItemHeader label="Insert card PIN" />
           <OTPInput secret value={code} length={8} onValueChange={setCode} />
         </View>
-        <ButtonSolid
+        <IOButton
           label={status === 'reading' ? 'Stop reading' : 'Start reading'}
           disabled={code.length !== 8}
           onPress={() =>

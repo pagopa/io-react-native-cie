@@ -55,16 +55,12 @@ export function InternalAuthenticationScreen() {
           navigation.dispatch(
             StackActions.replace('Result', {
               title: 'Internal Auth',
-              data: JSON.stringify(
-                {
-                  result: internalAutheticationResult,
-                  challenge,
-                  encodedChallenge: encodeChallenge(challenge, encoding),
-                  encoding: encoding,
-                },
-                undefined,
-                2
-              ),
+              data: {
+                result: internalAutheticationResult,
+                challenge,
+                encodedChallenge: encodeChallenge(challenge, encoding),
+                encoding: encoding,
+              },
             })
           );
         }
@@ -102,12 +98,12 @@ export function InternalAuthenticationScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
-      >
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
+    >
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -147,8 +143,8 @@ export function InternalAuthenticationScreen() {
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

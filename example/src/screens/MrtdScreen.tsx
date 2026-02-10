@@ -61,14 +61,10 @@ export function MrtdScreen() {
         navigation.dispatch(
           StackActions.replace('Result', {
             title: 'MRTD with PACE',
-            data: JSON.stringify(
-              {
-                result: mrtdResponse,
-                encoding,
-              },
-              undefined,
-              2
-            ),
+            data: {
+              result: mrtdResponse,
+              encoding,
+            },
           })
         );
       }),

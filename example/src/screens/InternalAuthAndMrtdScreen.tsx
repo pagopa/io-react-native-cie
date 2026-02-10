@@ -57,16 +57,12 @@ export function InternalAuthAndMrtdScreen() {
           navigation.dispatch(
             StackActions.replace('Result', {
               title: 'Internal Auth + MRTD',
-              data: JSON.stringify(
-                {
-                  result: internalAuthAndMrtdResponse,
-                  challenge,
-                  encodedChallenge: encodeChallenge(challenge, encoding),
-                  encoding,
-                },
-                undefined,
-                2
-              ),
+              data: {
+                result: internalAuthAndMrtdResponse,
+                challenge,
+                encodedChallenge: encodeChallenge(challenge, encoding),
+                encoding,
+              },
             })
           );
         }

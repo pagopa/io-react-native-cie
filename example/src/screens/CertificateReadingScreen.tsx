@@ -46,7 +46,7 @@ export function CertificateReadingScreen() {
         navigation.dispatch(
           StackActions.replace('Result', {
             title: 'Certificate Data',
-            data: JSON.stringify(data, undefined, 2),
+            data,
           })
         );
       }),

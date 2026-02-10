@@ -32,7 +32,7 @@ export function AttributesScreen() {
         navigation.dispatch(
           StackActions.replace('Result', {
             title: 'Attributes',
-            data: JSON.stringify(attributes, undefined, 2),
+            data: attributes,
           })
         );
       }),
