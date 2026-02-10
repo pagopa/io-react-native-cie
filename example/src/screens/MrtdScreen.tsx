@@ -16,7 +16,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
@@ -26,6 +25,7 @@ import {
 } from '../components/ReadStatusComponent';
 
 import { StackActions, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export function MrtdScreen() {
   const navigation = useNavigation();
@@ -101,12 +101,12 @@ export function MrtdScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
-      >
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
+    >
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -150,8 +150,8 @@ export function MrtdScreen() {
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
