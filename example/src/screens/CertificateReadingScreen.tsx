@@ -4,20 +4,20 @@ import {
   OTPInput,
 } from '@pagopa/io-app-design-system';
 import { CieManager, type NfcEvent } from '@pagopa/io-react-native-cie';
-import { useNavigation } from '@react-navigation/native';
+import { StackActions, useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ReadStatusComponent,
   type ReadStatus,
-} from '../../components/ReadStatusComponent';
+} from '../components/ReadStatusComponent';
 
 export function CertificateReadingScreen() {
   const navigation = useNavigation();
@@ -43,16 +43,12 @@ export function CertificateReadingScreen() {
       // Start listening for success
       CieManager.addListener('onCertificateSuccess', (data) => {
         setStatus('success');
-        navigation.reset({
-          index: 0,
-          routes: [
-            { name: 'Home' },
-            {
-              name: 'CertificateReadingResult',
-              params: data,
-            },
-          ],
-        });
+        navigation.dispatch(
+          StackActions.replace('Result', {
+            title: 'Certificate Data',
+            data,
+          })
+        );
       }),
     ];
 
@@ -86,7 +82,7 @@ export function CertificateReadingScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.keyboardAvoidingView}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}

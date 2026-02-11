@@ -16,32 +16,26 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
 import {
   ReadStatusComponent,
   type ReadStatus,
-} from '../../components/ReadStatusComponent';
+} from '../components/ReadStatusComponent';
 
-import { useNavigation } from '@react-navigation/native';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { encodeChallenge } from '../utils/encoding';
 
-export function MrtdScreen() {
+export function InternalAuthAndMrtdScreen() {
   const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
   const [can, setCan] = useState<string>('');
+  const [challenge, setChallenge] = useState<string>('');
 
   const [encoding, setEncoding] = useState<ResultEncoding>('hex');
-
-  // To test wrong CAN alert message
-  useEffect(() => {
-    CieManager.setAlertMessage(
-      'wrongCan',
-      'Hai inserito un CAN errato. Riprova'
-    );
-  }, []);
 
   useEffect(() => {
     const cleanup = [
@@ -56,22 +50,23 @@ export function MrtdScreen() {
         );
       }),
       // Start listening for reading MRTD data success
-      CieManager.addListener('onMRTDWithPaceSuccess', (mrtdResponse) => {
-        setStatus('success');
-        navigation.reset({
-          index: 0,
-          routes: [
-            { name: 'Home' },
-            {
-              name: 'MrtdResult',
-              params: {
-                result: mrtdResponse,
+      CieManager.addListener(
+        'onInternalAuthAndMRTDWithPaceSuccess',
+        (internalAuthAndMrtdResponse) => {
+          setStatus('success');
+          navigation.dispatch(
+            StackActions.replace('Result', {
+              title: 'Internal Auth + MRTD',
+              data: {
+                result: internalAuthAndMrtdResponse,
+                challenge,
+                encodedChallenge: encodeChallenge(challenge, encoding),
                 encoding,
               },
-            },
-          ],
-        });
-      }),
+            })
+          );
+        }
+      ),
     ];
 
     return () => {
@@ -80,7 +75,7 @@ export function MrtdScreen() {
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
-  }, [encoding, navigation]);
+  }, [challenge, encoding, navigation]);
 
   const handleStartReading = async () => {
     Keyboard.dismiss();
@@ -88,7 +83,11 @@ export function MrtdScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startMRTDReading(can, encoding);
+      await CieManager.startInternalAuthAndMRTDReading(
+        can,
+        challenge,
+        encoding
+      );
     } catch (e) {
       setStatus('error');
       Alert.alert(
@@ -105,12 +104,12 @@ export function MrtdScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
-      >
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
+    >
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -127,6 +126,11 @@ export function MrtdScreen() {
               keyboardType: 'number-pad',
               inputMode: 'numeric',
             }}
+          />
+          <TextInput
+            value={challenge}
+            placeholder={'Challenge'}
+            onChangeText={setChallenge}
           />
           <HStack space={8}>
             <ListItemRadio
@@ -148,14 +152,14 @@ export function MrtdScreen() {
         </VStack>
         <IOButton
           variant="solid"
-          label={status === 'reading' ? 'Stop' : 'Start reading'}
-          disabled={can.length !== 6}
+          label={status === 'reading' ? 'Stop' : 'Start sign and reading'}
+          disabled={can.length !== 6 || challenge.length === 0}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

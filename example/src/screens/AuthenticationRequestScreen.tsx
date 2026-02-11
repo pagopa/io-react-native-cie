@@ -1,5 +1,5 @@
 import {
-  ButtonSolid,
+  IOButton,
   ListItemHeader,
   OTPInput,
 } from '@pagopa/io-app-design-system';
@@ -10,10 +10,10 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { CiewWebView } from '../components/CiewWebView';
 import { LoadingSpinnerOverlay } from '../components/LoadingSpinnerOverlay';
 import {
@@ -100,7 +100,7 @@ export function AuthenticationRequestScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.keyboardAvoidingView}
     >
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -112,7 +112,7 @@ export function AuthenticationRequestScreen() {
           <ListItemHeader label="Insert card PIN" />
           <OTPInput secret value={code} length={8} onValueChange={setCode} />
         </View>
-        <ButtonSolid
+        <IOButton
           label={status === 'reading' ? 'Stop reading' : 'Start reading'}
           disabled={code.length !== 8}
           onPress={() =>

@@ -6,11 +6,7 @@ class IoReactNativeCie: RCTEventEmitter {
   private let cieSdk: CieDigitalId
   
   override init() {
-#if DEBUG
-    self.cieSdk = CieDigitalId.init(.console)
-#else
     self.cieSdk = CieDigitalId.init()
-#endif
     super.init()
   }
   
@@ -289,6 +285,33 @@ class IoReactNativeCie: RCTEventEmitter {
         handleReadError(nfcDigitalIdError)
         resolve(nil)
       }
+    }
+  }
+  
+  @objc func setLogMode(_ mode: NSString) {
+    let logMode = CieDigitalId.LogMode(rawValue: mode as String) ?? .disabled
+    cieSdk.setLogMode(logMode)
+  }
+  
+  @objc func getLogsFilePath(
+    _ resolve: RCTPromiseResolveBlock,
+    withRejecter reject: RCTPromiseRejectBlock
+  ) {
+    if let fileUrl = CieDigitalId.retriveLastLogFilePath() {
+      resolve(fileUrl)
+    } else {
+      reject(ModuleException.unexpected.rawValue, "Failed to retrieve last log file path", nil)
+    }
+  }
+  
+  @objc func getLogs(
+    _ resolve: RCTPromiseResolveBlock,
+    withRejecter reject: RCTPromiseRejectBlock
+  ) {
+    if let logs = CieDigitalId.retriveLastLogFile() {
+      resolve(logs)
+    } else {
+      reject(ModuleException.unexpected.rawValue, "Failed to retrieve last log", nil)
     }
   }
   

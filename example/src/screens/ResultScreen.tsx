@@ -3,34 +3,31 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {
   Alert,
   Platform,
-  SafeAreaView,
   ScrollView,
   Share,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
-import type {
-  MrtdResponse,
-  ResultEncoding,
-} from '../../../../src/manager/types';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { DebugPrettyPrint } from '../components/DebugPrettyPrint';
 
 interface Props {
   route: {
     params: {
-      result: MrtdResponse;
-      encoding: ResultEncoding;
+      title: string;
+      data: string;
     };
   };
   navigation: any;
 }
 
-export function MrtdResultScreen({ route }: Props) {
-  const { result, encoding } = route.params;
-  const resultString = JSON.stringify({ encoding, ...result }, null, 2);
+export function ResultScreen({ route }: Props) {
+  const { title, data } = route.params;
+
+  console.log('ResultScreen data:', data);
 
   const handleCopy = async () => {
-    Clipboard.setString(resultString);
+    Clipboard.setString(data);
     Alert.alert('Copied', 'Result copied to clipboard');
   };
 
@@ -38,14 +35,14 @@ export function MrtdResultScreen({ route }: Props) {
     try {
       await Share.share(
         {
-          message: resultString,
-          title: 'MRTD with PACE Result',
+          message: data,
+          title,
           // Workaround for iOS to set the subject sharing email in some apps
-          ...(Platform.OS === 'ios' ? { url: 'MRTD with PACE Result' } : {}),
+          ...(Platform.OS === 'ios' ? { url: title } : {}),
         },
         {
-          subject: 'MRTD with PACE Result',
-          dialogTitle: 'Share MRTD with PACE Result',
+          subject: `${title} Result`,
+          dialogTitle: `Share ${title} Result`,
         }
       );
     } catch (error) {
@@ -54,14 +51,12 @@ export function MrtdResultScreen({ route }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
       >
-        <Text selectable style={styles.resultText}>
-          {resultString}
-        </Text>
+        <DebugPrettyPrint data={data} />
       </ScrollView>
       <View style={styles.buttonRow}>
         <IOButton variant="outline" label="Copy" onPress={handleCopy} />

@@ -1,7 +1,8 @@
 import * as CieUtils from './utils';
 import * as CieManager from './manager';
+import * as CieLogger from './logger';
 
-export { CieUtils, CieManager };
+export { CieUtils, CieManager, CieLogger };
 
 export type {
   NfcEvent,
@@ -13,6 +14,9 @@ export type {
   MrtdResponse,
   InternalAuthAndMrtdResponse,
   ResultEncoding,
+  CertificateData,
 } from './manager/types';
+
+export type { LogMode } from './logger/types';
 
 export type { CieErrorSchema, CieError, CieErrorCodes } from './errors';

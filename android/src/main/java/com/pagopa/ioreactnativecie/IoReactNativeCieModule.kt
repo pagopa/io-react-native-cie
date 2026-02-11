@@ -149,7 +149,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   ) {
     val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
     try {
-      cieSdk.startReadingNis(challenge, timeout, object : NfcEvents {
+      cieSdk.startReadingNis(challenge, timeout, true, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.EVENT.value, WritableNativeMap().apply {
@@ -204,7 +204,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   ) {
     val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
     try {
-      cieSdk.startDoPace(can, timeout, object : NfcEvents {
+      cieSdk.startDoPace(can, timeout, true, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.EVENT.value, WritableNativeMap().apply {
@@ -259,7 +259,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
   ) {
     val encoding: ResultEncoding = ResultEncoding.fromString(resultEncoding)
     try {
-      cieSdk.startNisAndPace(challenge, can, timeout, object : NfcEvents {
+      cieSdk.startNisAndPace(challenge, can, timeout, true, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.EVENT.value, WritableNativeMap().apply {
@@ -326,7 +326,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     promise: Promise,
   ) {
     try {
-      cieSdk.startReadingCieAtr(timeout, object : NfcEvents {
+      cieSdk.startReadingCieAtr(timeout, true, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.EVENT.value, WritableNativeMap().apply {
@@ -392,7 +392,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
 
     try {
-      cieSdk.startReading(timeout, object : NfcEvents {
+      cieSdk.startReading(timeout, true, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.EVENT.value, WritableNativeMap().apply {
@@ -447,7 +447,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     }
 
     try {
-      cieSdk.startReadingCertificate(timeout, object : NfcEvents {
+      cieSdk.startReadingCertificate(timeout, true, object : NfcEvents {
         override fun event(event: NfcEvent) {
           this@IoReactNativeCieModule.reactApplicationContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(EventType.EVENT.value, WritableNativeMap().apply {
@@ -490,6 +490,24 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
     } catch (e: Exception) {
       promise.reject(ModuleException.UNKNOWN_EXCEPTION, e.message, e)
     }
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun setLogMode(mode: String, promise: Promise) {
+    promise.reject(ModuleException.UNSUPPORTED, "Logging is not supported on Android", null)
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun getLogsFilePath(promise: Promise) {
+    promise.reject(ModuleException.UNSUPPORTED, "Logging is not supported on Android", null)
+  }
+
+  @Suppress("unused")
+  @ReactMethod
+  fun getLogs(promise: Promise) {
+    promise.reject(ModuleException.UNSUPPORTED, "Logging is not supported on Android", null)
   }
 
   @Suppress("unused")
@@ -576,6 +594,7 @@ class IoReactNativeCieModule(reactContext: ReactApplicationContext) :
       const val PIN_REGEX_NOT_VALID = "PIN_REGEX_NOT_VALID"
       const val INVALID_AUTH_URL = "INVALID_AUTH_URL"
       const val UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION"
+      const val UNSUPPORTED = "UNSUPPORTED"
     }
   }
 }

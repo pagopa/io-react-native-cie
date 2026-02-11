@@ -16,25 +16,32 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   StyleSheet,
   View,
 } from 'react-native';
 import {
   ReadStatusComponent,
   type ReadStatus,
-} from '../../components/ReadStatusComponent';
+} from '../components/ReadStatusComponent';
 
-import { useNavigation } from '@react-navigation/native';
-import { encodeChallenge } from '../../utils/encoding';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export function InternalAuthenticationScreen() {
+export function MrtdScreen() {
   const navigation = useNavigation();
   const [status, setStatus] = useState<ReadStatus>('idle');
   const [event, setEvent] = useState<NfcEvent>();
-  const [challenge, setChallenge] = useState<string>('');
+  const [can, setCan] = useState<string>('');
 
   const [encoding, setEncoding] = useState<ResultEncoding>('hex');
+
+  // To test wrong CAN alert message
+  useEffect(() => {
+    CieManager.setAlertMessage(
+      'wrongCan',
+      'Hai inserito un CAN errato. Riprova'
+    );
+  }, []);
 
   useEffect(() => {
     const cleanup = [
@@ -44,32 +51,23 @@ export function InternalAuthenticationScreen() {
       CieManager.addListener('onError', (error) => {
         setStatus('error');
         Alert.alert(
-          'Error while reading attributes',
+          'Error while reading MRTD with PACE',
           JSON.stringify(error, undefined, 2)
         );
       }),
-      // Start listening for attributes success
-      CieManager.addListener(
-        'onInternalAuthenticationSuccess',
-        (internalAutheticationResult) => {
-          setStatus('success');
-          navigation.reset({
-            index: 0,
-            routes: [
-              { name: 'Home' },
-              {
-                name: 'InternalAuthenticationResult',
-                params: {
-                  result: internalAutheticationResult,
-                  challenge,
-                  encodedChallenge: encodeChallenge(challenge, encoding),
-                  encoding: encoding,
-                },
-              },
-            ],
-          });
-        }
-      ),
+      // Start listening for reading MRTD data success
+      CieManager.addListener('onMRTDWithPaceSuccess', (mrtdResponse) => {
+        setStatus('success');
+        navigation.dispatch(
+          StackActions.replace('Result', {
+            title: 'MRTD with PACE',
+            data: {
+              result: mrtdResponse,
+              encoding,
+            },
+          })
+        );
+      }),
     ];
 
     return () => {
@@ -78,7 +76,7 @@ export function InternalAuthenticationScreen() {
       // Ensure the reading is stopped when the screen is unmounted
       CieManager.stopReading();
     };
-  }, [challenge, encoding, navigation]);
+  }, [encoding, navigation]);
 
   const handleStartReading = async () => {
     Keyboard.dismiss();
@@ -86,11 +84,11 @@ export function InternalAuthenticationScreen() {
     setStatus('reading');
 
     try {
-      await CieManager.startInternalAuthentication(challenge, encoding);
+      await CieManager.startMRTDReading(can, encoding);
     } catch (e) {
       setStatus('error');
       Alert.alert(
-        'Error while reading attributes',
+        'Error while reading MRTD with PACE',
         JSON.stringify(e, undefined, 2)
       );
     }
@@ -103,12 +101,12 @@ export function InternalAuthenticationScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
-      >
+    <KeyboardAvoidingView
+      style={styles.keyboardAvoidingView}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 124 : 0}
+    >
+      <SafeAreaView style={styles.container} edges={['bottom']}>
         <View style={styles.progressContainer}>
           <ReadStatusComponent
             progress={event?.progress}
@@ -118,9 +116,13 @@ export function InternalAuthenticationScreen() {
         </View>
         <VStack space={8} style={styles.inputContainer}>
           <TextInput
-            value={challenge}
-            placeholder={'Challenge'}
-            onChangeText={setChallenge}
+            value={can}
+            placeholder={'CAN'}
+            onChangeText={setCan}
+            textInputProps={{
+              keyboardType: 'number-pad',
+              inputMode: 'numeric',
+            }}
           />
           <HStack space={8}>
             <ListItemRadio
@@ -142,14 +144,14 @@ export function InternalAuthenticationScreen() {
         </VStack>
         <IOButton
           variant="solid"
-          label={status === 'reading' ? 'Stop' : 'Sign challenge'}
-          disabled={challenge.length === 0}
+          label={status === 'reading' ? 'Stop' : 'Start reading'}
+          disabled={can.length !== 6}
           onPress={() =>
             status === 'reading' ? handleStopReading() : handleStartReading()
           }
         />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -175,8 +177,5 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
-  },
-  attributesContainer: {
-    justifyContent: 'flex-end',
   },
 });

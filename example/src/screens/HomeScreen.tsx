@@ -1,15 +1,16 @@
 import {
-  IOButton,
   Divider,
   IOColors,
   ListItemInfo,
-  Pictogram,
+  ListItemNav,
+  VSpacer,
   VStack,
 } from '@pagopa/io-app-design-system';
-import { CieUtils } from '@pagopa/io-react-native-cie';
+import { CieLogger, CieUtils } from '@pagopa/io-react-native-cie';
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useState } from 'react';
-import { Platform, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Alert, Platform, ScrollView, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppStateActive } from '../hooks/useAppStateActive';
 
 export function HomeScreen() {
@@ -18,6 +19,10 @@ export function HomeScreen() {
   const [isNFCEnabled, setIsNFCEnabled] = useState<boolean | undefined>();
   const [isCieAuthenticationSupported, setIsCieAuthenticationSupported] =
     useState<boolean | undefined>();
+
+  useEffect(() => {
+    CieLogger.setLogMode('localFile');
+  }, []);
 
   useAppStateActive(
     useCallback(async () => {
@@ -29,118 +34,133 @@ export function HomeScreen() {
     }, [])
   );
 
+  const obtainLogs = async () => {
+    if (Platform.OS === 'ios') {
+      try {
+        const logs = await CieLogger.getLogs();
+        navigation.navigate('Result', {
+          title: 'Logs',
+          data: logs,
+        });
+      } catch (e) {
+        Alert.alert(
+          'Error while obtaining logs',
+          JSON.stringify(e, undefined, 2)
+        );
+      }
+    }
+  };
+
+  const infos = [
+    { label: 'Has NFC', value: hasNFC },
+    { label: 'Is NFC enabled', value: isNFCEnabled },
+    {
+      label: 'CIE authentication supported',
+      value: isCieAuthenticationSupported,
+    },
+  ];
+
+  const tests: ReadonlyArray<ListItemNav> = [
+    {
+      value: 'Start CIE attributes reading',
+      icon: 'creditCard',
+      onPress: () => navigation.navigate('Attributes'),
+    },
+    {
+      value: 'Start CIE authentication',
+      icon: 'cieLetter',
+      onPress: () => navigation.navigate('AuthenticationRequest'),
+    },
+    {
+      value: 'Start Internal CIE authentication',
+      icon: 'selfCert',
+      onPress: () => navigation.navigate('InternalAuthentication'),
+    },
+    {
+      value: 'Start MRTD with PACE reading',
+      icon: 'fiscalCodeIndividual',
+      onPress: () => navigation.navigate('Mrtd'),
+    },
+    {
+      value: 'Start Internal Auth + MRTD reading',
+      icon: 'navWalletFocused',
+      onPress: () => navigation.navigate('InternalAuthAndMrtd'),
+    },
+    {
+      value: 'Start Certificate reading',
+      icon: 'navWalletFocused',
+      onPress: () => navigation.navigate('CertificateReading'),
+    },
+  ];
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.pictogramContainer}>
-        <Pictogram name="cie" size={180} />
-      </View>
-      <View style={styles.infoContainer}>
-        <ListItemInfo
-          value="Has NFC"
-          endElement={{
-            type: 'badge',
-            componentProps: {
-              text: hasNFC ? '🟢 OK' : '🔴 KO',
-              variant: hasNFC ? 'success' : 'error',
-            },
-          }}
-        />
-        <Divider />
-        <ListItemInfo
-          value="Is NFC enabled"
-          endElement={{
-            type: 'badge',
-            componentProps: {
-              text: isNFCEnabled ? '🟢 OK' : '🔴 KO',
-              variant: isNFCEnabled ? 'success' : 'error',
-            },
-          }}
-        />
-        <Divider />
-        <ListItemInfo
-          value="CIE authentication supported"
-          endElement={{
-            type: 'badge',
-            componentProps: {
-              text: isCieAuthenticationSupported ? '🟢 OK' : '🔴 KO',
-              variant: isCieAuthenticationSupported ? 'success' : 'error',
-            },
-          }}
-        />
-      </View>
-      <VStack space={8}>
-        <IOButton
-          variant="solid"
-          label="Read CIE attributes"
-          icon="creditCard"
-          disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('Attributes')}
-        />
-        <IOButton
-          variant="solid"
-          label="Start CIE authentication"
-          icon="cieLetter"
-          disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('AuthenticationRequest')}
-        />
-        <IOButton
-          variant="solid"
-          label="Start Internal CIE authentication"
-          icon="selfCert"
-          disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('InternalAuthentication')}
-        />
-        <IOButton
-          variant="solid"
-          label="Start MRTD with PACE reading"
-          icon="fiscalCodeIndividual"
-          disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('Mrtd')}
-        />
-        <IOButton
-          variant="solid"
-          label="Start Internal Auth + MRTD reading"
-          icon="navWalletFocused"
-          disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('InternalAuthAndMrtd')}
-        />
-        <IOButton
-          variant="solid"
-          label="Start Certificate reading"
-          icon="navWalletFocused"
-          disabled={!isCieAuthenticationSupported}
-          onPress={() => navigation.navigate('CertificateReading')}
-        />
-        {Platform.OS === 'android' && (
-          <View style={styles.buttonContainer}>
-            <IOButton
-              variant="link"
-              label="Open NFC Settings"
-              icon="coggle"
-              onPress={() => CieUtils.openNfcSettings()}
-            />
-          </View>
-        )}
-      </VStack>
+    <SafeAreaView edges={['bottom']}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <VStack style={styles.infoContainer}>
+          {infos.map((info, index) => (
+            <Fragment key={`home-screen-info-fragment-${info.label}-${index}`}>
+              {index !== 0 && <Divider />}
+              <ListItemInfo
+                value={info.label}
+                endElement={{
+                  type: 'badge',
+                  componentProps: {
+                    text: info.value ? '🟢 OK' : '🔴 KO',
+                    variant: info.value ? 'success' : 'error',
+                  },
+                }}
+              />
+            </Fragment>
+          ))}
+        </VStack>
+        <VSpacer size={24} />
+        <VStack style={styles.testsContainer}>
+          {tests.map((item, index) => {
+            return (
+              <Fragment key={`home-screen-fragment-${item.value}-${index}`}>
+                {index !== 0 && <Divider />}
+                <ListItemNav {...item} />
+              </Fragment>
+            );
+          })}
+          {Platform.OS === 'android' && (
+            <>
+              <Divider />
+              <ListItemNav
+                value="Open NFC Settings"
+                icon="coggle"
+                onPress={() => CieUtils.openNfcSettings()}
+              />
+            </>
+          )}
+          {Platform.OS === 'ios' && (
+            <>
+              <Divider />
+              <ListItemNav
+                value="View logs"
+                icon="docAttach"
+                onPress={obtainLogs}
+              />
+            </>
+          )}
+        </VStack>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 24,
-    gap: 24,
-  },
-  pictogramContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  scrollContainer: {
+    paddingVertical: 24,
   },
   infoContainer: {
     backgroundColor: IOColors['grey-50'],
     paddingHorizontal: 16,
+    marginHorizontal: 24,
     borderRadius: 8,
+  },
+  testsContainer: {
+    marginHorizontal: 24,
   },
   buttonContainer: {
     alignSelf: 'center',
