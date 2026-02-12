@@ -21,7 +21,7 @@ export function HomeScreen() {
     useState<boolean | undefined>();
 
   useEffect(() => {
-    CieLogger.setLogMode('localFile');
+    CieLogger.setLogMode('FILE');
   }, []);
 
   useAppStateActive(
